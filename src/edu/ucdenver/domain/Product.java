@@ -1,3 +1,4 @@
+/*
 package edu.ucdenver.domain;
 
 public class Product extends Catagory {
@@ -12,6 +13,6 @@ public class Product extends Catagory {
 
     }
     //get/set for products
-    //**//
 
 }
+*/

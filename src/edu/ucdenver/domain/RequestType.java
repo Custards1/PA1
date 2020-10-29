@@ -1,0 +1,15 @@
+package edu.ucdenver.domain;
+
+public enum RequestType {
+    CREATE_USER,
+    AUTHENTICATE_USER,
+    ADD_PRODUCT_TO_CATALOG,
+    REMOVE_PRODUCT_FROM_CATALOG,
+    ADD_CATAGORY_FROM_PRODUCT,
+    ADD_REMOVE_FROM_PRODUCT,
+    TERMINATE,
+    ERROR,
+    NOOP,
+    OK,
+    PICTURE
+}

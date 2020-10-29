@@ -1,3 +1,4 @@
+/*
 package edu.ucdenver.domain;
 
 public class Hasher {
@@ -5,3 +6,5 @@ public class Hasher {
 
     }
 }
+
+ */
