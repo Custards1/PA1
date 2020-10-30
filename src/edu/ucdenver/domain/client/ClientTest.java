@@ -205,8 +205,8 @@ public class ClientTest {
                 printer(product);
             }
             System.out.println();
-            System.out.println("Searching for \"is\" in products:");
-            for (Product product : client.search("is")) {
+            System.out.println("Searching for \"phone\" in products:");
+            for (Product product : client.search("phone")) {
                 printer(product);
             }
             System.out.println();
