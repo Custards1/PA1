@@ -1,13 +1,11 @@
 package edu.ucdenver.domain.client;
 
-import edu.ucdenver.domain.User;
+import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.category.Catagory;
 import edu.ucdenver.domain.products.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ClientTest {
 

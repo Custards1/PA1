@@ -1,4 +1,4 @@
-package edu.ucdenver.domain;
+package edu.ucdenver.domain.request;
 
 
 import edu.ucdenver.domain.client.ClientError;
@@ -7,8 +7,6 @@ import edu.ucdenver.domain.client.ClientErrorType;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.stream.Stream;
 
 public class Request {
     private RequestType type;

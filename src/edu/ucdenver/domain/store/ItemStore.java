@@ -1,14 +1,12 @@
 package edu.ucdenver.domain.store;
 
-import edu.ucdenver.domain.User;
+import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.category.Catagory;
 import edu.ucdenver.domain.products.Product;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ItemStore extends UserStore {
     private ArrayList<Product> products;

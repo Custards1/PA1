@@ -1,6 +1,6 @@
 package edu.ucdenver.domain.order;
 
-import edu.ucdenver.domain.Requestable;
+import edu.ucdenver.domain.request.Requestable;
 import edu.ucdenver.domain.category.CatagoryParser;
 import edu.ucdenver.domain.products.Product;
 

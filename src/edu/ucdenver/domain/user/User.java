@@ -1,4 +1,4 @@
-package edu.ucdenver.domain;
+package edu.ucdenver.domain.user;
 
 import edu.ucdenver.domain.request.Requestable;
 

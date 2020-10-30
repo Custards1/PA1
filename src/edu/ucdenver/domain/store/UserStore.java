@@ -1,7 +1,7 @@
 
 package edu.ucdenver.domain.store;
 
-import edu.ucdenver.domain.User;
+import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.order.Order;
 
 import java.util.ArrayList;

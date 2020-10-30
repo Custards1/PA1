@@ -1,6 +1,6 @@
 package edu.ucdenver.domain.category;
 
-import edu.ucdenver.domain.Requestable;
+import edu.ucdenver.domain.request.Requestable;
 import edu.ucdenver.domain.products.Product;
 
 import java.util.ArrayList;

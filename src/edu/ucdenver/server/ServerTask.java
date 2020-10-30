@@ -1,9 +1,9 @@
 package edu.ucdenver.server;
 
-import edu.ucdenver.domain.Request;
-import edu.ucdenver.domain.RequestType;
-import edu.ucdenver.domain.Requestable;
-import edu.ucdenver.domain.User;
+import edu.ucdenver.domain.request.Request;
+import edu.ucdenver.domain.request.RequestType;
+import edu.ucdenver.domain.request.Requestable;
+import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.category.Catagory;
 import edu.ucdenver.domain.client.ClientError;
 import edu.ucdenver.domain.client.ClientErrorType;

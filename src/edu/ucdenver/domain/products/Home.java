@@ -1,6 +1,6 @@
 package edu.ucdenver.domain.products;
 
-import edu.ucdenver.domain.Requestable;
+import edu.ucdenver.domain.request.Requestable;
 
 import java.time.LocalDate;
 import java.util.HashMap;

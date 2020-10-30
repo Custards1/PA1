@@ -1,4 +1,4 @@
-package edu.ucdenver.domain;
+package edu.ucdenver.domain.request;
 
 public enum RequestType {
     CREATE_USER,
