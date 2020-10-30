@@ -232,6 +232,77 @@ public class ServerTask implements Runnable {
                         return RequestType.ERROR;
                     }
                 }
+            case ADD_ADMIN_USER:
+                if(incoming.getObjs().isEmpty()){
+                    try {
+                        sendErrorRequest(output,ClientErrorType.INVALID_RESOURCE);
+                        return RequestType.OK;
+                    }
+                    catch (Exception ee){
+                        return RequestType.ERROR;
+                    }
+                }
+
+                User user = null;
+                try {
+                    user = new User(incoming.getObjs().get(0));
+
+                }
+                catch (IllegalArgumentException e){
+
+                    try {
+                        sendErrorRequest(output,ClientErrorType.INVALID_RESOURCE);
+                        return RequestType.OK;
+                    }
+                    catch (Exception ee){
+                        return RequestType.ERROR;
+                    }
+                }
+                if(!user.validEmail()){
+
+                    try {
+                        sendErrorRequest(output,ClientErrorType.INVALID_EMAIL);
+                        return RequestType.OK;
+                    }
+                    catch (Exception ee){
+                        return RequestType.ERROR;
+                    }
+                }
+                if(!user.validPassword()){
+                    try {
+                        sendErrorRequest(output,ClientErrorType.INVALID_PASSWORD);
+                        return RequestType.OK;
+                    }
+                    catch (Exception ee){
+                        return RequestType.ERROR;
+                    }
+                }
+                if (!this.userStore.addAdminUser(connectedUser,user)){
+                    try {
+                        sendErrorRequest(output,ClientErrorType.INVALID_USER);
+                        return RequestType.OK;
+                    }
+                    catch (Exception ee){
+                        return RequestType.ERROR;
+                    }
+
+                }
+
+                    try {
+                        sendOneHotRequest(output,RequestType.OK,"admin","true");
+                        return RequestType.OK;
+                    }
+                    catch (Exception ee){
+                        try {
+                            sendErrorRequest(output,ClientErrorType.INVALID_USER);
+                            return RequestType.OK;
+                        }
+                        catch (Exception eer){
+                            return RequestType.ERROR;
+                        }
+                    }
+
+
             case SEARCH:
                 try {
                     temp = incoming.getField("search");

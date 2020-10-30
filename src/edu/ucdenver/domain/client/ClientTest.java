@@ -106,6 +106,10 @@ public class ClientTest {
             System.out.printf("You are %s user.\n",client.isAdmin()?"a privileged":"an unprivledged");
             //These functions WILL fail if user is not admin.
 
+            //Creates a new admin, must already be an admin to use this function
+            client.createAdmin("antoheradmin@admin.org","Admin2","password12");
+
+
             //Adding catagories
             client.addCatagory("House");
             client.addCatagory("Book");

@@ -228,6 +228,24 @@ public class Client {
             return p;
         }
     }
+    public void createAdmin(String email,String name,String password)throws ClientError{
+        if(!this.isAdmin){
+            throw new ClientError(ClientErrorType.INVALID_ACCESS);
+        }
+
+        User self = new User(email,name,password);
+       sendMinimalRequestable(RequestType.ADD_ADMIN_USER,self);
+        Request r = okOrDie();
+    }
+    public void removeUser(String email)throws ClientError{
+        if(!this.isAdmin){
+            throw new ClientError(ClientErrorType.INVALID_ACCESS);
+        }
+//TODO
+       //
+       // sendMinimalRequestable(RequestType.ADD_ADMIN_USER,self);
+        //Request r = okOrDie();
+    }
     public Product addCatagoryToProductByName(String catagoryName,String productName)throws ClientError{
         StringBuilder id = new StringBuilder();
         for(String word : productName.split("\\s")) {
