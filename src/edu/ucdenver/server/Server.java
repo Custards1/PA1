@@ -30,15 +30,17 @@ public class Server implements Runnable {
         try {
             server = new ServerSocket(this.port,this.backlog);
             while (true){
-                System.out.println("Accepting...");
+
                 Socket s = server.accept();
-                System.out.println("Accepted!");
+
                 service.execute(new ServerTask(s,server,store));
             }
         }
         catch (Exception e){
             try{
-                server.close();
+                if(server!=null){
+                    server.close();
+                }
             }
             catch (Exception ee){
 
@@ -46,7 +48,9 @@ public class Server implements Runnable {
         }
 
         try{
-            server.close();
+            if(server!=null){
+                server.close();
+            }
         }
         catch (Exception ee){
 

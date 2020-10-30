@@ -13,6 +13,6 @@ public class Main {
     public static void main(String[] args) {
         Server server = new Server(8080,20);
         server.run();
-        System.out.println("RANNNN");
+        
     }
 }

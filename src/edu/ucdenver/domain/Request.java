@@ -14,6 +14,7 @@ public class Request {
     private RequestType type;
     private HashMap<String,String> fields;
     private ArrayList<HashMap<String,String>> objs;
+    public static String seperater = "(?<!\\|)\\|(?!\\|)";
     public Request(RequestType type,HashMap<String,String> fields,ArrayList<HashMap<String,String>> objs){
         if(type==null) {
             this.type = RequestType.ERROR;
@@ -35,6 +36,13 @@ public class Request {
             this.objs=objs;
         }
     }
+    public HashMap<String,String> getTable() {
+        return this.fields;
+    }
+    public void setTable(HashMap<String,String> table) {
+        this.fields = table;
+    }
+
     public ArrayList<HashMap<String,String>> getObjs(){
         return this.objs;
     }
@@ -68,7 +76,7 @@ public class Request {
             throw new IOException();
         }
         String S=this.toRaw();
-        System.out.printf("Sending %s",S);
+      
         output.printf("%d|",S.length());
         if(output.checkError()){
             throw new IOException();
@@ -83,10 +91,11 @@ public class Request {
         }
     }
     public Request(BufferedReader stream) throws ClientError {
+        
         this.initFields();
         StringBuilder size = new StringBuilder(new String());
         int bytes = 0;
-
+      
         try{
             while ((bytes=stream.read())>0 && (char)bytes!='|'){
                 size.append((char) bytes);
@@ -97,8 +106,13 @@ public class Request {
 
             throw new ClientError(ClientErrorType.INVALID_SOCKET);
         }
-        int rsize = Integer.parseInt(size.toString());
-
+        String b=size.toString();
+        if(b.isEmpty()){
+            throw new ClientError(ClientErrorType.INVALID_SOCKET);
+        }
+        
+        int rsize = Integer.parseInt(b);
+        
         if(rsize<=0){
             if(bytes <=0) {
                 throw new ClientError(ClientErrorType.INVALID_SOCKET);
@@ -107,6 +121,7 @@ public class Request {
                 throw new ClientError(ClientErrorType.INVALID_REQUEST);
             }
         }
+       
         char[] chars = new char[rsize];
         int charsRead = 0;
         try {
@@ -118,7 +133,9 @@ public class Request {
             String s = String.valueOf(chars);
 
             try{
+               
                 this.fromString(s);
+                
                 this.validateType();
             }
             catch (IllegalArgumentException e) {
@@ -138,9 +155,13 @@ public class Request {
         this.objs = new ArrayList<>();
     }
     public Request(String raw) throws IllegalArgumentException {
+        
         this.initFields();
+        
         this.fromString(raw);
+        ;
         this.validateType();
+       
     }
     public void validateType()throws IllegalArgumentException {
 
@@ -151,7 +172,7 @@ public class Request {
 
         String temp = this.fields.get("rtype").toUpperCase().trim();
         if (temp!=null) {
-            System.out.printf("|%s|",temp);
+           
         }
 
         this.type = RequestType.valueOf(temp);
@@ -160,19 +181,20 @@ public class Request {
     private void fromObjString(String raw)throws IllegalArgumentException {
 
     }
-    public void fromString(String raw) throws IllegalArgumentException {
 
+    public void fromString(String raw) throws IllegalArgumentException {
+        
         if (raw == null||raw.isEmpty() ){
             throw new IllegalArgumentException("Null request.");
         }
-
+        
         int i = 2;
         String last= new String();
         int total = 0;
 
         boolean isObj=false;
         int objFields = 0;
-        for(String splice : raw.split("(?<!\\|)\\|(?!\\|)")) {
+        for(String splice : raw.split(seperater)) {
             if (splice.length() ==0 ||splice.isEmpty() || splice.equals("")||(int)splice.charAt(0)==0){
                 break;
             }
@@ -208,6 +230,7 @@ public class Request {
             }
             i++;
         }
+        
         total+=1;
 
     }

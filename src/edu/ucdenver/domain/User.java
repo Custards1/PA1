@@ -1,40 +1,72 @@
 package edu.ucdenver.domain;
 
+import edu.ucdenver.domain.category.CatagoryParser;
+import edu.ucdenver.domain.order.Order;
+
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.IntPredicate;
 
 public class User implements Requestable {
-    private boolean is_admin;
+    private boolean isAdmin;
     private String email;
     private String name;
     private String password;
+    private int orders;
     //boolean authenticated;
     //**//
+    public User(){
+        clear();
+    }
     public User(String email,String name,String password) {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.is_admin = false;
+        this.isAdmin = false;
+        orders = 0;
     }
     public User(HashMap<String,String> requestable) throws IllegalArgumentException {
-        this.fromRequestable(requestable);
+        fromRequestable(requestable);
+    }
+    public void clear(){
+        this.email = new String();
+        this.password = new String();
+        this.name = new String();
+        this.isAdmin = false;
+        orders = 0;
     }
     public void fromRequestable(HashMap<String,String> requestable) throws IllegalArgumentException {
         if(!requestable.containsKey("email")||!requestable.containsKey("name")||!requestable.containsKey("password")||!requestable.containsKey("is_admin")){
             throw new IllegalArgumentException("Bad requestable");
         }
-        email =requestable.get("email");
-        name = requestable.get("name");
-        password = requestable.get("password");
-        is_admin = requestable.get("is_admin")=="true";
+        clear();
+        this.email=requestable.get("email");
+        this.name=requestable.get("name");
+        this.password=requestable.get("password");
+        this.isAdmin=requestable.get("is_admin")=="true";
+        String temp = requestable.get("orders");
+        if(temp == null || temp.isEmpty()){
+            throw new IllegalArgumentException();
+        }
+        try{
+            orders = Integer.parseInt(temp);
+        }
+        catch (Exception ignored){
+
+        }
     }
     public HashMap<String,String> asRequestable(){
         HashMap<String,String> requestable = new HashMap<>();
         requestable.put("email",this.email);
         requestable.put("name",this.name);
         requestable.put("password",this.password);
-        requestable.put("is_admin",this.is_admin?"true":"false");
+        requestable.put("is_admin",this.isAdmin ?"true":"false");
+        requestable.put("orders",Integer.toString(this.orders));
         return requestable;
+    }
+    public static User fromObj(HashMap<String,String> obj) throws IllegalArgumentException {
+        User user = new User();
+        user.fromRequestable(obj);
+        return user;
     }
     public void setPassword(String password){
         this.password = password;
@@ -94,11 +126,17 @@ public class User implements Requestable {
         return this.password != null && !this.password.isEmpty() && this.password.length() >= 8 && this.password.chars().allMatch(Character::isLetterOrDigit);
     }
     public boolean isAdmin(){
-        return this.is_admin;
+        return this.isAdmin;
     }
     public void setAdmin(boolean is_admin){
-        this.is_admin = is_admin;
+        this.isAdmin = is_admin;
     }
 
+    public int getOrders() {
+        return orders;
+    }
 
+    public void setOrders(int orders) {
+        this.orders = orders;
+    }
 }
