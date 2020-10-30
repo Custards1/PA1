@@ -60,6 +60,9 @@ public class UserStore {
         User admin = this.users.get(userNameMap.get(user.getEmail()));
         return admin.isAdmin();
     }
+    public ArrayList<User> allUsers(User admin){
+        return null;
+    }
     public synchronized boolean addUser(User user) {
         if(validateUser(user)){
             return false;
