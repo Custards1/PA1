@@ -1,7 +1,7 @@
 
 package edu.ucdenver.domain.products;
 import edu.ucdenver.domain.request.Requestable;
-import edu.ucdenver.domain.category.CatagoryParser;
+import edu.ucdenver.domain.parser.RequestObjectParser;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -60,7 +60,7 @@ public class Product implements Requestable {
         requestable.put("product-type",this.type);
         String temp = null;
         try{
-            temp = CatagoryParser.intoRaw(this.catagories);
+            temp = RequestObjectParser.intoRaw(this.catagories);
             if(temp == null || temp.isEmpty()){
                 temp = "default";
             }
@@ -130,7 +130,7 @@ public class Product implements Requestable {
         temp = argCheck(requestable,"product-catagory");
         if(temp!=null && !temp.isEmpty()){
             try {
-                this.catagories = CatagoryParser.fromRaw(temp);
+                this.catagories = RequestObjectParser.fromRaw(temp);
             }
             catch (Exception e){
                 throw new IllegalArgumentException();

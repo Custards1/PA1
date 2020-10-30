@@ -1,10 +1,10 @@
-package edu.ucdenver.domain.category;
+package edu.ucdenver.domain.parser;
 
 import edu.ucdenver.domain.request.Request;
 
 import java.util.ArrayList;
 
-public class CatagoryParser {
+public class RequestObjectParser {
     public static String intoRaw(ArrayList<String> listing) {
         StringBuilder bob = new StringBuilder();
         for (String entry : listing) {

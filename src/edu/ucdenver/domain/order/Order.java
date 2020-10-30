@@ -1,7 +1,7 @@
 package edu.ucdenver.domain.order;
 
 import edu.ucdenver.domain.request.Requestable;
-import edu.ucdenver.domain.category.CatagoryParser;
+import edu.ucdenver.domain.parser.RequestObjectParser;
 import edu.ucdenver.domain.products.Product;
 
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ public class Order implements Requestable {
         HashMap<String,String> requestable = new HashMap<>();
         String temp = null;
         try{
-            temp = CatagoryParser.intoRaw(this.products);
+            temp = RequestObjectParser.intoRaw(this.products);
             if(temp == null || temp.isEmpty()){
                 temp = "none";
             }
@@ -54,7 +54,7 @@ public class Order implements Requestable {
         temp = Product.argCheck(requestable,"ordered-products");
         if(temp!=null && !temp.isEmpty()){
             try {
-                this.products = CatagoryParser.fromRaw(temp);
+                this.products = RequestObjectParser.fromRaw(temp);
             }
             catch (Exception e){
                 throw new IllegalArgumentException();

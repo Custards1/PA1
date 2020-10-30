@@ -1,7 +1,7 @@
 package edu.ucdenver.domain.products;
 
 import edu.ucdenver.domain.request.Requestable;
-import edu.ucdenver.domain.category.CatagoryParser;
+import edu.ucdenver.domain.parser.RequestObjectParser;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class Computer extends Electronic implements Requestable {
     public HashMap<String, String> asRequestable() {
         setType("Computer");
         HashMap<String, String> base = super.asRequestable();
-        base.put("specs", CatagoryParser.intoRaw(technicalSpecs));
+        base.put("specs", RequestObjectParser.intoRaw(technicalSpecs));
         return base;
     }
     @Override
@@ -44,7 +44,7 @@ public class Computer extends Electronic implements Requestable {
         String temp = argCheck(requestable,"specs");
         if(temp!=null && !temp.isEmpty()){
             try {
-                this.technicalSpecs = CatagoryParser.fromRaw(temp);
+                this.technicalSpecs = RequestObjectParser.fromRaw(temp);
             }
             catch (Exception e){
                 throw new IllegalArgumentException();

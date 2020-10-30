@@ -1,5 +1,6 @@
 package edu.ucdenver.domain.category;
 
+import edu.ucdenver.domain.parser.RequestObjectParser;
 import edu.ucdenver.domain.request.Requestable;
 import edu.ucdenver.domain.products.Product;
 
@@ -57,7 +58,7 @@ public class Catagory implements Requestable {
         HashMap<String, String> requestable = new HashMap<>();
         requestable.put("catagory-name",this.name);
         requestable.put("catagory-is-default",this.isDefault?"true":"false");
-        requestable.put("product-list", CatagoryParser.intoRaw(this.products));
+        requestable.put("product-list", RequestObjectParser.intoRaw(this.products));
         return requestable;
     }
 
@@ -71,7 +72,7 @@ public class Catagory implements Requestable {
         }
         this.name = Product.argCheck(requestable,"catagory-name");
         try{
-            this.products = CatagoryParser.fromRaw(Product.argCheck(requestable,"product-list"));
+            this.products = RequestObjectParser.fromRaw(Product.argCheck(requestable,"product-list"));
         }
         catch (Exception e){
            ;
