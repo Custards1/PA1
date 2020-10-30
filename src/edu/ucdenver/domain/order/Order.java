@@ -9,21 +9,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Order implements Requestable {
-
+    private String orderId;
     private ArrayList<String> products;
     private LocalDate finalization;
     private boolean finalized;
     public Order () {
         products = new ArrayList<>();
         finalized = false;
+        orderId = "";
         finalization = LocalDate.of(2020,12,6);
     }
     public HashMap<String, String> asRequestable() {
         HashMap<String,String> requestable = new HashMap<>();
+        requestable.put("ordered-id",orderId.isEmpty()?"invalid":orderId);
         String temp = null;
         try{
             temp = RequestObjectParser.intoRaw(this.products);
-            if(temp == null || temp.isEmpty()){
+            if(temp.isEmpty()){
                 temp = "none";
             }
 
@@ -42,7 +44,9 @@ public class Order implements Requestable {
     public void fromRequestable(HashMap<String, String> requestable) throws IllegalArgumentException {
         products = new ArrayList<>();
         finalized = false;
+        orderId = "";
         finalization = LocalDate.of(2020,12,6);
+        orderId = Product.argCheck(requestable,"ordered-id");
         String temp = Product.argCheck(requestable,"finalization-date");
         try {
             this.finalization = LocalDate.parse(temp);
@@ -52,7 +56,7 @@ public class Order implements Requestable {
         }
 
         temp = Product.argCheck(requestable,"ordered-products");
-        if(temp!=null && !temp.isEmpty()){
+        if(!temp.isEmpty()){
             try {
                 this.products = RequestObjectParser.fromRaw(temp);
             }

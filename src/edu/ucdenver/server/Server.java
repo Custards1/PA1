@@ -1,5 +1,7 @@
 package edu.ucdenver.server;
 import edu.ucdenver.domain.store.ItemStore;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -7,16 +9,18 @@ import java.util.concurrent.Executors;
 
 public class Server implements Runnable {
     private int port;
+
+
     private int backlog;
     private String configFile;
     private ItemStore store;
     public Server (int port,int backlog) {
             this.backlog = backlog;
             this.port = port;
-            this.configFile = null;
+            this.configFile = "default.ser";
             this.store = new ItemStore();
     }
-    public Server (int port,int backlog,String configFile) throws IllegalArgumentException,java.io.IOException {
+    public Server (int port,int backlog,String configFile) throws IllegalArgumentException,java.io.IOException,ClassNotFoundException {
             this.backlog = backlog;
             this.port = port;
             this.configFile = configFile;
@@ -58,7 +62,56 @@ public class Server implements Runnable {
         service.shutdown();
 
     }
-    private void loadFromFile() throws IllegalArgumentException{
-        return;
+    public void loadFromFile() throws IOException,ClassNotFoundException{
+        if(configFile.isEmpty() || configFile == null){
+            configFile = "default.ser";
+        }
+        FileInputStream fileIn = new FileInputStream(configFile);
+        ObjectInputStream in = new ObjectInputStream(fileIn);
+        store = (ItemStore) in.readObject();
+        in.close();
+        fileIn.close();
+    }
+    public void saveToFile() throws IOException{
+        if(configFile.isEmpty() || configFile == null){
+            configFile = "default.ser";
+        }
+        FileOutputStream fileOut = new FileOutputStream(configFile);
+        ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        out.writeObject(store);
+        out.close();
+        fileOut.close();
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public int getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(int backlog) {
+        this.backlog = backlog;
+    }
+
+    public String getConfigFile() {
+        return configFile;
+    }
+
+    public void setConfigFile(String configFile) {
+        this.configFile = configFile;
+    }
+
+    public ItemStore getStore() {
+        return store;
+    }
+
+    public void setStore(ItemStore store) {
+        this.store = store;
     }
 }

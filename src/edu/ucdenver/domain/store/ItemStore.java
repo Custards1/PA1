@@ -4,11 +4,12 @@ import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.category.Catagory;
 import edu.ucdenver.domain.products.Product;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ItemStore extends UserStore {
+public class ItemStore extends UserStore implements Serializable {
     private ArrayList<Product> products;
     private ArrayList<Catagory> catagories;
     private HashMap<String,Integer> catagoryNames;

@@ -4,10 +4,12 @@ package edu.ucdenver.domain.store;
 import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.order.Order;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-public class UserStore {
+public class UserStore  implements Serializable  {
     ArrayList<User> users;
     ArrayList<Order> Order;
     HashMap<String,Integer> userNameMap;
@@ -60,8 +62,17 @@ public class UserStore {
         User admin = this.users.get(userNameMap.get(user.getEmail()));
         return admin.isAdmin();
     }
-    public ArrayList<User> allUsers(User admin){
-        return null;
+    public synchronized ArrayList<User>  allUsers(User admin) throws IllegalArgumentException {
+        if(!validAdminAuthentication(admin)){
+            throw new IllegalArgumentException();
+        }
+        ArrayList<User> users = new ArrayList<>();
+        for(Map.Entry<String,Integer> name : userNameMap.entrySet()){
+            if(!name.getKey().isEmpty()) {
+                users.add(this.users.get(name.getValue()));
+            }
+        }
+        return users;
     }
     public synchronized boolean addUser(User user) {
         if(validateUser(user)){

@@ -47,9 +47,9 @@ public class Request {
     public String toRaw() {
         StringBuilder builder = new StringBuilder();
         for (HashMap.Entry<String,String> entry : this.fields.entrySet()) {
-            builder.append(entry.getKey().replace("|","||"));
+            builder.append((entry.getKey().isEmpty()?" ":entry.getKey()).replace("|","||"));
             builder.append("|");
-            builder.append(entry.getValue().replace("|","||"));
+            builder.append((entry.getValue().isEmpty()?" ":entry.getValue()).replace("|","||"));
             builder.append("|");
         }
         for(HashMap<String,String> object : this.objs){
@@ -57,9 +57,9 @@ public class Request {
             StringBuilder innerBuilder = new StringBuilder();
             int fields = 0;
             for (HashMap.Entry<String,String> entry : object.entrySet()) {
-                innerBuilder.append(entry.getKey().replace("|","||"));
+                innerBuilder.append((entry.getKey().isEmpty()?" ":entry.getKey()).replace("|","||"));
                 innerBuilder.append("|");
-                innerBuilder.append(entry.getValue().replace("|","||"));
+                innerBuilder.append((entry.getValue().isEmpty()?" ":entry.getValue()).replace("|","||"));
                 innerBuilder.append("|");
                 fields++;
             }

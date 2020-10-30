@@ -1,9 +1,10 @@
 
 package edu.ucdenver.domain.client;
 
+import edu.ucdenver.domain.order.Order;
 import edu.ucdenver.domain.request.Request;
+import edu.ucdenver.domain.request.RequestClientProtocol;
 import edu.ucdenver.domain.request.RequestType;
-import edu.ucdenver.domain.request.Requestable;
 import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.category.Catagory;
 import edu.ucdenver.domain.products.*;
@@ -16,7 +17,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Client {
+public class Client implements RequestClientProtocol {
     private String host;
     private int port;
     private Socket socket;
@@ -80,7 +81,7 @@ public class Client {
 
 
             try {
-                recived = okOrDie();
+                recived = okOrDie(this,input);
                 try {
                     String is_admin_raw = recived.getField("admin");
                     this.isAdmin = is_admin_raw.equals("true");
@@ -101,72 +102,13 @@ public class Client {
             throw ioe;
         }
     }
-    public void sendBlankRequest(RequestType type) throws ClientError {
-        Request to_send = new Request(type,null,null);
-        try {
-            to_send.send(output);
-        }
-        catch (IOException e){
-            shutdown();
-            throw new ClientError(ClientErrorType.INVALID_SOCKET);
-        }
-    }
-    public void sendMinimalRequest(RequestType type,HashMap<String,String> fields) throws ClientError {
-
-        Request to_send = new Request(type,fields,null);
-        try {
-            to_send.send(output);
-        }
-        catch (IOException e){
-            shutdown();
-            throw new ClientError(ClientErrorType.INVALID_SOCKET);
-        }
-    }
-    public void sendMinimalRequestable(RequestType type, Requestable requestable) throws ClientError {
-        ArrayList<HashMap<String,String>> objs = new ArrayList<>();
-        objs.add(requestable.asRequestable());
-        Request to_send = new Request(type,null,objs);
-        try {
-            to_send.send(output);
-        }
-        catch (IOException e){
-            shutdown();
-            throw new ClientError(ClientErrorType.INVALID_SOCKET);
-        }
-    }
-    public void sendModerateRequestable(RequestType type,HashMap<String,String> fields ,Requestable requestable) throws ClientError {
-        ArrayList<HashMap<String,String>> objs = new ArrayList<>();
-        objs.add(requestable.asRequestable());
-        Request to_send = new Request(type,fields,objs);
-        try {
-            to_send.send(output);
-        }
-        catch (IOException e){
-            shutdown();
-            throw new ClientError(ClientErrorType.INVALID_SOCKET);
-        }
-    }
-    public < T extends Requestable> void  sendRequestable(RequestType type, HashMap<String,String> fields, ArrayList<T> requestable) throws ClientError {
-        ArrayList<HashMap<String,String>> objs = new ArrayList<>();
-        for(T req : requestable){
-            objs.add(req.asRequestable());
-        }
-        Request to_send = new Request(type,fields,objs);
-        try {
-            to_send.send(output);
-        }
-        catch (IOException e){
-            shutdown();
-            throw new ClientError(ClientErrorType.INVALID_SOCKET);
-        }
-    }
 
     public boolean isAdmin() {
         return isAdmin;
     }
     public Catagory getDefaultCatagory() throws ClientError {
-        sendBlankRequest(RequestType.GET_DEFAULT_CATAGORY);
-        Request r = okOrDie();
+        RequestClientProtocol.sendBlankRequest(this,RequestType.GET_DEFAULT_CATAGORY,output);
+        Request r = okOrDie(this,input);
         
         Catagory res = new Catagory();
         try {
@@ -183,10 +125,10 @@ public class Client {
         if(!this.isAdmin|| p == null){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
+
+        RequestClientProtocol.sendMinimalRequestable(this,RequestType.ADD_PRODUCT_TO_CATALOG,p,output);
        
-        sendMinimalRequestable(RequestType.ADD_PRODUCT_TO_CATALOG,p);
-       
-        Request r = okOrDie();
+        Request r = okOrDie(this,input);
        
     }
     public ArrayList<Product> search(String text) throws ClientError {
@@ -195,8 +137,8 @@ public class Client {
         }
         HashMap<String,String> fields = new HashMap<>();
         fields.put("search",text);
-        sendMinimalRequest(RequestType.SEARCH,fields);
-        Request r = okOrDie();
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.SEARCH,fields,output);
+        Request r = okOrDie(this,input);
         ArrayList<Product> products = new ArrayList<>();
         for(HashMap<String,String> requestable : r.getObjs()){
             products.add(parseProduct(requestable));
@@ -211,8 +153,8 @@ public class Client {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("catagory",catagoryName);
         fields.put("product",productid);
-        sendMinimalRequest(RequestType.ADD_CATAGORY_TO_PRODUCT,fields);
-        Request r = okOrDie();
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.ADD_CATAGORY_TO_PRODUCT,fields,output);
+        Request r = okOrDie(this,input);
         ArrayList<HashMap<String,String>> objs = r.getObjs();
         if(objs == null || objs.isEmpty()) {
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
@@ -234,8 +176,8 @@ public class Client {
         }
 
         User self = new User(email,name,password);
-       sendMinimalRequestable(RequestType.ADD_ADMIN_USER,self);
-        Request r = okOrDie();
+        RequestClientProtocol.sendMinimalRequestable(this,RequestType.ADD_ADMIN_USER,self,output);
+        Request r = okOrDie(this,input);
     }
     public void removeUser(String email)throws ClientError{
         if(!this.isAdmin){
@@ -244,7 +186,7 @@ public class Client {
 //TODO
        //
        // sendMinimalRequestable(RequestType.ADD_ADMIN_USER,self);
-        //Request r = okOrDie();
+        //Request r = okOrDie(this,input);
     }
     public Product addCatagoryToProductByName(String catagoryName,String productName)throws ClientError{
         StringBuilder id = new StringBuilder();
@@ -260,9 +202,9 @@ public class Client {
        
         HashMap<String,String> fields = new HashMap<>();
         fields.put("product-to-remove",productId);
-        sendMinimalRequest(RequestType.REMOVE_PRODUCT_FROM_CATALOG,fields);
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.REMOVE_PRODUCT_FROM_CATALOG,fields,output);
   
-        Request r = okOrDie();
+        Request r = okOrDie(this,input);
       
     }
     public void removeProductFromCatalogByName(String productName) throws ClientError {
@@ -279,8 +221,8 @@ public class Client {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("catagory",catagoryName);
         fields.put("product",productid);
-        sendMinimalRequest(RequestType.REMOVE_CATAGORY_FROM_PRODUCT,fields);
-        Request r = okOrDie();
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.REMOVE_CATAGORY_FROM_PRODUCT,fields,output);
+        Request r = okOrDie(this,input);
         ArrayList<HashMap<String,String>> objs = r.getObjs();
         if(objs == null || objs.isEmpty()) {
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
@@ -334,8 +276,8 @@ public class Client {
     public ArrayList<Product> getProductsInCatagory(String catagoryName) throws ClientError {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("catagory",catagoryName);
-        sendMinimalRequest(RequestType.GET_PRODUCTS_FROM_CATAGORY,fields);
-        Request r = okOrDie();
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.GET_PRODUCTS_FROM_CATAGORY,fields,output);
+        Request r = okOrDie(this,input);
         ArrayList<Product> products= new ArrayList<>();
         for(HashMap<String,String> requested : r.getObjs()){
             products.add(parseProduct(requested));
@@ -345,9 +287,9 @@ public class Client {
     public ArrayList<Product> getProductsInDefaultCatagory() throws ClientError {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("default","true");
-        sendMinimalRequest(RequestType.GET_PRODUCTS_FROM_CATAGORY,fields);
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.GET_PRODUCTS_FROM_CATAGORY,fields,output);
        
-        Request r = okOrDie();
+        Request r = okOrDie(this,input);
       
         ArrayList<Product> products= new ArrayList<>();
         for(HashMap<String,String> requested : r.getObjs()){
@@ -360,7 +302,7 @@ public class Client {
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
-        sendBlankRequest(RequestType.TERMINATE);
+        RequestClientProtocol.sendBlankRequest(this,RequestType.TERMINATE,output);
     }
     public void addCatagory(String catagory) throws ClientError {
             if(!isAdmin){
@@ -369,9 +311,9 @@ public class Client {
            
             HashMap<String,String> cat = new HashMap<>();
             cat.put("catagory",catagory);
-            sendMinimalRequest(RequestType.CREATE_CATAGORY,cat);
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.CREATE_CATAGORY,cat,output);
        
-           Request r = okOrDie();
+           Request r = okOrDie(this,input);
     }
     public void removeCatagory(String catagory) throws ClientError {
         if(!isAdmin){
@@ -379,14 +321,14 @@ public class Client {
         }
         HashMap<String,String> cat = new HashMap<>();
         cat.put("catagory-to-remove",catagory);
-        sendMinimalRequest(RequestType.REMOVE_CATAGORY,cat);
-        Request r = okOrDie();
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.REMOVE_CATAGORY,cat,output);
+        Request r = okOrDie(this,input);
     }
     public ArrayList<Catagory> allCatagories() throws ClientError {
-     
-        sendBlankRequest(RequestType.GET_ALL_CATAGORIES);
+
+        RequestClientProtocol.sendBlankRequest(this,RequestType.GET_ALL_CATAGORIES,output);
         
-        Request r = okOrDie();
+        Request r = okOrDie(this,input);
      
         ArrayList<Catagory> catagories = new ArrayList<>();
         for(HashMap<String,String> obj : r.getObjs()){
@@ -405,10 +347,37 @@ public class Client {
         }
         return catagories;
     }
+    public ArrayList<User> allUsers() throws ClientError {
+        if(!this.isAdmin){
+            throw new ClientError(ClientErrorType.INVALID_ACCESS);
+        }
+        RequestClientProtocol.sendBlankRequest(this,RequestType.GET_ALL_USERS,output);
+        Request r = okOrDie(this,input);
+        ArrayList<User> users = new ArrayList<>();
+        for(HashMap<String,String> obj : r.getObjs()){
+            if(obj == null){
+                continue;
+            }
+            try {
+
+                User user = new User();
+                user.fromRequestable(obj);
+                users.add(user);
+            }
+            catch (Exception ignored){
+
+            }
+
+        }
+        return users;
+    }
+    public Order currentOrder() throws ClientError {
+       return null;
+    }
     public ArrayList<Product> allProducts() throws ClientError {
 
-        sendBlankRequest(RequestType.GET_ALL_PRODUCTS);
-        Request r = okOrDie();
+        RequestClientProtocol.sendBlankRequest(this,RequestType.GET_ALL_PRODUCTS,output);
+        Request r = okOrDie(this,input);
         ArrayList<Product> products = new ArrayList<>();
         for(HashMap<String,String> obj : r.getObjs()){
             if(obj == null){
@@ -432,35 +401,10 @@ public class Client {
         }
         HashMap<String,String> cat = new HashMap<>();
         cat.put("catagory",catagory);
-        sendMinimalRequest(RequestType.SET_DEFAULT_CATAGORY,cat);
-        Request r = okOrDie();
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.SET_DEFAULT_CATAGORY,cat,output);
+        Request r = okOrDie(this,input);
     }
-    private Request okOrDie()throws ClientError{
-        
-        if(input == null){
-            
-            throw new ClientError();
-        }
-        Request recived = new Request(input);
-        
-        if(recived.getType() == RequestType.ERROR){
-            ClientErrorType error = ClientErrorType.UNKNOWN;
-            try {
-                error = ClientErrorType.valueOf(recived.getField("error-type"));
-            }
-            catch (IllegalArgumentException e){
-
-            }
-           
-            throw new ClientError(error);
-        }
-        else if(recived.getType() != RequestType.OK) {
-         
-            throw new ClientError(ClientErrorType.UNKNOWN);
-        }
-        return recived;
-
-    }
+   
 
 
     /*
