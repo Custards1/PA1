@@ -1,11 +1,12 @@
 package edu.ucdenver.domain.category;
 
 import edu.ucdenver.domain.Request;
+import edu.ucdenver.domain.order.Order;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CatagoryListing {
+public class CatagoryParser {
     public static String intoRaw(ArrayList<String> listing) {
         StringBuilder bob = new StringBuilder();
         for (String entry : listing) {
