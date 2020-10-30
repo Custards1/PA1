@@ -1,9 +1,7 @@
 package edu.ucdenver.domain;
 
-import edu.ucdenver.domain.category.CatagoryParser;
-import edu.ucdenver.domain.order.Order;
+import edu.ucdenver.domain.request.Requestable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class User implements Requestable {
