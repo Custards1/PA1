@@ -47,11 +47,13 @@ public class Adminclient {
     public PasswordField passwordFieldLogin;
     public Button loginButton;
     public Button resetButton;
+    public TextField emailField;
 
     private Client client = null;
+    private User user;
 
     public Adminclient(){
-        User user = new User("admin@admin.org","admin","admin3234");
+        this.user = new User("admin@admin.org","admin","admin3234");
         try {
             client = new Client("127.0.1.1", 8080, user, false);
         }
@@ -145,13 +147,23 @@ public class Adminclient {
 
     public void loginUser(ActionEvent actionEvent) {
         //call in constructor
+        this.user = new User("admin@admin.org",this.usernameFieldLogin.getText(),this.passwordFieldLogin.getText());
     }
 
     public void resetTextFieldsLogin(ActionEvent actionEvent) {
     }
 
     public void addAdmin(ActionEvent actionEvent) {
-        
+        try {
+            client.createAdmin(this.emailField.getText(), this.usernameField.getText(), this.passwordField.getText());
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Admin created");
+            alert.show();
+        }
+        catch (Exception e) {
+            System.out.printf("Execptions %s", e.getMessage());
+            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            eAlert.show();
+        }
         cleanAddUser();
     }
 
