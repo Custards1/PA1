@@ -25,8 +25,9 @@ public class Adminclient {
     public Button saveAndClose;
     public TextField usernameField;
     public PasswordField passwordField;
-    public ToggleButton adminToggle;
-    public ToggleGroup adminFlag;
+    public Button addAdminClick;
+    public Button addUserClick;
+    //public ToggleGroup adminFlag;
     public TextField prodnameField;
     public Button updateCats;
     public ComboBox prodCatSelBox;
@@ -60,11 +61,11 @@ public class Adminclient {
     }
 
     private void cleanCatManage(){
-        this.catNameField.setText("");
+        this.catNameField.setText(" ");
     }
     private void cleanAddUser(){
-        this.usernameField.setText("");
-        this.passwordField.setText("");
+        this.usernameField.setText(" ");
+        this.passwordField.setText(" ");
     }
 
     public void addUserClick(Event event) {
@@ -84,6 +85,7 @@ public class Adminclient {
     }
 
     public void toggleAdmin(ActionEvent actionEvent) {
+        //change to add admin, add user
     }
 
     public void updatedCategories(ActionEvent actionEvent) {
@@ -142,8 +144,18 @@ public class Adminclient {
     }
 
     public void loginUser(ActionEvent actionEvent) {
+        //call in constructor
     }
 
     public void resetTextFieldsLogin(ActionEvent actionEvent) {
+    }
+
+    public void addAdmin(ActionEvent actionEvent) {
+        
+        cleanAddUser();
+    }
+
+    public void addUser(ActionEvent actionEvent) {
+        cleanAddUser();
     }
 }
