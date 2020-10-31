@@ -1,5 +1,6 @@
 package edu.ucdenver.domain.client;
 
+import edu.ucdenver.domain.order.Order;
 import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.category.Catagory;
 import edu.ucdenver.domain.products.*;
@@ -212,6 +213,24 @@ public class ClientTest {
                 printer(product);
             }
             System.out.println();
+
+            Order current = client.currentOrder();
+            System.out.printf("Current order id is %s\n",current.getId());
+            client.addProductToOrder(phone);
+            client.addProductToOrder(phone);
+            client.removeProductFromOrder(phone);
+            Order fin = client.finalizeOrder();
+            System.out.printf("Final order id is %s\n",current.getId());
+
+            int i =0;
+            for(Order fine : client.allFinalizedOrders()){
+                System.out.printf("Got order %d\n",i++);
+                for(String p : fine.getProducts()){
+                    System.out.printf("Got product %s\n",p);
+                }
+            }
+
+
             //ADMIN REQUIRED
             //shuting down server
             client.askToShutdown();

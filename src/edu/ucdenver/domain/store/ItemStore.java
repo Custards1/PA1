@@ -133,7 +133,22 @@ public class ItemStore extends UserStore implements Serializable {
         return product;
     }
 
-    private Product getProduct(String productId) throws IllegalArgumentException {
+    public Product getProduct(String productId) throws IllegalArgumentException {
+        Integer h = productNames.get(productId);
+        if(h != null) {
+            Product k = products.get(h);
+            if(k!=null){
+                return k;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+    public Product getProductByName(String productName) throws IllegalArgumentException {
+        StringBuilder id = new StringBuilder();
+        for(String word : productName.split("\\s")) {
+            id.append(word);
+        }
+        String productId = id.toString();
         Integer h = productNames.get(productId);
         if(h != null) {
             Product k = products.get(h);

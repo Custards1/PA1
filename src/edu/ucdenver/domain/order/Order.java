@@ -13,10 +13,24 @@ public class Order implements Requestable {
     private ArrayList<String> products;
     private LocalDate finalization;
     private boolean finalized;
+    public String getId(){
+        return orderId;
+    }
+    public void setId(String id){
+        orderId=id;
+    }
     public Order () {
+
         products = new ArrayList<>();
         finalized = false;
         orderId = "";
+        finalization = LocalDate.of(2020,12,6);
+    }
+    public Order (String orderId) {
+
+        products = new ArrayList<>();
+        finalized = false;
+        this.orderId = orderId;
         finalization = LocalDate.of(2020,12,6);
     }
     public HashMap<String, String> asRequestable() {

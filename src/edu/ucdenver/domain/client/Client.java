@@ -1,6 +1,7 @@
 
 package edu.ucdenver.domain.client;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import edu.ucdenver.domain.order.Order;
 import edu.ucdenver.domain.request.Request;
 import edu.ucdenver.domain.request.RequestClientProtocol;
@@ -170,6 +171,7 @@ public class Client implements RequestClientProtocol {
             return p;
         }
     }
+
     public void createAdmin(String email,String name,String password)throws ClientError{
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
@@ -183,7 +185,7 @@ public class Client implements RequestClientProtocol {
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
-//TODO
+        //TODO
        //
        // sendMinimalRequestable(RequestType.ADD_ADMIN_USER,self);
         //Request r = okOrDie(this,input);
@@ -371,8 +373,94 @@ public class Client implements RequestClientProtocol {
         }
         return users;
     }
+    public void addAnotherUser(User u) throws ClientError{
+        if(!this.isAdmin){
+            throw new ClientError(ClientErrorType.INVALID_ACCESS);
+        }
+        u.setAdmin(false);
+        RequestClientProtocol.sendMinimalRequestable(this,RequestType.CREATE_USER,u,output);
+        Request r = okOrDie(this,input);
+    }
     public Order currentOrder() throws ClientError {
-       return null;
+        RequestClientProtocol.sendBlankRequest(this,RequestType.CURRENT_ORDER,output);
+        Request r = okOrDie(this,input);
+        if(r.getObjs().isEmpty()){
+            throw new ClientError(ClientErrorType.INVALID_RESOURCE);
+        }
+        try {
+           Order order = new Order();
+            order.fromRequestable(r.getObjs().get(0));
+            return order;
+        }
+        catch (Exception ignored){
+            throw new ClientError(ClientErrorType.INVALID_RESOURCE);
+        }
+    }
+    public ArrayList<Order> clientsOrders() throws ClientError {
+        RequestClientProtocol.sendBlankRequest(this,RequestType.GET_USER_ORDERS,output);
+        ArrayList<Order> orders = new ArrayList<>();
+        Request r = okOrDie(this,input);
+        for(HashMap<String,String> objs : r.getObjs() ){
+            Order temp = new Order();
+            temp.fromRequestable(objs);
+            orders.add(temp);
+        }
+        return orders;
+    }
+    public Order finalizeOrder() throws ClientError {
+        RequestClientProtocol.sendBlankRequest(this,RequestType.FINALIZE_ORDER,output);
+
+        Request r = okOrDie(this,input);
+        if(r.getObjs().isEmpty()){
+            throw new ClientError(ClientErrorType.INVALID_RESOURCE);
+        }
+        Order order = new Order();
+        order.fromRequestable(r.getObjs().get(0));
+        return order;
+    }
+    //returns updated order
+    public Order addProductToOrder(Product p) throws ClientError {
+        HashMap<String,String> fields = new HashMap<>();
+        fields.put("product",p.getProductId());
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.ADD_PRODUCT_TO_ORDER,fields,output);
+        Request r = okOrDie(this,input);
+        if(r.getObjs().isEmpty()){
+            throw new ClientError(ClientErrorType.INVALID_RESOURCE);
+        }
+        Order order = new Order();
+        order.fromRequestable(r.getObjs().get(0));
+        return order;
+    }
+    //needs admin access
+    public ArrayList<Order> allFinalizedOrders() throws ClientError {
+        if(!this.isAdmin){
+            throw new ClientError(ClientErrorType.INVALID_ACCESS);
+        }
+        RequestClientProtocol.sendBlankRequest(this,RequestType.GET_FINALIZED_ORDERS,output);
+        Request r = okOrDie(this,input);
+        if(r.getObjs().isEmpty()){
+            throw new ClientError(ClientErrorType.INVALID_RESOURCE);
+        }
+        ArrayList<Order> orders = new ArrayList<>();
+        for(HashMap<String,String> objs : r.getObjs() ){
+            Order temp = new Order();
+            temp.fromRequestable(objs);
+            orders.add(temp);
+        }
+        return orders;
+    }
+    //returns updated order
+    public Order removeProductFromOrder(Product p) throws ClientError {
+        HashMap<String,String> fields = new HashMap<>();
+        fields.put("product",p.getProductId());
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.REMOVE_PRODUCT_FROM_ORDER,fields,output);
+        Request r = okOrDie(this,input);
+        if(r.getObjs().isEmpty()){
+            throw new ClientError(ClientErrorType.INVALID_RESOURCE);
+        }
+        Order order = new Order();
+        order.fromRequestable(r.getObjs().get(0));
+        return order;
     }
     public ArrayList<Product> allProducts() throws ClientError {
 
