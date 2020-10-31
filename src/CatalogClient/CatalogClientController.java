@@ -1,11 +1,11 @@
-package CatagoryClient;
+package CatalogClient;
 
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
-public class CatagoryClientController {
+public class CatalogClientController {
     public Tab browseTab;
     public ListView browseCategories;
     public ListView browseProductsInCategory;
