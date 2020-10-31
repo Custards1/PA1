@@ -82,7 +82,8 @@ public class UserStore  implements Serializable  {
         return users;
     }
     public synchronized boolean addUser(User user) {
-        if(validateUser(user)){
+        if(!validUserConstruct(user)){
+            System.out.println("Invalid user");
             return false;
         }
         addPotentiallyPrivilagedUser(user,false);

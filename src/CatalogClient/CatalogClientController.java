@@ -1,9 +1,13 @@
 package CatalogClient;
 
+import edu.ucdenver.domain.client.Client;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 public class CatalogClientController {
     public Tab browseTab;
@@ -29,13 +33,15 @@ public class CatalogClientController {
     public PasswordField passwordFieldLogin;
     public Button loginButton;
     public Button resetButton;
-
+    private Client client;
     public void browseTabSel(Event event) {
     }
 
     public void addToOrder(ActionEvent actionEvent) {
     }
-
+    public void setClient(Client client){
+        this.client = client;
+    }
     public void searchTabSel(Event event) {
     }
 
@@ -44,7 +50,10 @@ public class CatalogClientController {
 
     public void selectProductFromSearch(MouseEvent mouseEvent) {
     }
+    public void login(ActionEvent event){
 
+
+    }
     public void orderTabSel(Event event) {
     }
 
@@ -58,6 +67,8 @@ public class CatalogClientController {
     }
 
     public void loginUser(ActionEvent actionEvent) {
+        Stage stageTheLabelBelongs = (Stage) loginButton.getScene().getWindow();
+
     }
 
     public void resetTextFieldsLogin(ActionEvent actionEvent) {

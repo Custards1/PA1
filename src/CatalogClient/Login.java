@@ -1,2 +1,5 @@
-package CatalogClient;public class Login {
+package CatalogClient;
+
+public class Login {
+
 }

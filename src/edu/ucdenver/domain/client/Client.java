@@ -68,6 +68,7 @@ public class Client implements RequestClientProtocol {
         ArrayList<HashMap<String,String>> re = new ArrayList();
         re.add(self.asRequestable());
         Request to_send = new Request(signup?RequestType.CREATE_USER:RequestType.AUTHENTICATE_USER,null,re);
+        System.out.printf("Tryina send %s\n",to_send.toRaw());
         try {
             try{
                 this.socket = new Socket(host,port);
@@ -78,7 +79,7 @@ public class Client implements RequestClientProtocol {
             catch (IOException e){
                 throw new ClientError(ClientErrorType.INVALID_SOCKET);
             }
-
+            System.out.println("Snt");
 
             try {
                 recived = okOrDie(this,input);

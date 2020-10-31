@@ -248,6 +248,14 @@ public class ClientTest {
     }
 
     public static void main(String[] args) {
+        try {
+            Client client = new Client("127.0.1.1",8080,new User("blakemin@comcast.net","Brownbla","Bornwefw12"),true);
+            System.out.println("Good");
+            client.shutdown();
+        }
+        catch (Exception e){
+            System.out.printf("Bad %s\n",e.getMessage());
+        }
         LookAtThisFunction();
     }
 }

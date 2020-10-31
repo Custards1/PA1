@@ -44,16 +44,18 @@ public class ServerTask implements Runnable, RequestServerProtocol {
     //Used to authenicate incoming user;
     private User authorize(BufferedReader input, PrintWriter output) throws ClientError {
         Request incoming = null;
+        System.out.println("Tryina auth");
         try{
            incoming = new Request(input);
         } catch (ClientError e){
            throw  e;
         }
+        System.out.printf("Gotten %s\n",incoming.toRaw());
         if(incoming.getType()== RequestType.AUTHENTICATE_USER ||incoming.getType() == RequestType.CREATE_USER) {
             ArrayList<HashMap<String,String>> objs = incoming.getObjs();
-        
+            System.out.println("is ok");
             if(objs.isEmpty()){
-        
+                System.out.println("OBJS IS EMPTY ");
               RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_REQUEST);
               throw new ClientError((ClientErrorType.INVALID_REQUEST));
             }
@@ -61,20 +63,21 @@ public class ServerTask implements Runnable, RequestServerProtocol {
                 User user = null;
                 try {
                     user = new User(objs.get(0));
+                    System.out.println("user is ok");
 
                 }
                 catch (IllegalArgumentException e){
-               
+                    System.out.println("user is bad");
                     RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_REQUEST);
                     throw new ClientError((ClientErrorType.INVALID_REQUEST));
                 }
                 if(!user.validEmail()){
-      
+                    System.out.println("user is bad email");
                     RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_EMAIL);
                     throw new ClientError((ClientErrorType.INVALID_EMAIL));
                 }
                 if(!user.validPassword()){
-           
+                    System.out.println("user is bad password");
                     RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_PASSWORD);
                     throw new ClientError((ClientErrorType.INVALID_PASSWORD));
                 }
@@ -93,11 +96,13 @@ public class ServerTask implements Runnable, RequestServerProtocol {
                     return user;
                 }
                 else {
+                    System.out.println("user is maybe ok");
                     user.setAdmin(false);
                     if (!this.userStore.addUser(user)){
-                       
+                        System.out.println("user is No bueno");
                         throw new ClientError(ClientErrorType.INVALID_USER);
                     }
+                    System.out.println("added");
                     RequestServerProtocol.sendOneHotRequest(output,RequestType.OK,"admin","false");
                     return user;
                 }
