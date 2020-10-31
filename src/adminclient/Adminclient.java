@@ -75,7 +75,7 @@ public class Adminclient {
         this.passwordFieldLogin.setText(" ");
     }
 
-    //public void addUserClick(Event event) { }
+    public void addUserClick(Event event) { }
 
     public void prodManClick(Event event) {
     }
@@ -146,7 +146,7 @@ public class Adminclient {
     public void ordReportClck(Event event) {
     }
 
-    //public void checkAuthLogin(Event event) { }
+    public void checkAuthLogin(Event event) { }
 
     public void loginUser(ActionEvent actionEvent) {
         //call in constructor
