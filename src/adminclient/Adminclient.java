@@ -5,6 +5,14 @@ import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
+import edu.ucdenver.domain.user.User;
+import edu.ucdenver.domain.category.Catagory;
+import edu.ucdenver.domain.products.*;
+import edu.ucdenver.domain.client.*;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 //File Upload Test
 
 public class Adminclient {
@@ -38,6 +46,18 @@ public class Adminclient {
     public PasswordField passwordFieldLogin;
     public Button loginButton;
     public Button resetButton;
+
+    private Client client = null;
+
+    public Adminclient(){
+        User user = new User("admin@admin.org","admin","admin3234");
+        try {
+            client = new Client("127.0.1.1", 8080, user, false);
+        }
+        catch (Exception e){
+            System.out.printf("Execptions %s",e.getMessage());
+        }
+    }
 
     public void addUserClick(Event event) {
     }
