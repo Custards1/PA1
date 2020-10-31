@@ -68,10 +68,14 @@ public class Adminclient {
     private void cleanAddUser(){
         this.usernameField.setText(" ");
         this.passwordField.setText(" ");
+        this.emailField.setText(" ");
+    }
+    private void cleanLogin(){
+        this.usernameFieldLogin.setText(" ");
+        this.passwordFieldLogin.setText(" ");
     }
 
-    public void addUserClick(Event event) {
-    }
+    //public void addUserClick(Event event) { }
 
     public void prodManClick(Event event) {
     }
@@ -142,15 +146,18 @@ public class Adminclient {
     public void ordReportClck(Event event) {
     }
 
-    public void checkAuthLogin(Event event) {
-    }
+    //public void checkAuthLogin(Event event) { }
 
     public void loginUser(ActionEvent actionEvent) {
         //call in constructor
         this.user = new User("admin@admin.org",this.usernameFieldLogin.getText(),this.passwordFieldLogin.getText());
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Loged in");
+        alert.show();
+        cleanLogin();
     }
 
     public void resetTextFieldsLogin(ActionEvent actionEvent) {
+        cleanLogin();
     }
 
     public void addAdmin(ActionEvent actionEvent) {
