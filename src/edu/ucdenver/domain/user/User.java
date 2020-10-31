@@ -25,6 +25,12 @@ public class User implements Requestable {
     public User(HashMap<String,String> requestable) throws IllegalArgumentException {
         fromRequestable(requestable);
     }
+    public String getOrderId(int id){
+        return  getEmail()+Integer.toString(id);
+    }
+    public String getCurrentOrderId(){
+        return  getEmail()+Integer.toString(getOrders());
+    }
     public void clear(){
         this.email = new String();
         this.password = new String();

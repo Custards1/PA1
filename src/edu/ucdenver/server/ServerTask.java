@@ -1,5 +1,6 @@
 package edu.ucdenver.server;
 
+import edu.ucdenver.domain.order.Order;
 import edu.ucdenver.domain.request.*;
 import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.category.Catagory;
@@ -148,7 +149,80 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
+    private RequestType createAnotherUser(Request incoming, BufferedReader input, PrintWriter output) {
+        if(incoming.getObjs().isEmpty()){
+            try {
+                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_RESOURCE);
+                return RequestType.OK;
+            }
+            catch (Exception ee){
+                return RequestType.ERROR;
+            }
+        }
+        User user = null;
+        try {
+            user = new User(incoming.getObjs().get(0));
+
+        }
+        catch (IllegalArgumentException e){
+
+            try {
+                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_RESOURCE);
+                return RequestType.OK;
+            }
+            catch (Exception ee){
+                return RequestType.ERROR;
+            }
+        }
+        if(!user.validEmail()){
+
+            try {
+                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_EMAIL);
+                return RequestType.OK;
+            }
+            catch (Exception ee){
+                return RequestType.ERROR;
+            }
+        }
+        if(!user.validPassword()){
+            try {
+                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_PASSWORD);
+                return RequestType.OK;
+            }
+            catch (Exception ee){
+                return RequestType.ERROR;
+            }
+        }
+        if (!this.userStore.addUser(user)){
+            try {
+                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_USER);
+                return RequestType.OK;
+            }
+            catch (Exception ee){
+                return RequestType.ERROR;
+            }
+
+        }
+
+        try {
+            RequestServerProtocol.sendOneHotRequest(output,RequestType.OK,"admin","false");
+            return RequestType.OK;
+        }
+        catch (Exception ee){
+            try {
+                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_USER);
+                return RequestType.OK;
+            }
+            catch (Exception eer){
+                return RequestType.ERROR;
+            }
+        }
+
+    }
+
+
     private RequestType addAdminUser(Request incoming,BufferedReader input,PrintWriter output){
+        
         if(incoming.getObjs().isEmpty()){
             try {
                 RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_RESOURCE);
@@ -616,13 +690,129 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             return RequestType.ERROR;
         }
     }
+    private RequestType getCurrentOrder(Request incoming, BufferedReader input, PrintWriter output) {
+        try{
+            System.out.println("Sent");
+            Requestable r  = userStore.getCurrentOrder(connectedUser);
+            System.out.println("Hoobla");
+            RequestServerProtocol.sendRequestable(output,RequestType.OK,r);
+            System.out.println("Sending");
+            return RequestType.OK;
+        }
+        catch (Exception e){
+            return RequestType.ERROR;
+        }
+    }
+
+    private RequestType removeProductFromOrder(Request incoming, BufferedReader input, PrintWriter output) {
+        String temp = new String();
+        try {
+            temp = incoming.getTable().get("product");
+            if(temp == null||temp.isEmpty()){
+                try {
+                    RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_ACCESS);
+                    return RequestType.OK;
+                }
+                catch (Exception ee){
+                    return RequestType.ERROR;
+                }
+            }
+            userStore.getCurrentOrder(connectedUser).getProducts().remove(temp);
+            try {
+                RequestServerProtocol.sendRequestable(output,RequestType.OK,userStore.getCurrentOrder(connectedUser));
+                return RequestType.OK;
+            }
+            catch (ClientError e){
+                return RequestType.ERROR;
+            }
+
+        }
+        catch (IllegalArgumentException e){
+            try {
+                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_RESOURCE);
+                return RequestType.OK;
+            }
+            catch (Exception ee){
+                return RequestType.ERROR;
+            }
+        }
+    }
+
+    private RequestType addProductToOrder(Request incoming, BufferedReader input, PrintWriter output) {
+        String temp = new String();
+        try {
+            temp = incoming.getTable().get("product");
+            if(temp == null||temp.isEmpty()){
+                try {
+                    RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_ACCESS);
+                    return RequestType.OK;
+                }
+                catch (Exception ee){
+                    return RequestType.ERROR;
+                }
+            }
+            Product prod = userStore.getProduct(temp);
+            userStore.getCurrentOrder(connectedUser).getProducts().add(prod.getProductId());
+            try {
+                RequestServerProtocol.sendRequestable(output,RequestType.OK,userStore.getCurrentOrder(connectedUser));
+                return RequestType.OK;
+            }
+            catch (ClientError e){
+                return RequestType.ERROR;
+            }
+
+        }
+        catch (IllegalArgumentException e){
+            try {
+                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_RESOURCE);
+                return RequestType.OK;
+            }
+            catch (Exception ee){
+                return RequestType.ERROR;
+            }
+        }
+    }
+
+    private RequestType getUserOrders(Request incoming, BufferedReader input, PrintWriter output) {
+        try{
+            ArrayList<Order> r  = userStore.getUsersOrders(connectedUser);
+            sendList(output,RequestType.OK,r);
+            return RequestType.OK;
+        }
+        catch (Exception e){
+            return RequestType.ERROR;
+        }
+    }
+
+    private RequestType finalizeOrder(Request incoming, BufferedReader input, PrintWriter output) {
+        try{
+            Requestable r  = userStore.finalizeOrder(connectedUser);
+            RequestServerProtocol.sendRequestable(output,RequestType.OK,r);
+            return RequestType.OK;
+        }
+        catch (Exception e){
+            return RequestType.ERROR;
+        }
+    }
+    private RequestType getFinalizedOrders(Request incoming, BufferedReader input, PrintWriter output) {
+        try{
+            ArrayList<Order> r  = userStore.getFinalizedOrders(connectedUser);
+            sendList(output,RequestType.OK,r);
+            return RequestType.OK;
+        }
+        catch (Exception e){
+            return RequestType.ERROR;
+        }
+    }
 
     public RequestType reply(Request incoming,BufferedReader input,PrintWriter output) {
         Request toSend = null;
         String temp = new String();
         switch (incoming.getType()){
-            case OK: case AUTHENTICATE_USER: case ERROR:case CREATE_USER:case PICTURE:case NOOP:
+            case OK: case AUTHENTICATE_USER: case ERROR:case PICTURE:case NOOP:
                 break;
+            case CREATE_USER:
+                return createAnotherUser(incoming,input,output);
             case REMOVE_PRODUCT_FROM_CATALOG:
                 return removeProductFromCatalog(incoming,input,output);
             case ADD_ADMIN_USER:
@@ -652,9 +842,19 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             case TERMINATE:
                 return serverTerminate(incoming,input,output);
             case CURRENT_ORDER:
-
+                return getCurrentOrder(incoming,input,output);
             case GET_ALL_USERS:
                 return getAllUsers(output);
+            case FINALIZE_ORDER:
+                return finalizeOrder(incoming,input,output);
+            case GET_USER_ORDERS:
+                return getUserOrders(incoming,input,output);
+            case ADD_PRODUCT_TO_ORDER:
+                return addProductToOrder(incoming,input,output);
+            case REMOVE_PRODUCT_FROM_ORDER:
+                return removeProductFromOrder(incoming,input,output);
+            case GET_FINALIZED_ORDERS:
+                return getFinalizedOrders(incoming,input,output);
             default:break;
         }
         return RequestType.ERROR;
