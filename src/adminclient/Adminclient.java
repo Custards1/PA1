@@ -59,6 +59,14 @@ public class Adminclient {
         }
     }
 
+    private void cleanCatManage(){
+        this.catNameField.setText("");
+    }
+    private void cleanAddUser(){
+        this.usernameField.setText("");
+        this.passwordField.setText("");
+    }
+
     public void addUserClick(Event event) {
     }
 
@@ -96,9 +104,12 @@ public class Adminclient {
         }
         catch (Exception e){
             System.out.printf("Execptions %s",e.getMessage());
+            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            eAlert.show();
         }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory added");
         alert.show();
+        cleanCatManage();
     }
 
     public void deleteCategory(ActionEvent actionEvent) {
@@ -107,9 +118,12 @@ public class Adminclient {
         }
         catch (Exception e){
             System.out.printf("Execptions %s",e.getMessage());
+            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            eAlert.show();
         }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory deleted");
         alert.show();
+        cleanCatManage();
     }
 
     public void updateDefCat(ActionEvent actionEvent) {
