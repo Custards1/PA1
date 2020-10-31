@@ -24,6 +24,7 @@ public class CatalogClientMain extends Application {
         temp.setScene(new Scene(login));
         temp.showAndWait();
         LoginController l = fxmlLoader.getController();
+        //FAILING ON THIS
         User client = l.getUser();
         try {
 
