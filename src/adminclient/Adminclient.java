@@ -72,6 +72,7 @@ public class Adminclient {
     }
 
     public void saveCloseClick(ActionEvent actionEvent) {
+        client.shutdown();//close
     }
 
     public void toggleAdmin(ActionEvent actionEvent) {
@@ -90,9 +91,25 @@ public class Adminclient {
     }
 
     public void addCategory(ActionEvent actionEvent) {
+        try {
+            client.addCatagory(this.catNameField.getText());
+        }
+        catch (Exception e){
+            System.out.printf("Execptions %s",e.getMessage());
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory added");
+        alert.show();
     }
 
     public void deleteCategory(ActionEvent actionEvent) {
+        try {
+            client.removeCatagory(this.catNameField.getText());
+        }
+        catch (Exception e){
+            System.out.printf("Execptions %s",e.getMessage());
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory deleted");
+        alert.show();
     }
 
     public void updateDefCat(ActionEvent actionEvent) {
