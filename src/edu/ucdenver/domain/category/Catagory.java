@@ -10,8 +10,6 @@ import java.util.HashMap;
 public class Catagory implements Requestable {
     private String name;
     private ArrayList<String> products;
-
-
     private boolean isDefault;
     public Catagory(String name){
         this.name = name;

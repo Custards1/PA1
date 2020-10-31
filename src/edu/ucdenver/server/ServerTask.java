@@ -651,6 +651,8 @@ public class ServerTask implements Runnable, RequestServerProtocol {
               return getDefaultCatagory(incoming,input,output);
             case TERMINATE:
                 return serverTerminate(incoming,input,output);
+            case CURRENT_ORDER:
+
             case GET_ALL_USERS:
                 return getAllUsers(output);
             default:break;

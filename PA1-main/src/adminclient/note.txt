@@ -1,3 +1,0 @@
-This is the admin client section, should be pretty obvious. Most things are
-safe to delete in the event of not being useful, if GUI-side needs changes/is missing anything
-just let me know. I went based on the descriptions on the project page.
