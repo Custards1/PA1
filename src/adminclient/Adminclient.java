@@ -101,20 +101,21 @@ public class Adminclient {
     public void addCategory(ActionEvent actionEvent) {
         try {
             client.addCatagory(this.catNameField.getText());
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory added");
+            alert.show();
         }
         catch (Exception e){
             System.out.printf("Execptions %s",e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
         }
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory added");
-        alert.show();
         cleanCatManage();
     }
 
     public void deleteCategory(ActionEvent actionEvent) {
         try {
             client.removeCatagory(this.catNameField.getText());
+            cleanCatManage();
         }
         catch (Exception e){
             System.out.printf("Execptions %s",e.getMessage());
