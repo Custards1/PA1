@@ -1,26 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminclient.Adminclient">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.261" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminclient.Adminclient">
     <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <Tab fx:id="addUser" onSelectionChanged="#addUserClick" text="Add User">
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -59,7 +43,7 @@
         </Tab>
         <Tab fx:id="prodManagement" onSelectionChanged="#prodManClick" text="Product Management">
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="440.0" prefWidth="701.0">
-                <GridPane fx:id="gridPane" layoutX="150.0" layoutY="34.0" prefHeight="217.0" prefWidth="297.0">
+                <GridPane fx:id="gridPane" layoutX="150.0" layoutY="34.0" prefHeight="297.0" prefWidth="297.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -89,7 +73,7 @@
                <TextField fx:id="brandName" GridPane.columnIndex="1" />
                <TextField fx:id="prodnameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 </GridPane>
-                <GridPane layoutX="201.0" layoutY="262.0">
+                <GridPane layoutX="201.0" layoutY="330.0" prefHeight="35.0" prefWidth="200.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -98,7 +82,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <Button fx:id="addProdClick" mnemonicParsing="false" onAction="#addProduct" text="Add Product" GridPane.halignment="CENTER" />
-                    <Button fx:id="delProdClick" mnemonicParsing="false" onAction="#deleteProduct" text="Delete Product" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                    <Button fx:id="delProdClick" mnemonicParsing="false" onAction="#deleteProduct" prefWidth="96.0" text="Delete Product" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
                 </GridPane>
             <GridPane fx:id="extraTextFields" layoutX="453.0" layoutY="47.0" prefHeight="311.0" prefWidth="142.0">
               <columnConstraints>
