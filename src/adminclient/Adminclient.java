@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.application.*;
 
 import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.category.Catagory;
@@ -38,7 +39,7 @@ public class Adminclient {
     public Button addCatClick;
     public Button delCatClick;
     public Button setDefaultCat;
-    public ChoiceBox defCategorySel;
+    public ChoiceBox<String> defCategorySel;
     public ListView userOrderViews;
     public ListView userSelectOrderViews;
     public DatePicker dateSelOrderView;
@@ -62,7 +63,7 @@ public class Adminclient {
             System.out.printf("Execptions %s",e.getMessage());
         }
         this.prodCatSelBox = new ComboBox<>();
-        this.defCategorySel = new ChoiceBox();
+        this.defCategorySel = new ChoiceBox<>();
     }
 
     public void initialize(){
@@ -85,17 +86,15 @@ public class Adminclient {
 
     public void addUserClick(Event event) { }//tab
 
-    public void prodManClick(Event event) {//tab
-    }
+    public void prodManClick(Event event) { }//tab
 
-    public void catManClick(Event event) {//tab
-    }
+    public void catManClick(Event event) { }//tab
 
-    public void ordReportClick(Event event) {//tab
-    }
+    public void ordReportClick(Event event) { }//tab
 
     public void saveCloseClick(ActionEvent actionEvent) {
         client.shutdown();//close
+        Platform.exit();
     }
 
    /* public void toggleAdmin(ActionEvent actionEvent) {
@@ -145,6 +144,14 @@ public class Adminclient {
     }
 
     public void updateDefCat(ActionEvent actionEvent) {//catagory managment confirm button
+        try {
+            client.setDefaultCatagory(this.defCategorySel.getValue());
+        }
+        catch (Exception e){
+            System.out.printf("Execptions %s",e.getMessage());
+            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            eAlert.show();
+        }
     }
 
     public void selUserReportView(MouseEvent mouseEvent) {//viewer on final order reports
@@ -185,6 +192,17 @@ public class Adminclient {
     }
 
     public void addUser(ActionEvent actionEvent) {
+        try {
+            User temp = new User(this.emailField.getText(), this.usernameField.getText(), this.passwordField.getText());
+            client.addAnotherUser(temp);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Admin created");
+            alert.show();
+        }
+        catch (Exception e) {
+            System.out.printf("Execptions %s", e.getMessage());
+            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            eAlert.show();
+        }
         cleanAddUser();
     }
 }
