@@ -56,8 +56,9 @@
                     <Label text="Product Name:" />
                     <Label text="Product Category:" GridPane.rowIndex="1" />
                     <TextField fx:id="prodnameField" GridPane.columnIndex="1" />
-                    <Button fx:id="updateCats" mnemonicParsing="false" onAction="#updatedCategories" text="Update Categories" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                    <Button fx:id="addCatsToProd" mnemonicParsing="false" onAction="#addCatToProd" text="Add Category to Product" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                     <ComboBox fx:id="prodCatSelBox" onAction="#selProdCategory" prefWidth="150.0" promptText="Select Categories" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               <Button fx:id="removeCatsFromProd" mnemonicParsing="false" onAction="#removeCatFromProd" text="Remove Catagory From Product" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 </GridPane>
                 <GridPane layoutX="201.0" layoutY="262.0">
                     <columnConstraints>
