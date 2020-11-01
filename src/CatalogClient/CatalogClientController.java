@@ -146,7 +146,7 @@ public class CatalogClientController {
         }
         try {
             client.addProductToOrder(client.getProductByName(selectedProduct));
-            Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setContentText(String.format("Successfully added %s",selectedProduct));
             a.show();
             return;
@@ -232,7 +232,7 @@ public class CatalogClientController {
         try{
             client.finalizeOrder();
             updateOrderRaw();
-            Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setContentText(String.format("Successfully ordered products!"));
             a.show();
         }
@@ -247,7 +247,7 @@ public class CatalogClientController {
         try{
             client.clearOrder();
             updateOrderRaw();
-            Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setContentText(String.format("Successfully canceled order!"));
             a.show();
         }

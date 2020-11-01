@@ -779,14 +779,41 @@ public class ServerTask implements Runnable, RequestServerProtocol {
     }
 
     private RequestType getUserOrders(Request incoming, BufferedReader input, PrintWriter output) {
-        try{
-            ArrayList<Order> r  = userStore.getUsersOrders(connectedUser);
-            sendList(output,RequestType.OK,r);
-            return RequestType.OK;
+        String temp = new String();
+        try {
+            ArrayList<HashMap<String,String>> objs = incoming.getObjs();
+            if(objs == null || objs.isEmpty()) {
+                try{
+                    ArrayList<Order> r  = userStore.getUsersOrders(connectedUser);
+                    sendList(output,RequestType.OK,r);
+                    return RequestType.OK;
+                }
+                catch (Exception e){
+                    return RequestType.ERROR;
+                }
+            }
+           User user = new User();
+            user.fromRequestable(objs.get(0));
+            try{
+                ArrayList<Order> r  = userStore.getUsersOrders(connectedUser,user);
+                sendList(output,RequestType.OK,r);
+                return RequestType.OK;
+            }
+            catch (Exception e){
+                return RequestType.ERROR;
+            }
+
         }
-        catch (Exception e){
-            return RequestType.ERROR;
+        catch (IllegalArgumentException e){
+            try {
+                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_RESOURCE);
+                return RequestType.OK;
+            }
+            catch (Exception ee){
+                return RequestType.ERROR;
+            }
         }
+
     }
 
     private RequestType finalizeOrder(Request incoming, BufferedReader input, PrintWriter output) {

@@ -188,6 +188,16 @@ public class UserStore  implements Serializable  {
         }
         return toRet;
     }
+    public synchronized ArrayList<Order> getUsersOrders(User connectedUser,User user) throws IllegalArgumentException {
+        if(!connectedUser.validLoginInfo()){
+            throw new IllegalArgumentException();
+        }
+        ArrayList<Order> toRet = new ArrayList<>();
+        for(int i =0;i < user.getOrders();i++){
+            toRet.add(getOrder(user.getOrderId(i)));
+        }
+        return toRet;
+    }
     public synchronized ArrayList<Order> getFinalizedOrders(User connectedUser) throws IllegalArgumentException {
         if(!validAdminAuthentication(connectedUser)){
             throw new IllegalArgumentException();

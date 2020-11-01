@@ -464,6 +464,17 @@ public class Client implements RequestClientProtocol {
         }
         return orders;
     }
+    public synchronized ArrayList<Order> clientsOrders(User user) throws ClientError {
+        RequestClientProtocol.sendMinimalRequestable(this,RequestType.GET_USER_ORDERS,user,output);
+        ArrayList<Order> orders = new ArrayList<>();
+        Request r = okOrDie(this,input);
+        for(HashMap<String,String> objs : r.getObjs() ){
+            Order temp = new Order();
+            temp.fromRequestable(objs);
+            orders.add(temp);
+        }
+        return orders;
+    }
     public synchronized Order finalizeOrder() throws ClientError {
         RequestClientProtocol.sendBlankRequest(this,RequestType.FINALIZE_ORDER,output);
 
