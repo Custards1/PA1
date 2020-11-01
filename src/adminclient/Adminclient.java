@@ -62,10 +62,12 @@ public class Adminclient {
             System.out.printf("Execptions %s",e.getMessage());
         }
         this.prodCatSelBox = new ComboBox<>();
+        this.defCategorySel = new ChoiceBox();
     }
 
     public void initialize(){
         this.prodCatSelBox.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
+        this.defCategorySel.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
     }
 
     private void cleanCatManage(){
