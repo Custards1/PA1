@@ -1,8 +1,11 @@
 package adminclient;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.application.*;
@@ -11,12 +14,15 @@ import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.category.Catagory;
 import edu.ucdenver.domain.products.*;
 import edu.ucdenver.domain.client.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
+import javafx.util.converter.NumberStringConverter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 //File Upload Test
-
+import javafx.util.converter.NumberStringConverter;
 public class Adminclient {
 
 
@@ -37,6 +43,8 @@ public class Adminclient {
     public Button addProdClick;
     public Button delProdClick;
     public TextField catNameField;
+    public TextField brandName;
+    public TextField prdDescription;
     public Button addCatClick;
     public Button delCatClick;
     public Button setDefaultCat;
@@ -51,7 +59,24 @@ public class Adminclient {
     public Button loginButton;
     public Button resetButton;
     public TextField emailField;
-
+    public TextField numOfPages;
+    public ChoiceBox productType;
+    public GridPane gridPane;
+    private Label author;
+    private Label location;
+    private Label imei;
+    private Label os;
+    private Label pusblication;
+    private Label warrantyN;
+    private Label numPages;
+    private Label serial;
+    public TextField locationField;
+    public TextField authorField;
+    public TextField serialField;
+    public TextField imeiField;
+    public TextField osField;
+    public DatePicker publicationDate;
+    public DatePicker warranty;
     private Client client = null;
     private User user;
 
@@ -65,11 +90,173 @@ public class Adminclient {
         }
         this.prodCatSelBox = new ComboBox<>();
         this.defCategorySel = new ChoiceBox<>();
+        locationField = new TextField();
+        authorField = new TextField();
+        publicationDate = new DatePicker();
+        warranty = new DatePicker();
+        numOfPages = new TextField();
+        imeiField = new TextField();
+        osField = new TextField();
+        author = new Label();
+         location= new Label();
+         imei= new Label();
+         os= new Label();
+         pusblication= new Label();
+         warrantyN= new Label();
+         numPages = new Label();
+         serial = new Label();
+        locationField = new TextField();
+        authorField = new TextField();
+        publicationDate = new DatePicker();
+        warranty = new DatePicker();
+        numOfPages = new TextField();
+        imeiField = new TextField();
+        osField = new TextField();
+        author = new Label();
+        location= new Label();
+        imei= new Label();
+        os= new Label();
+        pusblication= new Label();
+        warrantyN= new Label();
+        numPages = new Label();
+        serialField = new TextField();
+        serial = new Label();
     }
 
     public void initialize(){
         this.prodCatSelBox.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
         this.defCategorySel.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
+        this.productType.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
+        productType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
+
+            try{
+                switch ((String)productType.getItems().get((Integer) number2)){
+                    case "Home":
+                        location.setText("Location:");
+
+                        for(Node n : gridPane.getChildren()) {
+                            Integer i = GridPane.getRowIndex(n);
+                            if(i==null || i<0){
+                                continue;
+                            }
+                            if(i > 6){
+                                n.setVisible(false);
+                            }
+                        }
+
+                        author         .setText("");
+
+                        imei          .setText("");
+                        os            .setText("");;
+                        pusblication  .setText("");
+                        warrantyN.setText("");
+                        numPages .setText("");
+                        serial .setText("");
+                        gridPane.add(location,0,6);
+                        gridPane.add(locationField,1,6);
+                        break;
+                    case "Book":
+                        for(Node n : gridPane.getChildren()) {
+                            Integer i = GridPane.getRowIndex(n);
+                            if(i==null || i<0){
+                                continue;
+                            }
+                            if(i > 8){
+                                n.setVisible(false);
+                            }
+                        }
+
+                        location      .setText("");
+                        imei          .setText("");
+                        os            .setText("");;
+
+                        warrantyN.setText("");
+
+                        serial .setText("");
+                        author.setText("Author:");
+                        pusblication.setText("Publication Date:");
+                        numPages.setText("Number of pages:");
+                        gridPane.add(author,0,6);
+                        gridPane.add(authorField,1,6);
+
+                        gridPane.add(pusblication,0,7);
+                        gridPane.add(publicationDate,1,7);
+
+                        gridPane.add(numPages,0,8);
+                        gridPane.add(numOfPages,1,8);
+
+                        break;
+                    case "Electronic":
+                        for(Node n : gridPane.getChildren()) {
+                            Integer i = GridPane.getRowIndex(n);
+                            if(i==null || i<0){
+                                continue;
+                            }
+                            if(i > 7){
+                                n.setVisible(false);
+                            }
+                        }
+                        author         .setText("");
+                        location      .setText("");
+                        imei          .setText("");
+                        os            .setText("");;
+                        pusblication  .setText("");
+
+                        numPages .setText("");
+
+                        serial.setText("Serial:");
+                        warrantyN.setText("Warranty:");
+                        gridPane.add(serial,0,6);
+                        gridPane.add(authorField,1,6);
+
+                        gridPane.add(warrantyN,0,7);
+                        gridPane.add(warranty,1,7);
+
+                        break;
+                    case "Computer":
+                        break;
+                    case "Phone":
+                        for(Node n : gridPane.getChildren()) {
+                            Integer i = GridPane.getRowIndex(n);
+                            if(i==null || i<0){
+                                continue;
+                            }
+                            if(i > 9){
+                                n.setVisible(false);
+                            }
+                        }
+                        author         .setText("");
+                        location      .setText("");
+
+                        pusblication  .setText("");
+
+                        numPages .setText("");
+                        imei.setText("IMEI:");
+                        os.setText("OS:");
+                        serial.setText("Serial:");
+                        warrantyN.setText("Warranty:");
+                        gridPane.add(serial,0,6);
+                        gridPane.add(serialField,1,6);
+                        gridPane.add(warrantyN,0,7);
+                        gridPane.add(warranty,1,7);
+                        gridPane.add(imei,0,8);
+                        gridPane.add(imeiField,1,8);
+                        gridPane.add(os,0,9);
+                        gridPane.add(osField,1,9);
+
+
+                    default:break;
+                }
+            }
+            catch (Exception ignored){
+
+            }
+
+            }
+        });
+
     }
 
     private void cleanCatManage(){
@@ -110,7 +297,51 @@ public class Adminclient {
 
     public void addProduct(ActionEvent actionEvent) {//product tab add button
         try{
-            client.addProductToCatalog();
+            Object o = productType.getValue();
+            String s = (String)o;
+
+            switch (s){
+                case "Home":
+                    Home home = new Home(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),locationField.getText());
+                    home.getCatagories().add(prodCatSelBox.getValue());
+                    client.addProductToCatalog(home);
+
+                    break;
+                case "Book":
+                    Book book = new Book(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),authorField.getText(),publicationDate.getValue(),30);
+                    book.getCatagories().add(prodCatSelBox.getValue());
+                    client.addProductToCatalog(book);
+                    break;
+                case "Phone":
+                    Phone phone = new Phone(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),serialField.getText(),warranty.getValue(),imeiField.getText(),osField.getText());
+                    phone.getCatagories().add(prodCatSelBox.getValue());
+                    client.addProductToCatalog(phone);
+                    break;
+                case "Computer":
+                    Computer c = new Computer(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),serialField.getText(),warranty.getValue(),new ArrayList<>());
+                    c.getCatagories().add(prodCatSelBox.getValue());
+                    client.addProductToCatalog(c);
+                    break;
+                case "Electronic":
+                    Electronic el = new Electronic(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),serialField.getText(),warranty.getValue());
+                    el.getCatagories().add(prodCatSelBox.getValue());
+                    client.addProductToCatalog(el);
+                    break;
+                default:
+                    Product product = new Product(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now());
+                    client.addProductToCatalog(product);
+                    break;
+            }
+
+            prodnameField.setText("");
+            brandName.setText("");
+            prdDescription.setText("");
+            serialField.setText("");
+            imeiField.setText("");
+            osField.setText("");
+            authorField.setText("");
+            locationField.setText("");
+            //client.addProductToCatalog();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Product added");
             alert.show();
         }
@@ -123,7 +354,7 @@ public class Adminclient {
 
     public void deleteProduct(ActionEvent actionEvent) {//product tab delete button
         try{
-            client.removeProductFromCatalog();
+           // client.removeProductFromCatalog();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Product added");
             alert.show();
         }

@@ -152,14 +152,15 @@ public class Client implements RequestClientProtocol {
 
     }
      public synchronized void addProductToCatalog(Product p) throws ClientError {
+        System.out.println("__AasC");
         if(!this.isAdmin|| p == null){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
-
+         System.out.println("__dAC");
         RequestClientProtocol.sendMinimalRequestable(this,RequestType.ADD_PRODUCT_TO_CATALOG,p,output);
-       
+         System.out.println("__fAC");
         Request r = okOrDie(this,input);
-
+         System.out.println("_g_AC");
        
     }
     public synchronized ArrayList<Product> search(String text) throws ClientError {
