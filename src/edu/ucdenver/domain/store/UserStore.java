@@ -136,16 +136,18 @@ public class UserStore  implements Serializable  {
     }
     public synchronized Order getCurrentOrder(User connectedUser) throws IllegalArgumentException {
         if(!connectedUser.validLoginInfo()){
-
+            System.out.println("Invalid");
             throw new IllegalArgumentException();
         }
 
         String orderName = connectedUser.getCurrentOrderId();
-
+        System.out.printf("Orderid is %s\n",orderName);
         Integer i = orderNameMap.get(orderName);
         if(i == null){
+            System.out.printf("Ordwwerid is %s\n",orderName);
                 return addOrderRaw(new Order(orderName));
         }
+        System.out.printf("aOrderid is %s\n",orderName);
         return getOrder(orderName);
     }
     public synchronized Order getCurrentFinalOrder(User connectedUser) throws IllegalArgumentException {

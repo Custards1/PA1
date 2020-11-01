@@ -130,24 +130,30 @@ public class Adminclient {
         productType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-
+                for(Node n : gridPane.getChildren()) {
+                    Integer i = GridPane.getRowIndex(n);
+                    if(i==null || i<0){
+                        continue;
+                    }
+                    if(i > 5){
+                        n.setVisible(false);
+                    }
+                }
             try{
                 switch ((String)productType.getItems().get((Integer) number2)){
                     case "Home":
-                        location.setText("Location:");
-
                         for(Node n : gridPane.getChildren()) {
                             Integer i = GridPane.getRowIndex(n);
-                            if(i==null || i<0){
+                            if(i==null || i==0){
                                 continue;
                             }
-                            if(i > 6){
-                                n.setVisible(false);
+                            if(i == 6){
+                                n.setVisible(true);
                             }
                         }
 
+                        location.setText("Location:");
                         author         .setText("");
-
                         imei          .setText("");
                         os            .setText("");;
                         pusblication  .setText("");
@@ -160,13 +166,14 @@ public class Adminclient {
                     case "Book":
                         for(Node n : gridPane.getChildren()) {
                             Integer i = GridPane.getRowIndex(n);
-                            if(i==null || i<0){
+                            if(i==null || i==0){
                                 continue;
                             }
-                            if(i > 8){
-                                n.setVisible(false);
+                            if(i == 6||i == 7||i == 8){
+                                n.setVisible(true);
                             }
                         }
+
 
                         location      .setText("");
                         imei          .setText("");
@@ -189,15 +196,7 @@ public class Adminclient {
 
                         break;
                     case "Electronic":
-                        for(Node n : gridPane.getChildren()) {
-                            Integer i = GridPane.getRowIndex(n);
-                            if(i==null || i<0){
-                                continue;
-                            }
-                            if(i > 7){
-                                n.setVisible(false);
-                            }
-                        }
+
                         author         .setText("");
                         location      .setText("");
                         imei          .setText("");
@@ -218,15 +217,7 @@ public class Adminclient {
                     case "Computer":
                         break;
                     case "Phone":
-                        for(Node n : gridPane.getChildren()) {
-                            Integer i = GridPane.getRowIndex(n);
-                            if(i==null || i<0){
-                                continue;
-                            }
-                            if(i > 9){
-                                n.setVisible(false);
-                            }
-                        }
+
                         author         .setText("");
                         location      .setText("");
 

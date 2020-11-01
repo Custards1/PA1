@@ -43,6 +43,7 @@ public class CatalogClientController {
     public Button resetButton;
     public ListView prdouctDetails;
     public TextField viewProdProperties;
+    private String selectedProduct;
     private Client client;
     private boolean called;
     public CatalogClientController(){
@@ -183,21 +184,31 @@ public class CatalogClientController {
 
     }
     public void orderTabSel(Event event) {
+        updateOrderRaw();
+    }
+    public void updateOrder(ActionEvent e){
+       updateOrderRaw();
+    }
+    private void updateOrderRaw(){
         try {
             ArrayList<String>names = new ArrayList<>();
             Order products = client.currentOrder();
             names.add(String.format("ID: %s",products.getId()));
+            System.out.printf("Current order %s\n",products.getId());
             for(String entry : products.getProducts()){
+                if(entry==null||entry.isEmpty()||entry.equals("none")){
+                    continue;
+                }
+                System.out.printf("Current order is %s\n",entry);
                 Product p = client.getProduct(entry);
                 names.add(String.format("%s by %s",p.getProductName(),p.getBrandName()));
             }
             productsInOrder.setItems(FXCollections.observableList(names));
         }
-        catch (Exception e){
-            System.out.printf("Failed to init cuz search %s\n",e.getMessage());
+        catch (Exception ee){
+            System.out.printf("Failed to init cuz search %s\n",ee.getMessage());
         }
     }
-
     public void submitOrder(ActionEvent actionEvent) {
     }
 
