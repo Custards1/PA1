@@ -43,7 +43,6 @@
                 <ListView fx:id="searchResultsPane" layoutX="16.0" layoutY="127.0" onMouseClicked="#selectProductFromSearch" prefHeight="230.0" prefWidth="254.0" />
                 <TitledPane animated="false" layoutX="291.0" layoutY="122.0" prefHeight="237.0" prefWidth="293.0" text="Product Details">
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                         <Button fx:id="addFromSearchButton" layoutX="184.0" layoutY="170.0" mnemonicParsing="false" onAction="#addToOrder" text="Add to Cart" />
                   <ListView fx:id="searchProductDetails" layoutY="5.0" prefHeight="163.0" prefWidth="293.0" />
                     </AnchorPane>
                 </TitledPane>
@@ -69,8 +68,6 @@
                 <ListView fx:id="productsInOrder" layoutX="14.0" layoutY="14.0" prefHeight="347.0" prefWidth="323.0" />
                 <Button fx:id="submitOrderButton" layoutX="401.0" layoutY="45.0" mnemonicParsing="false" onAction="#submitOrder" text="Finalize Order" />
                 <Button fx:id="cancelOrderButton" layoutX="500.0" layoutY="45.0" mnemonicParsing="false" onAction="#cancelOrder" text="Cancel Order" />
-                <TextField fx:id="orderTotalCost" layoutX="437.0" layoutY="14.0" />
-                <Label layoutX="401.0" layoutY="18.0" text="Total:" />
             </AnchorPane>
         </Tab>
 

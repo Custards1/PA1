@@ -414,13 +414,13 @@ public class Client implements RequestClientProtocol {
         Request r = okOrDie(this,input);
     }
     public synchronized Order currentOrder() throws ClientError {
-        System.out.println("SEnding");
+
         RequestClientProtocol.sendBlankRequest(this,RequestType.CURRENT_ORDER,output);
-        System.out.println("SEnt");
+
         Request r = okOrDie(this,input);
-        System.out.println("GoTt");
+
         if(r.getObjs().isEmpty()){
-            System.out.println("GoTt is emplty");
+
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
         }
         try {
@@ -429,7 +429,27 @@ public class Client implements RequestClientProtocol {
             return order;
         }
         catch (Exception ignored){
-            System.out.println("GoTt is empltasddsy");
+
+            throw new ClientError(ClientErrorType.INVALID_RESOURCE);
+        }
+    }
+    public synchronized Order clearOrder() throws ClientError {
+
+        RequestClientProtocol.sendBlankRequest(this,RequestType.CLEAR_ORDER,output);
+
+        Request r = okOrDie(this,input);
+
+        if(r.getObjs().isEmpty()){
+
+            throw new ClientError(ClientErrorType.INVALID_RESOURCE);
+        }
+        try {
+            Order order = new Order();
+            order.fromRequestable(r.getObjs().get(0));
+            return order;
+        }
+        catch (Exception ignored){
+
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
         }
     }

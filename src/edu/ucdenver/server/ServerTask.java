@@ -855,7 +855,28 @@ public class ServerTask implements Runnable, RequestServerProtocol {
 
     }
 
+    private RequestType clearOrder(Request incoming, BufferedReader input, PrintWriter output) {
+        try {
+            userStore.getCurrentOrder(connectedUser).getProducts().clear();
+            try {
+                RequestServerProtocol.sendRequestable(output,RequestType.OK,userStore.getCurrentOrder(connectedUser));
+                return RequestType.OK;
+            }
+            catch (ClientError e){
+                return RequestType.ERROR;
+            }
 
+        }
+        catch (IllegalArgumentException e){
+            try {
+                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_RESOURCE);
+                return RequestType.OK;
+            }
+            catch (Exception ee){
+                return RequestType.ERROR;
+            }
+        }
+    }
 
     public RequestType reply(Request incoming,BufferedReader input,PrintWriter output) {
         Request toSend = null;
@@ -909,10 +930,13 @@ public class ServerTask implements Runnable, RequestServerProtocol {
                 return getFinalizedOrders(incoming,input,output);
             case GET_PRODUCT_BY_NAME:
                 return getProductByName(incoming,input,output);
+            case CLEAR_ORDER:
+                return clearOrder(incoming,input,output);
             default:break;
         }
         return RequestType.ERROR;
     }
+
 
 
     @Override

@@ -49,12 +49,14 @@ public class CatalogClientController {
     public CatalogClientController(){
         this.client = null;
         called = false;
+        selectedProduct = new String();
     }
     public void initializeMe() {
         browseCategories.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 updateProducts(newValue);
+
                 prdouctDetails.getItems().clear();
             }
         });
@@ -62,6 +64,7 @@ public class CatalogClientController {
         browseProductsInCategory.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                selectedProduct = newValue;
                 updateProductDetails(newValue);
             }
         });
@@ -135,9 +138,25 @@ public class CatalogClientController {
         }
     }
     public void addToOrder(ActionEvent actionEvent) {
-        System.out.print("Tryina init ");
-        System.out.print(client);
-        System.out.println();
+        if(selectedProduct.isEmpty()){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setContentText("Please select a product to add");
+            a.show();
+            return;
+        }
+        try {
+            client.addProductToOrder(client.getProductByName(selectedProduct));
+            Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+            a.setContentText(String.format("Successfully added %s",selectedProduct));
+            a.show();
+            return;
+        }
+        catch (Exception e){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setContentText(e.getMessage());
+            a.show();
+            return;
+        }
     }
     public void setClient(Client client){
         this.client = client;
@@ -210,9 +229,33 @@ public class CatalogClientController {
         }
     }
     public void submitOrder(ActionEvent actionEvent) {
+        try{
+            client.finalizeOrder();
+            updateOrderRaw();
+            Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+            a.setContentText(String.format("Successfully ordered products!"));
+            a.show();
+        }
+        catch (Exception e){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setContentText(String.format("Failed ordering products!"));
+            a.show();
+        }
     }
 
     public void cancelOrder(ActionEvent actionEvent) {
+        try{
+            client.clearOrder();
+            updateOrderRaw();
+            Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+            a.setContentText(String.format("Successfully canceled order!"));
+            a.show();
+        }
+        catch (Exception e){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setContentText(String.format("Failed canceling order!"));
+            a.show();
+        }
     }
 
     public void checkAuthLogin(Event event) {
