@@ -121,6 +121,7 @@ public class Adminclient {
         numPages = new Label();
         serialField = new TextField();
         serial = new Label();
+        dateSelOrderView = new DatePicker();
     }
 
     public void initialize(){
@@ -363,7 +364,7 @@ public class Adminclient {
     public void deleteProduct(ActionEvent actionEvent) {//product tab delete button
         try{
            // client.removeProductFromCatalog();
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Product added");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Product deleted");
             alert.show();
         }
         catch (Exception e){
