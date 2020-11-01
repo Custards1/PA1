@@ -109,9 +109,29 @@ public class Adminclient {
     }
 
     public void addProduct(ActionEvent actionEvent) {//product tab add button
+        try{
+            client.addProductToCatalog();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Product added");
+            alert.show();
+        }
+        catch (Exception e){
+            System.out.printf("Execptions %s",e.getMessage());
+            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            eAlert.show();
+        }
     }
 
     public void deleteProduct(ActionEvent actionEvent) {//product tab delete button
+        try{
+            client.removeProductFromCatalog();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Product added");
+            alert.show();
+        }
+        catch (Exception e){
+            System.out.printf("Execptions %s",e.getMessage());
+            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            eAlert.show();
+        }
     }
 
     public void addCategory(ActionEvent actionEvent) {
