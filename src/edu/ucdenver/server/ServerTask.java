@@ -814,11 +814,22 @@ public class ServerTask implements Runnable, RequestServerProtocol {
         try {
             temp = incoming.getTable().get("product");
             if(temp == null||temp.isEmpty()){
+                temp = incoming.getTable().get("product-id");
+                if(temp == null||temp.isEmpty()){
+                    try {
+                        RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_ACCESS);
+                        return RequestType.OK;
+                    }
+                    catch (Exception ee){
+                        return RequestType.ERROR;
+                    }
+                }
+                Product prod = userStore.getProduct(temp);
                 try {
-                    RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_ACCESS);
+                    RequestServerProtocol.sendRequestable(output,RequestType.OK,prod);
                     return RequestType.OK;
                 }
-                catch (Exception ee){
+                catch (ClientError e){
                     return RequestType.ERROR;
                 }
             }
@@ -953,11 +964,11 @@ public class ServerTask implements Runnable, RequestServerProtocol {
         }
         catch (IOException e){
 
-           // RequestServerProtocol.close(socket,input,output);
+            RequestServerProtocol.close(socket,input,output);
            
         }
         finally {
-          //  RequestServerProtocol.close(socket,input,output);
+            RequestServerProtocol.close(socket,input,output);
          //
         }
     }

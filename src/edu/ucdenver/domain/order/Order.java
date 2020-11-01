@@ -55,7 +55,6 @@ public class Order implements Requestable, Serializable {
         return requestable;
     }
 
-
     public void fromRequestable(HashMap<String, String> requestable) throws IllegalArgumentException {
         products = new ArrayList<>();
         finalized = false;

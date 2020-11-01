@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -68,6 +69,7 @@ public class LoginController {
             return;
         }
         newUser = false;
+        ;
         Stage stage =(Stage) loginButton.getScene().getWindow();
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("UserClient.fxml"));
@@ -106,6 +108,8 @@ public class LoginController {
         }
         newUser = true;
         Stage stage =(Stage) loginButton.getScene().getWindow();
+        Scene scene = (Scene)loginButton.getScene();
+
         //stage.setUserData(client);
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("UserClient.fxml"));

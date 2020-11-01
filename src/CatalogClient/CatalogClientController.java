@@ -3,6 +3,7 @@ package CatalogClient;
 import com.sun.org.apache.xpath.internal.objects.XBoolean;
 import edu.ucdenver.domain.category.Catagory;
 import edu.ucdenver.domain.client.Client;
+import edu.ucdenver.domain.order.Order;
 import edu.ucdenver.domain.products.Product;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -55,6 +56,7 @@ public class CatalogClientController {
                 prdouctDetails.getItems().clear();
             }
         });
+
         browseProductsInCategory.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -67,6 +69,7 @@ public class CatalogClientController {
                 updateProductSearchDetails(newValue);
             }
         });
+
         updateCatagories();
     }
     public void browseTabSel(Event event) {
@@ -83,7 +86,7 @@ public class CatalogClientController {
             browseProductsInCategory.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
-            System.out.printf("Failed to init cuz %s\n",e.getMessage());
+            System.out.printf("Failed to update prods cuz %s\n",e.getMessage());
         }
     }
     private synchronized void updateProductDetails(String name){
@@ -98,11 +101,11 @@ public class CatalogClientController {
             prdouctDetails.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
-            System.out.printf("Failed to init cuz %s\n",e.getMessage());
+            System.out.printf("Failed to update prod details cuz %s\n",e.getMessage());
         }
     }
     private synchronized void updateProductSearchDetails(String name){
-        System.out.println("Updating details");
+        System.out.println("Updatings details");
         ArrayList<String> names= new ArrayList<>();
         try {
             System.out.println("Updating details");
@@ -113,7 +116,7 @@ public class CatalogClientController {
             searchProductDetails.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
-            System.out.printf("Failed to init cuz %s\n",e.getMessage());
+            System.out.printf("Failed to update prod search details cuz %s\n",e.getMessage());
         }
     }
     private synchronized  void updateCatagories(){
@@ -126,7 +129,7 @@ public class CatalogClientController {
             browseCategories.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
-            System.out.printf("Failed to init cuz %s\n",e.getMessage());
+            System.out.printf("Failed to update cata cuz %s\n",e.getMessage());
         }
     }
     public void addToOrder(ActionEvent actionEvent) {
@@ -158,18 +161,34 @@ public class CatalogClientController {
             searchResultsPane.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
-            System.out.printf("Failed to init cuz %s\n",e.getMessage());
+            System.out.printf("Failed to init cuz search %s\n",e.getMessage());
         }
 
     }
 
     public void selectProductFromSearch(MouseEvent mouseEvent) {
+
+
+
     }
     public void login(ActionEvent event){
 
 
     }
     public void orderTabSel(Event event) {
+        try {
+            ArrayList<String>names = new ArrayList<>();
+            Order products = client.currentOrder();
+            names.add(String.format("ID: %s",products.getId()));
+            for(String entry : products.getProducts()){
+                Product p = client.getProduct(entry);
+                names.add(String.format("%s by %s",p.getProductName(),p.getBrandName()));
+            }
+            productsInOrder.setItems(FXCollections.observableList(names));
+        }
+        catch (Exception e){
+            System.out.printf("Failed to init cuz search %s\n",e.getMessage());
+        }
     }
 
     public void submitOrder(ActionEvent actionEvent) {

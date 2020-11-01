@@ -64,6 +64,7 @@ public class Client implements RequestClientProtocol {
         this.port = port;
         this.isAdmin = false;
         ;
+
         Request recived = null;
         ArrayList<HashMap<String,String>> re = new ArrayList();
         re.add(self.asRequestable());
@@ -107,7 +108,7 @@ public class Client implements RequestClientProtocol {
     public boolean isAdmin() {
         return isAdmin;
     }
-    public Catagory getDefaultCatagory() throws ClientError {
+    public synchronized Catagory getDefaultCatagory() throws ClientError {
         RequestClientProtocol.sendBlankRequest(this,RequestType.GET_DEFAULT_CATAGORY,output);
         Request r = okOrDie(this,input);
         
@@ -122,7 +123,7 @@ public class Client implements RequestClientProtocol {
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
         }
     }
-    public Product getProductByName(String name) throws  ClientError{
+    public synchronized Product getProductByName(String name) throws  ClientError{
         HashMap<String,String> fields = new HashMap<>();
         fields.put("product",name);
         RequestClientProtocol.sendMinimalRequest(this,RequestType.GET_PRODUCT_BY_NAME,fields,output);
@@ -136,7 +137,21 @@ public class Client implements RequestClientProtocol {
         }
 
     }
-     public void addProductToCatalog(Product p) throws ClientError {
+    public synchronized Product getProduct(String id) throws  ClientError{
+        HashMap<String,String> fields = new HashMap<>();
+        fields.put("product-id",id);
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.GET_PRODUCT_BY_NAME,fields,output);
+        Request r = okOrDie(this,input);
+        try {
+            return parseProduct(r.getObjs().get(0));
+        }
+        catch (Exception e) {
+
+            throw new ClientError(ClientErrorType.INVALID_RESOURCE);
+        }
+
+    }
+     public synchronized void addProductToCatalog(Product p) throws ClientError {
         if(!this.isAdmin|| p == null){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
@@ -147,7 +162,7 @@ public class Client implements RequestClientProtocol {
 
        
     }
-    public ArrayList<Product> search(String text) throws ClientError {
+    public synchronized ArrayList<Product> search(String text) throws ClientError {
         if(text == null){
             return allProducts();
         }
@@ -162,7 +177,7 @@ public class Client implements RequestClientProtocol {
         return products;
     }
     //returns updated product if succesfull
-    public Product addCatagoryToProduct(String catagoryName,String productid) throws ClientError{
+    public synchronized Product addCatagoryToProduct(String catagoryName,String productid) throws ClientError{
         if(!this.isAdmin||catagoryName==null||productid==null||catagoryName.isEmpty()||productid.isEmpty()){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
@@ -187,7 +202,7 @@ public class Client implements RequestClientProtocol {
         }
     }
 
-    public void createAdmin(String email,String name,String password)throws ClientError{
+    public synchronized void createAdmin(String email,String name,String password)throws ClientError{
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
@@ -196,7 +211,7 @@ public class Client implements RequestClientProtocol {
         RequestClientProtocol.sendMinimalRequestable(this,RequestType.ADD_ADMIN_USER,self,output);
         Request r = okOrDie(this,input);
     }
-    public void removeUser(String email)throws ClientError{
+    public synchronized  void removeUser(String email)throws ClientError{
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
@@ -205,14 +220,14 @@ public class Client implements RequestClientProtocol {
        // sendMinimalRequestable(RequestType.ADD_ADMIN_USER,self);
         //Request r = okOrDie(this,input);
     }
-    public Product addCatagoryToProductByName(String catagoryName,String productName)throws ClientError{
+    public synchronized  Product addCatagoryToProductByName(String catagoryName,String productName)throws ClientError{
         StringBuilder id = new StringBuilder();
         for(String word : productName.split("\\s")) {
             id.append(word);
         }
         return addCatagoryToProduct(catagoryName,id.toString());
     }
-    public void removeProductFromCatalog(String productId) throws ClientError {
+    public synchronized void removeProductFromCatalog(String productId) throws ClientError {
         if(!this.isAdmin || productId == null){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
@@ -224,14 +239,14 @@ public class Client implements RequestClientProtocol {
         Request r = okOrDie(this,input);
       
     }
-    public void removeProductFromCatalogByName(String productName) throws ClientError {
+    public synchronized  void removeProductFromCatalogByName(String productName) throws ClientError {
         StringBuilder id = new StringBuilder();
         for(String word : productName.split("\\s")) {
             id.append(word);
         }
         removeProductFromCatalog(id.toString());
     }
-    public Product removeCatagoryFromProduct(String catagoryName, String productid) throws ClientError{
+    public synchronized Product removeCatagoryFromProduct(String catagoryName, String productid) throws ClientError{
         if(!this.isAdmin||catagoryName==null||productid==null||catagoryName.isEmpty()||productid.isEmpty()){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
@@ -242,6 +257,7 @@ public class Client implements RequestClientProtocol {
         Request r = okOrDie(this,input);
         ArrayList<HashMap<String,String>> objs = r.getObjs();
         if(objs == null || objs.isEmpty()) {
+
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
         }
         Product p = null;
@@ -255,14 +271,14 @@ public class Client implements RequestClientProtocol {
             return p;
         }
     }
-    public Product removeCatagoryFromProductByName(String catagoryName,String productName) throws ClientError{
+    public synchronized Product removeCatagoryFromProductByName(String catagoryName,String productName) throws ClientError{
         StringBuilder id = new StringBuilder();
         for(String word : productName.split("\\s")) {
             id.append(word);
         }
         return removeCatagoryFromProduct(catagoryName,id.toString());
     }
-    protected static Product parseProduct(HashMap<String,String> requested) throws IllegalArgumentException{
+    protected synchronized static Product parseProduct(HashMap<String,String> requested) throws IllegalArgumentException{
         String type = requested.get("product-type");
         Product p = null;
         if(type.equals("Home")){
@@ -290,7 +306,7 @@ public class Client implements RequestClientProtocol {
         p.fromRequestable(requested);
         return p;
     }
-    public ArrayList<Product> getProductsInCatagory(String catagoryName) throws ClientError {
+    public synchronized ArrayList<Product> getProductsInCatagory(String catagoryName) throws ClientError {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("catagory",catagoryName);
         RequestClientProtocol.sendMinimalRequest(this,RequestType.GET_PRODUCTS_FROM_CATAGORY,fields,output);
@@ -301,7 +317,7 @@ public class Client implements RequestClientProtocol {
         }
         return products;
     }
-    public ArrayList<Product> getProductsInDefaultCatagory() throws ClientError {
+    public synchronized  ArrayList<Product> getProductsInDefaultCatagory() throws ClientError {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("default","true");
         RequestClientProtocol.sendMinimalRequest(this,RequestType.GET_PRODUCTS_FROM_CATAGORY,fields,output);
@@ -315,13 +331,13 @@ public class Client implements RequestClientProtocol {
         return products;
     }
     //if not admin fails
-    public void askToShutdown() throws  ClientError {
+    public synchronized void askToShutdown() throws  ClientError {
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
         RequestClientProtocol.sendBlankRequest(this,RequestType.TERMINATE,output);
     }
-    public void addCatagory(String catagory) throws ClientError {
+    public synchronized void addCatagory(String catagory) throws ClientError {
             if(!isAdmin){
                 throw new ClientError(ClientErrorType.INVALID_ACCESS);
             }
@@ -332,7 +348,7 @@ public class Client implements RequestClientProtocol {
        
            Request r = okOrDie(this,input);
     }
-    public void removeCatagory(String catagory) throws ClientError {
+    public synchronized void removeCatagory(String catagory) throws ClientError {
         if(!isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
@@ -341,7 +357,7 @@ public class Client implements RequestClientProtocol {
         RequestClientProtocol.sendMinimalRequest(this,RequestType.REMOVE_CATAGORY,cat,output);
         Request r = okOrDie(this,input);
     }
-    public ArrayList<Catagory> allCatagories() throws ClientError {
+    public synchronized ArrayList<Catagory> allCatagories() throws ClientError {
 
         RequestClientProtocol.sendBlankRequest(this,RequestType.GET_ALL_CATAGORIES,output);
         
@@ -364,7 +380,7 @@ public class Client implements RequestClientProtocol {
         }
         return catagories;
     }
-    public ArrayList<User> allUsers() throws ClientError {
+    public synchronized ArrayList<User> allUsers() throws ClientError {
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
@@ -388,7 +404,7 @@ public class Client implements RequestClientProtocol {
         }
         return users;
     }
-    public void addAnotherUser(User u) throws ClientError{
+    public synchronized void addAnotherUser(User u) throws ClientError{
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
@@ -396,7 +412,7 @@ public class Client implements RequestClientProtocol {
         RequestClientProtocol.sendMinimalRequestable(this,RequestType.CREATE_USER,u,output);
         Request r = okOrDie(this,input);
     }
-    public Order currentOrder() throws ClientError {
+    public synchronized Order currentOrder() throws ClientError {
         RequestClientProtocol.sendBlankRequest(this,RequestType.CURRENT_ORDER,output);
         Request r = okOrDie(this,input);
         if(r.getObjs().isEmpty()){
@@ -411,7 +427,7 @@ public class Client implements RequestClientProtocol {
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
         }
     }
-    public ArrayList<Order> clientsOrders() throws ClientError {
+    public synchronized ArrayList<Order> clientsOrders() throws ClientError {
         RequestClientProtocol.sendBlankRequest(this,RequestType.GET_USER_ORDERS,output);
         ArrayList<Order> orders = new ArrayList<>();
         Request r = okOrDie(this,input);
@@ -422,7 +438,7 @@ public class Client implements RequestClientProtocol {
         }
         return orders;
     }
-    public Order finalizeOrder() throws ClientError {
+    public synchronized Order finalizeOrder() throws ClientError {
         RequestClientProtocol.sendBlankRequest(this,RequestType.FINALIZE_ORDER,output);
 
         Request r = okOrDie(this,input);
@@ -434,7 +450,7 @@ public class Client implements RequestClientProtocol {
         return order;
     }
     //returns updated order
-    public Order addProductToOrder(Product p) throws ClientError {
+    public synchronized Order addProductToOrder(Product p) throws ClientError {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("product",p.getProductId());
         RequestClientProtocol.sendMinimalRequest(this,RequestType.ADD_PRODUCT_TO_ORDER,fields,output);
@@ -447,7 +463,7 @@ public class Client implements RequestClientProtocol {
         return order;
     }
     //needs admin access
-    public ArrayList<Order> allFinalizedOrders() throws ClientError {
+    public synchronized ArrayList<Order> allFinalizedOrders() throws ClientError {
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
@@ -465,7 +481,7 @@ public class Client implements RequestClientProtocol {
         return orders;
     }
     //returns updated order
-    public Order removeProductFromOrder(Product p) throws ClientError {
+    public synchronized Order removeProductFromOrder(Product p) throws ClientError {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("product",p.getProductId());
         RequestClientProtocol.sendMinimalRequest(this,RequestType.REMOVE_PRODUCT_FROM_ORDER,fields,output);
@@ -477,7 +493,7 @@ public class Client implements RequestClientProtocol {
         order.fromRequestable(r.getObjs().get(0));
         return order;
     }
-    public ArrayList<Product> allProducts() throws ClientError {
+    public synchronized ArrayList<Product> allProducts() throws ClientError {
 
         RequestClientProtocol.sendBlankRequest(this,RequestType.GET_ALL_PRODUCTS,output);
         Request r = okOrDie(this,input);
@@ -498,7 +514,7 @@ public class Client implements RequestClientProtocol {
         }
         return products;
     }
-    public void setDefaultCatagory(String catagory) throws ClientError {
+    public synchronized void setDefaultCatagory(String catagory) throws ClientError {
         if(!isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
