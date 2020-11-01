@@ -809,6 +809,42 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             return RequestType.ERROR;
         }
     }
+    private RequestType getProductByName(Request incoming, BufferedReader input, PrintWriter output) {
+        String temp = new String();
+        try {
+            temp = incoming.getTable().get("product");
+            if(temp == null||temp.isEmpty()){
+                try {
+                    RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_ACCESS);
+                    return RequestType.OK;
+                }
+                catch (Exception ee){
+                    return RequestType.ERROR;
+                }
+            }
+            Product prod = userStore.getProductByName(temp);
+            try {
+                RequestServerProtocol.sendRequestable(output,RequestType.OK,prod);
+                return RequestType.OK;
+            }
+            catch (ClientError e){
+                return RequestType.ERROR;
+            }
+
+        }
+        catch (IllegalArgumentException e){
+            try {
+                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_RESOURCE);
+                return RequestType.OK;
+            }
+            catch (Exception ee){
+                return RequestType.ERROR;
+            }
+        }
+
+    }
+
+
 
     public RequestType reply(Request incoming,BufferedReader input,PrintWriter output) {
         Request toSend = null;
@@ -860,11 +896,12 @@ public class ServerTask implements Runnable, RequestServerProtocol {
                 return removeProductFromOrder(incoming,input,output);
             case GET_FINALIZED_ORDERS:
                 return getFinalizedOrders(incoming,input,output);
+            case GET_PRODUCT_BY_NAME:
+                return getProductByName(incoming,input,output);
             default:break;
         }
         return RequestType.ERROR;
     }
-
 
 
     @Override

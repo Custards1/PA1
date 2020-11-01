@@ -2,10 +2,12 @@ package edu.ucdenver.domain.products;
 
 import edu.ucdenver.domain.request.Requestable;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Electronic extends Product implements Requestable {
+public class Electronic extends Product implements Requestable, Serializable {
 
     private String serial;
     private LocalDate warrenty;
@@ -51,6 +53,13 @@ public class Electronic extends Product implements Requestable {
 
         }
        
+    }
+    @Override
+    public ArrayList<String> asDisplayable() {
+        ArrayList<String> displayable = super.asDisplayable();
+        displayable.add(String.format("Serial %s",serial));
+        displayable.add(String.format("Warranty valid until %s",warrenty.toString()));
+        return displayable;
     }
     public String getSerial() {
         return serial;

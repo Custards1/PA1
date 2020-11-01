@@ -2,10 +2,12 @@ package edu.ucdenver.domain.products;
 
 import edu.ucdenver.domain.request.Requestable;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Home extends Product implements Requestable {
+public class Home extends Product implements Requestable , Serializable {
 
     private String location;
     public Home(){
@@ -23,6 +25,12 @@ public class Home extends Product implements Requestable {
         super(productName,brandName,description,doi);
         this.location = location;
         setType("Home");
+    }
+    @Override
+    public ArrayList<String> asDisplayable(){
+        ArrayList<String> diplayable = super.asDisplayable();
+        diplayable.add(String.format("Location: %s",location));
+        return diplayable;
     }
     @Override
     public HashMap<String, String> asRequestable() {

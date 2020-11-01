@@ -3,11 +3,12 @@ package edu.ucdenver.domain.products;
 import edu.ucdenver.domain.request.Requestable;
 import edu.ucdenver.domain.parser.RequestObjectParser;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Computer extends Electronic implements Requestable {
+public class Computer extends Electronic implements Requestable, Serializable {
 
 
     private ArrayList<String> technicalSpecs;
@@ -35,6 +36,20 @@ public class Computer extends Electronic implements Requestable {
         HashMap<String, String> base = super.asRequestable();
         base.put("specs", RequestObjectParser.intoRaw(technicalSpecs));
         return base;
+    }
+    @Override
+    public ArrayList<String> asDisplayable() {
+        ArrayList<String> displayable = super.asDisplayable();
+        if(technicalSpecs.isEmpty()){
+            displayable.add(String.format("Specs: None"));
+        }
+        else{
+                displayable.add("Specs:");
+            for(String name : technicalSpecs){
+                displayable.add(String.format("      %s",name));
+            }
+        }
+        return displayable;
     }
     @Override
     public void fromRequestable(HashMap<String, String> requestable) throws IllegalArgumentException {

@@ -27,7 +27,7 @@ public class CatalogClientMain extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader();
         root  = fxmlLoader.load(getClass().getResource("login.fxml"));;
         primaryStage.setTitle("Catalog");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 500, 500));
         window.show();
     }
 

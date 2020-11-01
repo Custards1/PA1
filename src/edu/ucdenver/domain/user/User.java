@@ -2,9 +2,10 @@ package edu.ucdenver.domain.user;
 
 import edu.ucdenver.domain.request.Requestable;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class User implements Requestable {
+public class User implements Requestable, Serializable {
     private boolean isAdmin;
     private String email;
     private String name;

@@ -4,11 +4,12 @@ import edu.ucdenver.domain.request.Requestable;
 import edu.ucdenver.domain.parser.RequestObjectParser;
 import edu.ucdenver.domain.products.Product;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Order implements Requestable {
+public class Order implements Requestable, Serializable {
     private String orderId;
     private ArrayList<String> products;
     private LocalDate finalization;

@@ -23,6 +23,7 @@ public enum RequestType {
     FINALIZE_ORDER,
     GET_USER_ORDERS,
     GET_FINALIZED_ORDERS,
+    GET_PRODUCT_BY_NAME,
     TERMINATE,
     ERROR,
     NOOP,

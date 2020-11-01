@@ -74,6 +74,7 @@ public class LoginController {
             Parent root = (Parent) loader.load();
             CatalogClientController load = (CatalogClientController)loader.getController();
             load.setClient(client);
+            load.initializeMe();
             stage.setScene(new Scene(root));
         }
         catch (Exception ee){
@@ -111,6 +112,7 @@ public class LoginController {
             Parent root = (Parent) loader.load();
             CatalogClientController load = (CatalogClientController)loader.getController();
             load.setClient(client);
+            load.initializeMe();
             stage.setScene(new Scene(root));
         }
         catch (Exception ee){

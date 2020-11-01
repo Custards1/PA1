@@ -1,16 +1,19 @@
 package CatalogClient;
 
+import com.sun.org.apache.xpath.internal.objects.XBoolean;
+import edu.ucdenver.domain.category.Catagory;
 import edu.ucdenver.domain.client.Client;
-import edu.ucdenver.domain.user.User;
+import edu.ucdenver.domain.products.Product;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class CatalogClientController {
     public Tab browseTab;
@@ -36,22 +39,77 @@ public class CatalogClientController {
     public PasswordField passwordFieldLogin;
     public Button loginButton;
     public Button resetButton;
+    public ListView prdouctDetails;
     private Client client;
+    private boolean called;
     public CatalogClientController(){
-
+        this.client = null;
+        called = false;
     }
-    @FXML
-    public void initialize() {
-        // Step 1
-      //  Stage stage = (Stage) loginButton.getScene().getWindow();
-        // Step 2
-       // client = (Client) stage.getUserData();
-        // Step 3
+    public void initializeMe() {
+        Stage stage = (Stage)  prdouctDetails.getScene().getWindow();
+        browseCategories.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                updateProducts(newValue);
+            }
+        });
+        browseProductsInCategory.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                updateProductDetails(newValue);
+            }
+        });
+        updateCatagories();
     }
     public void browseTabSel(Event event) {
+        updateCatagories();
     }
-
+    private void updateProducts(String catagory){
+        ArrayList<String> names= new ArrayList<>();
+        try {
+            ArrayList<Product> products = client.getProductsInCatagory(catagory);
+            for(Product entry : products){
+                names.add(entry.getProductName());
+            }
+            browseProductsInCategory.setItems(FXCollections.observableList(names));
+        }
+        catch (Exception e){
+            System.out.printf("Failed to init cuz %s\n",e.getMessage());
+        }
+    }
+    private void updateProductDetails(String name){
+        System.out.println("Updating details");
+        ArrayList<String> names= new ArrayList<>();
+        try {
+            System.out.println("Updating details");
+            Product p = client.getProductByName(name);
+            System.out.println(p);
+            names = p.asDisplayable();
+            System.out.println(names);
+            prdouctDetails.setItems(FXCollections.observableList(names));
+        }
+        catch (Exception e){
+            System.out.printf("Failed to init cuz %s\n",e.getMessage());
+        }
+    }
+    private void updateCatagories(){
+        ArrayList<String> names= new ArrayList<>();
+        try {
+            ArrayList<Catagory> catagories = client.allCatagories();
+            for(Catagory entry : catagories){
+                names.add(entry.getName());
+            }
+            browseCategories.setItems(FXCollections.observableList(names));
+        }
+        catch (Exception e){
+            System.out.printf("Failed to init cuz %s\n",e.getMessage());
+        }
+    }
     public void addToOrder(ActionEvent actionEvent) {
+        System.out.print("Tryina init ");
+        System.out.print(client);
+        System.out.println();
     }
     public void setClient(Client client){
         this.client = client;

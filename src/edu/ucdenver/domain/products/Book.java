@@ -2,10 +2,12 @@ package edu.ucdenver.domain.products;
 
 import edu.ucdenver.domain.request.Requestable;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Book extends Product implements Requestable {
+public class Book extends Product implements Requestable, Serializable {
 
 
 
@@ -40,7 +42,14 @@ public class Book extends Product implements Requestable {
     public void setPublicationDate(LocalDate publicationDate) {
         this.publicationDate = publicationDate;
     }
-
+    @Override
+    public ArrayList<String> asDisplayable() {
+        ArrayList<String> displayable = super.asDisplayable();
+        displayable.add(String.format("Author %s",author));
+        displayable.add(String.format("Publication Date %s",getPublicationDate().toString()));
+        displayable.add(String.format("Number of Pages %d",numPages));
+        return displayable;
+    }
     public void setNumPages(int numPages) {
         this.numPages = numPages;
     }

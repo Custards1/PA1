@@ -3,10 +3,11 @@ package edu.ucdenver.domain.products;
 import edu.ucdenver.domain.request.Requestable;
 import edu.ucdenver.domain.parser.RequestObjectParser;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
-public class Product implements Requestable {
+public class Product implements Requestable , Serializable {
 
     private String productId;
     private String productName;
@@ -101,7 +102,14 @@ public class Product implements Requestable {
     public void setCatagories(ArrayList<String> catagories) {
         this.catagories = catagories;
     }
-
+    public ArrayList<String> asDisplayable(){
+        ArrayList<String> displayable = new ArrayList<>();
+        displayable.add(String.format("Name: %s",getProductName()));
+        displayable.add(String.format("Brand Name: %s",getBrandName()));
+        displayable.add(String.format("Description: %s",getDescription()));
+        displayable.add(String.format("Available from: %s",getDoi().toString()));
+        return displayable;
+    }
     public void fromRequestable(HashMap<String, String> requestable) throws IllegalArgumentException {
         clear();
 

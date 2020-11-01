@@ -4,10 +4,11 @@ import edu.ucdenver.domain.parser.RequestObjectParser;
 import edu.ucdenver.domain.request.Requestable;
 import edu.ucdenver.domain.products.Product;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Catagory implements Requestable {
+public class Catagory implements Requestable, Serializable {
     private String name;
     private ArrayList<String> products;
     private boolean isDefault;

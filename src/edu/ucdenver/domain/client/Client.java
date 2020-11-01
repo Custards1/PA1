@@ -117,12 +117,26 @@ public class Client implements RequestClientProtocol {
             
             return res;
         }
-        catch (IllegalArgumentException e) {
+        catch (Exception e) {
             
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
         }
     }
-    public void addProductToCatalog(Product p) throws ClientError {
+    public Product getProductByName(String name) throws  ClientError{
+        HashMap<String,String> fields = new HashMap<>();
+        fields.put("product",name);
+        RequestClientProtocol.sendMinimalRequest(this,RequestType.GET_PRODUCT_BY_NAME,fields,output);
+        Request r = okOrDie(this,input);
+        try {
+            return parseProduct(r.getObjs().get(0));
+        }
+        catch (Exception e) {
+
+            throw new ClientError(ClientErrorType.INVALID_RESOURCE);
+        }
+
+    }
+     public void addProductToCatalog(Product p) throws ClientError {
         if(!this.isAdmin|| p == null){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
@@ -130,6 +144,7 @@ public class Client implements RequestClientProtocol {
         RequestClientProtocol.sendMinimalRequestable(this,RequestType.ADD_PRODUCT_TO_CATALOG,p,output);
        
         Request r = okOrDie(this,input);
+
        
     }
     public ArrayList<Product> search(String text) throws ClientError {

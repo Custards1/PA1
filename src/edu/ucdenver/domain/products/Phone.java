@@ -2,10 +2,12 @@ package edu.ucdenver.domain.products;
 
 import edu.ucdenver.domain.request.Requestable;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Phone extends Electronic implements Requestable {
+public class Phone extends Electronic implements Requestable , Serializable {
 
 
     private String imei;
@@ -46,6 +48,13 @@ public class Phone extends Electronic implements Requestable {
         this.os = new String();
         this.imei = argCheck(requestable,"imei");
         this.os = argCheck(requestable,"os");
+    }
+    @Override
+    public ArrayList<String> asDisplayable() {
+        ArrayList<String> displayable = super.asDisplayable();
+        displayable.add(String.format("IMEI: %s",imei));
+        displayable.add(String.format("Operating System: %s",os));
+        return displayable;
     }
     public String getImei() {
         return imei;
