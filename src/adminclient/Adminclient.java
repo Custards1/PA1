@@ -14,6 +14,8 @@ import edu.ucdenver.domain.user.User;
 import edu.ucdenver.domain.category.Catagory;
 import edu.ucdenver.domain.products.*;
 import edu.ucdenver.domain.client.*;
+import edu.ucdenver.domain.order.*;
+
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.util.converter.NumberStringConverter;
@@ -197,15 +199,6 @@ public class Adminclient {
 
                         break;
                     case "Electronic":
-                        for(Node n : gridPane.getChildren()) {
-                            Integer i = GridPane.getRowIndex(n);
-                            if(i==null || i==0){
-                                continue;
-                            }
-                            if(i == 6||i == 7){
-                                n.setVisible(true);
-                            }
-                        }
 
                         author         .setText("");
                         location      .setText("");
@@ -227,15 +220,7 @@ public class Adminclient {
                     case "Computer":
                         break;
                     case "Phone":
-                        for(Node n : gridPane.getChildren()) {
-                            Integer i = GridPane.getRowIndex(n);
-                            if(i==null || i==0){
-                                continue;
-                            }
-                            if(i == 6||i == 7||i == 8||i == 9){
-                                n.setVisible(true);
-                            }
-                        }
+
                         author         .setText("");
                         location      .setText("");
 
@@ -416,9 +401,29 @@ public class Adminclient {
     }
 
     public void selUserReportView(MouseEvent mouseEvent) {//viewer on final order reports
+        try {
+            for (User user : client.allUsers()) {
+                ArrayList<Order> orders = client.clientsOrders(user);
+            }
+        }
+        catch (Exception e){
+            System.out.printf("Execptions %s",e.getMessage());
+            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            eAlert.show();
+        }
     }
 
     public void dateUpdOrderView(ActionEvent actionEvent) {//view by date on final order reports
+        try {
+            for (User user : client.allUsers()) {
+                ArrayList<Order> orders = client.clientsOrders(user);
+            }
+        }
+        catch (Exception e){
+            System.out.printf("Execptions %s",e.getMessage());
+            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            eAlert.show();
+        }
     }
 
     public void ordReportClck(Event event) {//tab
