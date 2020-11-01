@@ -10,7 +10,7 @@ public class AdminClientMain extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("adminclient.fxml"));
         primaryStage.setTitle("Admin");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 500, 500));
         primaryStage.show();
     }
 

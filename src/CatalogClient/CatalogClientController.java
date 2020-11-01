@@ -24,13 +24,14 @@ public class CatalogClientController {
     public TextField prodNameDisplay;
     public Tab searchTab;
     public TextField searchProducts;
-    public Button doSearchButton;
+    public Button searchButton;
     public ListView searchResultsPane;
     public Button addFromSearchButton;
     public TextField prodPriceSearchDisplay;
     public TextField prodNameSearchDisplay;
     public Tab orderTab;
     public ListView productsInOrder;
+    public ListView searchProductDetails;
     public Button submitOrderButton;
     public Button cancelOrderButton;
     public TextField orderTotalCost;
@@ -47,8 +48,6 @@ public class CatalogClientController {
         called = false;
     }
     public void initializeMe() {
-
-
         browseCategories.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -62,13 +61,19 @@ public class CatalogClientController {
                 updateProductDetails(newValue);
             }
         });
+        searchProductDetails.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                updateProductSearchDetails(newValue);
+            }
+        });
         updateCatagories();
     }
     public void browseTabSel(Event event) {
 
         updateCatagories();
     }
-    private void updateProducts(String catagory){
+    private synchronized void updateProducts(String catagory){
         ArrayList<String> names= new ArrayList<>();
         try {
             ArrayList<Product> products = client.getProductsInCatagory(catagory);
@@ -81,7 +86,7 @@ public class CatalogClientController {
             System.out.printf("Failed to init cuz %s\n",e.getMessage());
         }
     }
-    private void updateProductDetails(String name){
+    private synchronized void updateProductDetails(String name){
         System.out.println("Updating details");
         ArrayList<String> names= new ArrayList<>();
         try {
@@ -96,7 +101,22 @@ public class CatalogClientController {
             System.out.printf("Failed to init cuz %s\n",e.getMessage());
         }
     }
-    private void updateCatagories(){
+    private synchronized void updateProductSearchDetails(String name){
+        System.out.println("Updating details");
+        ArrayList<String> names= new ArrayList<>();
+        try {
+            System.out.println("Updating details");
+            Product p = client.getProductByName(name);
+            System.out.println(p);
+            names = p.asDisplayable();
+            System.out.println(names);
+            searchProductDetails.setItems(FXCollections.observableList(names));
+        }
+        catch (Exception e){
+            System.out.printf("Failed to init cuz %s\n",e.getMessage());
+        }
+    }
+    private synchronized  void updateCatagories(){
         ArrayList<String> names= new ArrayList<>();
         try {
             ArrayList<Catagory> catagories = client.allCatagories();
@@ -120,7 +140,27 @@ public class CatalogClientController {
     public void searchTabSel(Event event) {
     }
 
-    public void doSearchAndUpdateList(ActionEvent actionEvent) {
+    public synchronized void doSearchAndUpdateList(ActionEvent actionEvent) {
+        String msg = searchProducts.getText();
+        searchProducts.setText("");
+        if(msg == null || msg.isEmpty()){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setContentText("Please enter something to search");
+            a.show();
+            return;
+        }
+        ArrayList<String> names= new ArrayList<>();
+        try {
+            ArrayList<Product> products = client.search(msg);
+            for(Product entry : products){
+                names.add(entry.getProductName());
+            }
+            searchResultsPane.setItems(FXCollections.observableList(names));
+        }
+        catch (Exception e){
+            System.out.printf("Failed to init cuz %s\n",e.getMessage());
+        }
+
     }
 
     public void selectProductFromSearch(MouseEvent mouseEvent) {
@@ -142,7 +182,7 @@ public class CatalogClientController {
     }
 
     public void loginUser(ActionEvent actionEvent) {
-        Stage stageTheLabelBelongs = (Stage) loginButton.getScene().getWindow();
+
 
     }
 

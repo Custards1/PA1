@@ -89,12 +89,12 @@ public class Adminclient {
     public void catManClick(Event event) {//tab
     }
 
-    /*public void ordReportClick(Event event) {//tab
+    public void ordReportClick(Event event) {//tab
     }
 
     public void saveCloseClick(ActionEvent actionEvent) {
         client.shutdown();//close
-    }*/
+    }
 
    /* public void toggleAdmin(ActionEvent actionEvent) {
         //change to add admin, add user

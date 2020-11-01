@@ -115,7 +115,6 @@ public class ClientTest {
             client.addCatagory("Electronic");
             client.addCatagory("Phone");
             client.addCatagory("Computer");
-            client.addCatagory("Removeable");
             client.addCatagory("RemoveableOne");
             client.addCatagory("RemoveableTwo");
 
@@ -158,10 +157,27 @@ public class ClientTest {
                     );
             //specify product catagory as Electronic, this will add it to the Electronic catagory aswell
             phone.getCatagories().add("Electronic");
-
+            ArrayList<String> specs = new ArrayList<>();
+            specs.add("sick");
+            specs.add("dope");
+            specs.add("awesome");
+            specs.add("sweet");
+            specs.add("nice");
+            specs.add("chill");
+            specs.add("fast");
+            Computer computer = new Computer("Laptop",
+                    "Dell",
+                    "A pimpin new laptop",
+                    LocalDate.now(),
+                    "9012332",
+                    LocalDate.of(2030,2,4),
+                    specs
+            );
+            computer.getCatagories().add("Computer");
+            computer.getCatagories().add("Electronic");
             //add the product to the catalog
             client.addProductToCatalog(phone);
-            
+            client.addProductToCatalog(computer);
             //this is an example electornic class
             Book fridge = new Book("Cool Fridge",
                     "CoolFridgeInc",
@@ -233,7 +249,7 @@ public class ClientTest {
 
             //ADMIN REQUIRED
             //shuting down server
-            client.askToShutdown();
+            //client.askToShutdown();
 
             System.out.println("Success");
         }

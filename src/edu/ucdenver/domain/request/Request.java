@@ -89,13 +89,12 @@ public class Request {
         }
     }
     public Request(BufferedReader stream) throws ClientError {
-        
         this.initFields();
         StringBuilder size = new StringBuilder(new String());
         int bytes = 0;
       
         try{
-            while ((bytes=stream.read())>0 && (char)bytes!='|'){
+            while ((bytes=stream.read())>0 && (char)bytes!='|' && stream.ready()){
                 size.append((char) bytes);
             }
 
