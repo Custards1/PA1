@@ -1,5 +1,6 @@
 package adminclient;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.scene.control.*;
@@ -30,7 +31,7 @@ public class Adminclient {
     //public ToggleGroup adminFlag;
     public TextField prodnameField;
     public Button updateCats;
-    public ComboBox prodCatSelBox;
+    public ComboBox<String> prodCatSelBox;
     public Button addProdClick;
     public Button delProdClick;
     public TextField catNameField;
@@ -60,6 +61,11 @@ public class Adminclient {
         catch (Exception e){
             System.out.printf("Execptions %s",e.getMessage());
         }
+        this.prodCatSelBox = new ComboBox<>();
+    }
+
+    public void initialize(){
+        this.prodCatSelBox.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
     }
 
     private void cleanCatManage(){
@@ -75,35 +81,35 @@ public class Adminclient {
         this.passwordFieldLogin.setText(" ");
     }
 
-    public void addUserClick(Event event) { }
+    public void addUserClick(Event event) { }//tab
 
-    public void prodManClick(Event event) {
+    public void prodManClick(Event event) {//tab
     }
 
-    public void catManClick(Event event) {
+    public void catManClick(Event event) {//tab
     }
 
-    public void ordReportClick(Event event) {
+    /*public void ordReportClick(Event event) {//tab
     }
 
     public void saveCloseClick(ActionEvent actionEvent) {
         client.shutdown();//close
-    }
+    }*/
 
-    public void toggleAdmin(ActionEvent actionEvent) {
+   /* public void toggleAdmin(ActionEvent actionEvent) {
         //change to add admin, add user
+    }*/
+
+    public void updatedCategories(ActionEvent actionEvent) {//product tab button
     }
 
-    public void updatedCategories(ActionEvent actionEvent) {
+    public void selProdCategory(ActionEvent actionEvent) {//product tab drop down menu
     }
 
-    public void selProdCategory(ActionEvent actionEvent) {
+    public void addProduct(ActionEvent actionEvent) {//product tab add button
     }
 
-    public void addProduct(ActionEvent actionEvent) {
-    }
-
-    public void deleteProduct(ActionEvent actionEvent) {
+    public void deleteProduct(ActionEvent actionEvent) {//product tab delete button
     }
 
     public void addCategory(ActionEvent actionEvent) {
@@ -111,6 +117,7 @@ public class Adminclient {
             client.addCatagory(this.catNameField.getText());
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory added");
             alert.show();
+            this.prodCatSelBox.getItems().addAll(this.catNameField.getText());
         }
         catch (Exception e){
             System.out.printf("Execptions %s",e.getMessage());
@@ -134,19 +141,19 @@ public class Adminclient {
         cleanCatManage();
     }
 
-    public void updateDefCat(ActionEvent actionEvent) {
+    public void updateDefCat(ActionEvent actionEvent) {//catagory managment confirm button
     }
 
-    public void selUserReportView(MouseEvent mouseEvent) {
+    public void selUserReportView(MouseEvent mouseEvent) {//viewer on final order reports
     }
 
-    public void dateUpdOrderView(ActionEvent actionEvent) {
+    public void dateUpdOrderView(ActionEvent actionEvent) {//view by date on final order reports
     }
 
-    public void ordReportClck(Event event) {
+    public void ordReportClck(Event event) {//tab
     }
 
-    public void checkAuthLogin(Event event) { }
+    public void checkAuthLogin(Event event) { }//tab
 
     public void loginUser(ActionEvent actionEvent) {
         //call in constructor
