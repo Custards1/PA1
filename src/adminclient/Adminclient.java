@@ -121,6 +121,7 @@ public class Adminclient {
         numPages = new Label();
         serialField = new TextField();
         serial = new Label();
+        dateSelOrderView = new DatePicker();
     }
 
     public void initialize(){
