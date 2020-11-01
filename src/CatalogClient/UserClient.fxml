@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CatalogClient.CatalogClientController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CatalogClient.CatalogClientController">
     <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <Tab fx:id="browseTab" onSelectionChanged="#browseTabSel" text="Browse">
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="266.0" prefWidth="394.0">
@@ -47,6 +38,21 @@
                   <ListView fx:id="searchProductDetails" layoutY="5.0" prefHeight="163.0" prefWidth="293.0" />
                     </AnchorPane>
                 </TitledPane>
+            <GridPane layoutX="338.0" layoutY="88.0" prefHeight="29.0" prefWidth="260.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <TextField fx:id="viewProdProperties" GridPane.columnIndex="1" />
+                  <Button fx:id="viewProdDetails" mnemonicParsing="false" onAction="#showProdDetails" text="View Details" GridPane.columnIndex="2" />
+                  <Label text="View properties" />
+               </children>
+            </GridPane>
             </AnchorPane>
         </Tab>
         <Tab fx:id="orderTab" onSelectionChanged="#orderTabSel" text="Order">

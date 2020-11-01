@@ -42,6 +42,7 @@ public class CatalogClientController {
     public Button loginButton;
     public Button resetButton;
     public ListView prdouctDetails;
+    public TextField viewProdProperties;
     private Client client;
     private boolean called;
     public CatalogClientController(){
@@ -167,9 +168,15 @@ public class CatalogClientController {
     }
 
     public void selectProductFromSearch(MouseEvent mouseEvent) {
-
-
-
+        //updateProductSearchDetails("IPhone");
+       /* searchProductDetails.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                System.out.println(newValue);
+                updateProductSearchDetails(newValue);
+            }
+        });*/
+        //System.out.println(searchProductDetails.getSelectionModel().selectionModeProperty());
     }
     public void login(ActionEvent event){
 
@@ -206,5 +213,21 @@ public class CatalogClientController {
     }
 
     public void resetTextFieldsLogin(ActionEvent actionEvent) {
+    }
+
+    public void showProdDetails(ActionEvent actionEvent) {
+        String name = this.viewProdProperties.getText();
+        ArrayList<String> names= new ArrayList<>();
+        try {
+            System.out.println("Updating details");
+            Product p = client.getProductByName(name);
+            System.out.println(p);
+            names = p.asDisplayable();
+            System.out.println(names);
+            searchProductDetails.setItems(FXCollections.observableList(names));
+        }
+        catch (Exception e){
+            System.out.printf("Failed to update prod search details cuz %s\n",e.getMessage());
+        }
     }
 }
