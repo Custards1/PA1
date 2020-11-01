@@ -31,7 +31,8 @@ public class Adminclient {
     public Button addUserClick;
     //public ToggleGroup adminFlag;
     public TextField prodnameField;
-    public Button updateCats;
+    public Button addCatsToProd;
+    public Button removeCatsFromProd;
     public ComboBox<String> prodCatSelBox;
     public Button addProdClick;
     public Button delProdClick;
@@ -204,5 +205,31 @@ public class Adminclient {
             eAlert.show();
         }
         cleanAddUser();
+    }
+
+    public void addCatToProd(ActionEvent actionEvent) {
+        try{
+            client.addCatagoryToProductByName(this.prodCatSelBox.getValue(), this.prodnameField.getText());
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory added to product");
+            alert.show();
+        }
+        catch (Exception e) {
+            System.out.printf("Execptions %s", e.getMessage());
+            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            eAlert.show();
+        }
+    }
+
+    public void removeCatFromProd(ActionEvent actionEvent) {
+        try{
+            client.removeCatagoryFromProductByName(this.prodCatSelBox.getValue(), this.prodnameField.getText());
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory removed from product");
+            alert.show();
+        }
+        catch (Exception e) {
+            System.out.printf("Execptions %s", e.getMessage());
+            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            eAlert.show();
+        }
     }
 }
