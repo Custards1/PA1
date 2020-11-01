@@ -1,8 +1,11 @@
 package CatalogClient;
 
 import edu.ucdenver.domain.client.Client;
+import edu.ucdenver.domain.user.User;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -34,6 +37,17 @@ public class CatalogClientController {
     public Button loginButton;
     public Button resetButton;
     private Client client;
+    public CatalogClientController(){
+
+    }
+    @FXML
+    public void initialize() {
+        // Step 1
+      //  Stage stage = (Stage) loginButton.getScene().getWindow();
+        // Step 2
+       // client = (Client) stage.getUserData();
+        // Step 3
+    }
     public void browseTabSel(Event event) {
     }
 
