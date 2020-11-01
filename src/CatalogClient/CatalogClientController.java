@@ -47,11 +47,13 @@ public class CatalogClientController {
         called = false;
     }
     public void initializeMe() {
-        Stage stage = (Stage)  prdouctDetails.getScene().getWindow();
+
+
         browseCategories.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 updateProducts(newValue);
+                prdouctDetails.getItems().clear();
             }
         });
         browseProductsInCategory.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -63,6 +65,7 @@ public class CatalogClientController {
         updateCatagories();
     }
     public void browseTabSel(Event event) {
+
         updateCatagories();
     }
     private void updateProducts(String catagory){
