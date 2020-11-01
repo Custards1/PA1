@@ -1,5 +1,6 @@
 package adminclient;
 
+import edu.ucdenver.domain.order.Order;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -123,7 +124,9 @@ public class Adminclient {
         serial = new Label();
         dateSelOrderView = new DatePicker();
     }
-
+    private Client getClient() throws ClientError {
+        return new Client("127.0.1.1", 8080, user, false);
+    }
     public void initialize(){
         this.prodCatSelBox.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
         this.defCategorySel.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
@@ -207,6 +210,8 @@ public class Adminclient {
                             }
                         }
 
+
+
                         author         .setText("");
                         location      .setText("");
                         imei          .setText("");
@@ -269,16 +274,16 @@ public class Adminclient {
     }
 
     private void cleanCatManage(){
-        this.catNameField.setText(" ");
+        this.catNameField.setText("");
     }
     private void cleanAddUser(){
-        this.usernameField.setText(" ");
-        this.passwordField.setText(" ");
-        this.emailField.setText(" ");
+        this.usernameField.setText("");
+        this.passwordField.setText("");
+        this.emailField.setText("");
     }
     private void cleanLogin(){
-        this.usernameFieldLogin.setText(" ");
-        this.passwordFieldLogin.setText(" ");
+        this.usernameFieldLogin.setText("");
+        this.passwordFieldLogin.setText("");
     }
 
     public void addUserClick(Event event) { }//tab
@@ -290,7 +295,14 @@ public class Adminclient {
     public void ordReportClick(Event event) { }//tab
 
     public void saveCloseClick(ActionEvent actionEvent) {
-        client.shutdown();//close
+        try {
+            client = getClient();
+            client.askToShutdown();
+            client.shutdown();
+        }
+        catch (Exception e){
+            client.shutdown();
+        }
         Platform.exit();
     }
 
@@ -308,7 +320,7 @@ public class Adminclient {
         try{
             Object o = productType.getValue();
             String s = (String)o;
-
+            client = getClient();
             switch (s){
                 case "Home":
                     Home home = new Home(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),locationField.getText());
@@ -341,7 +353,7 @@ public class Adminclient {
                     client.addProductToCatalog(product);
                     break;
             }
-
+            client.shutdown();
             prodnameField.setText("");
             brandName.setText("");
             prdDescription.setText("");
@@ -356,6 +368,7 @@ public class Adminclient {
         }
         catch (Exception e){
             System.out.printf("Execptions %s",e.getMessage());
+            client.shutdown();
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
         }
@@ -376,12 +389,15 @@ public class Adminclient {
 
     public void addCategory(ActionEvent actionEvent) {
         try {
+            client = getClient();
             client.addCatagory(this.catNameField.getText());
+            client.shutdown();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory added");
             alert.show();
             this.prodCatSelBox.getItems().addAll(this.catNameField.getText());
         }
         catch (Exception e){
+            client.shutdown();
             System.out.printf("Execptions %s",e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -391,12 +407,15 @@ public class Adminclient {
 
     public void deleteCategory(ActionEvent actionEvent) {
         try {
+            client = getClient();
             client.removeCatagory(this.catNameField.getText());
+            client.shutdown();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory deleted");
             alert.show();
             this.prodCatSelBox.getItems().remove(this.catNameField.getText());
         }
         catch (Exception e){
+            client.shutdown();
             System.out.printf("Execptions %s",e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -406,9 +425,12 @@ public class Adminclient {
 
     public void updateDefCat(ActionEvent actionEvent) {//catagory managment confirm button
         try {
+            client = getClient();
             client.setDefaultCatagory(this.defCategorySel.getValue());
+            client.shutdown();
         }
         catch (Exception e){
+            client.shutdown();
             System.out.printf("Execptions %s",e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -428,8 +450,25 @@ public class Adminclient {
 
     public void loginUser(ActionEvent actionEvent) {
         //call in constructor
-        this.user = new User("admin@admin.org",this.usernameFieldLogin.getText(),this.passwordFieldLogin.getText());
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Loged in");
+        if(this.emailField.getText().isEmpty() ||this.usernameFieldLogin.getText().isEmpty()||this.passwordFieldLogin.getText().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Please fill out all fields.");
+            alert.show();
+            cleanLogin();
+            return;
+        }
+        User user = new User(this.emailField.getText(),this.usernameFieldLogin.getText(),this.passwordFieldLogin.getText());
+        try{
+            client = getClient();
+            client.addAnotherUser(user);
+            client.shutdown();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to add user");
+            alert.show();
+            cleanLogin();
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Success");
         alert.show();
         cleanLogin();
     }
@@ -440,11 +479,14 @@ public class Adminclient {
 
     public void addAdmin(ActionEvent actionEvent) {
         try {
+            client = getClient();
             client.createAdmin(this.emailField.getText(), this.usernameField.getText(), this.passwordField.getText());
+            client.shutdown();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Admin created");
             alert.show();
         }
         catch (Exception e) {
+            client.shutdown();
             System.out.printf("Execptions %s", e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -455,11 +497,14 @@ public class Adminclient {
     public void addUser(ActionEvent actionEvent) {
         try {
             User temp = new User(this.emailField.getText(), this.usernameField.getText(), this.passwordField.getText());
+            client = getClient();
             client.addAnotherUser(temp);
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Admin created");
+            client.shutdown();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "User created");
             alert.show();
         }
         catch (Exception e) {
+            client.shutdown();
             System.out.printf("Execptions %s", e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -469,11 +514,14 @@ public class Adminclient {
 
     public void addCatToProd(ActionEvent actionEvent) {
         try{
+            client = getClient();
             client.addCatagoryToProductByName(this.prodCatSelBox.getValue(), this.prodnameField.getText());
+            client.shutdown();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory added to product");
             alert.show();
         }
         catch (Exception e) {
+            client.shutdown();
             System.out.printf("Execptions %s", e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -482,11 +530,14 @@ public class Adminclient {
 
     public void removeCatFromProd(ActionEvent actionEvent) {
         try{
+            client = getClient();
             client.removeCatagoryFromProductByName(this.prodCatSelBox.getValue(), this.prodnameField.getText());
+            client.shutdown();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory removed from product");
             alert.show();
         }
         catch (Exception e) {
+            client.shutdown();
             System.out.printf("Execptions %s", e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();

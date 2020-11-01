@@ -26,7 +26,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
     private ItemStore   userStore;
     private User        connectedUser;
 
-    //helper function
+    //helper function, sends a list of requestable objects
     private <T extends Requestable> void sendList(PrintWriter output,RequestType type,ArrayList<T> list) throws ClientError{
         ArrayList<HashMap<String,String>> objs = new ArrayList<>();
         for(T entry : list){
@@ -114,7 +114,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             throw new ClientError((ClientErrorType.INVALID_REQUEST));
         }
     }
-    //The rest are tasks the server supports
+    //Handles request to remove a product from the catalog
     private RequestType removeProductFromCatalog(Request incoming,BufferedReader input,PrintWriter output){
         String temp = new String();
         try {
@@ -154,6 +154,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
+    //Handles request to create another user
     private RequestType createAnotherUser(Request incoming, BufferedReader input, PrintWriter output) {
         if(incoming.getObjs().isEmpty()){
             try {
@@ -225,7 +226,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
 
     }
 
-
+    //Handles request to create an Admin user, connected user must be admin or client will recive an error
     private RequestType addAdminUser(Request incoming,BufferedReader input,PrintWriter output){
         
         if(incoming.getObjs().isEmpty()){
@@ -299,6 +300,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
 
 
     }
+    //Handles request to search products
     public RequestType searchProducts(Request incoming,BufferedReader input,PrintWriter output){
         String temp = new String();
         try {
@@ -322,6 +324,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
+    //Handles request to add a catagory to a prdocut
     private RequestType addCatagoryToProduct(Request incoming, BufferedReader input, PrintWriter output) {
         String temp = new String();
         try {
@@ -365,6 +368,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
+    //Terminates the server, must be admin or this function does nothing but send an error request
     private RequestType serverTerminate(Request incoming, BufferedReader input, PrintWriter output) {
         if(connectedUser.isAdmin()){
             RequestServerProtocol.terminate(serverRef,socket,input,output);
@@ -382,7 +386,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
         }
 
     }
-
+    //Handles request to return the default catagory
     private RequestType getDefaultCatagory(Request incoming, BufferedReader input, PrintWriter output) {
 
         Catagory d = null;
@@ -412,7 +416,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
-
+    //Handles request to get products from a specified catagory
     private RequestType getProductsFromCatagory(Request incoming, BufferedReader input, PrintWriter output) {
         String catagory = null;
         try{
@@ -457,7 +461,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
 
         }
     }
-
+    //Handles request to create a catagory, client must be admin
     private RequestType createCatagory(Request incoming, BufferedReader input, PrintWriter output) {
         String temp = new String();
         try {
@@ -482,7 +486,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
-
+    //Handles request to remove a catagory, client must be admin
     private RequestType removeCatagory(Request incoming, BufferedReader input, PrintWriter output) {
         String temp = new String();
         try {
@@ -518,7 +522,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
-
+    //Handles request to set a default catagory, client must be admin
     private RequestType setDefaultCatagories(Request incoming, BufferedReader input, PrintWriter output) {
         String temp = new String();
         try {
@@ -552,7 +556,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
-
+    //Handles request to get all catagories
     private RequestType getAllCatagories(PrintWriter output) {
         try {
             sendList(output,RequestType.OK,userStore.allCatagories());
@@ -562,7 +566,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             return RequestType.ERROR;
         }
     }
-
+    //Handles request to get all prodcuts
     private RequestType getAllProducts(PrintWriter output) {
         try {
             sendList(output,RequestType.OK,userStore.allProducts());
@@ -572,7 +576,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             return RequestType.ERROR;
         }
     }
-
+    //Handles request to addProductToTheCatalog, client must be admin
     private RequestType addProductToCatalog(Request incoming, BufferedReader input, PrintWriter output) {
         ArrayList<HashMap<String,String>> objs = incoming.getObjs();
         if(objs == null || objs.isEmpty()) {
@@ -642,7 +646,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
 
         }
     }
-
+    //Handles request to removeCatagoryFromProduct, client must be admin
     private RequestType removeCatagoryFromProduct(Request incoming, BufferedReader input, PrintWriter output) {
         String temp = new String();
         try {
@@ -686,6 +690,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
+    //Handles request to getAllUsers, client must be admin
     private RequestType getAllUsers(PrintWriter output) {
         try {
             sendList(output,RequestType.OK,userStore.allUsers(connectedUser));
@@ -695,6 +700,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             return RequestType.ERROR;
         }
     }
+    //Handles request to get the connceted users current order
     private RequestType getCurrentOrder(Request incoming, BufferedReader input, PrintWriter output) {
         try{
             System.out.println("Sent");
@@ -708,7 +714,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             return RequestType.ERROR;
         }
     }
-
+    //Handles request to remove a product from the order
     private RequestType removeProductFromOrder(Request incoming, BufferedReader input, PrintWriter output) {
         String temp = new String();
         try {
@@ -742,7 +748,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
-
+    //Handles request to add a product to the order
     private RequestType addProductToOrder(Request incoming, BufferedReader input, PrintWriter output) {
         String temp = new String();
         try {
@@ -777,7 +783,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
-
+    //Handles request to get all orders from specified user, must be admin
     private RequestType getUserOrders(Request incoming, BufferedReader input, PrintWriter output) {
         String temp = new String();
         try {
@@ -815,7 +821,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
         }
 
     }
-
+    //Handles request finilize products in cart
     private RequestType finalizeOrder(Request incoming, BufferedReader input, PrintWriter output) {
         try{
             Requestable r  = userStore.finalizeOrder(connectedUser);
@@ -826,6 +832,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             return RequestType.ERROR;
         }
     }
+    //Handles request to get users finalized orders
     private RequestType getFinalizedOrders(Request incoming, BufferedReader input, PrintWriter output) {
         try{
             ArrayList<Order> r  = userStore.getFinalizedOrders(connectedUser);
@@ -836,6 +843,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             return RequestType.ERROR;
         }
     }
+    //Handles request to get a product by name
     private RequestType getProductByName(Request incoming, BufferedReader input, PrintWriter output) {
         String temp = new String();
         try {
@@ -881,7 +889,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
         }
 
     }
-
+    //Handles request to clear the current order
     private RequestType clearOrder(Request incoming, BufferedReader input, PrintWriter output) {
         try {
             userStore.getCurrentOrder(connectedUser).getProducts().clear();
@@ -904,7 +912,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             }
         }
     }
-
+    //Replys to clients request
     public RequestType reply(Request incoming,BufferedReader input,PrintWriter output) {
         Request toSend = null;
         String temp = new String();
@@ -965,7 +973,7 @@ public class ServerTask implements Runnable, RequestServerProtocol {
     }
 
 
-
+    //starts the servertask
     @Override
     public void run(){
         BufferedReader input = null;
