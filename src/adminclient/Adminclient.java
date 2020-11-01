@@ -132,6 +132,7 @@ public class Adminclient {
             client.removeCatagory(this.catNameField.getText());
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory deleted");
             alert.show();
+            this.prodCatSelBox.getItems().remove(this.catNameField.getText());
         }
         catch (Exception e){
             System.out.printf("Execptions %s",e.getMessage());
