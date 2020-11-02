@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.util.converter.NumberStringConverter;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -65,6 +66,7 @@ public class Adminclient {
     public TextField numOfPages;
     public ChoiceBox productType;
     public GridPane gridPane;
+    public ComboBox delProdNam;
     private Label author;
     private Label location;
     private Label imei;
@@ -78,6 +80,7 @@ public class Adminclient {
     public TextField serialField;
     public TextField imeiField;
     public TextField osField;
+    public User selected;
     public DatePicker publicationDate;
     public DatePicker warranty;
     private Client client = null;
@@ -91,6 +94,7 @@ public class Adminclient {
         catch (Exception e){
             System.out.printf("Execptions %s",e.getMessage());
         }
+        selected = new User();
         this.prodCatSelBox = new ComboBox<>();
         this.defCategorySel = new ChoiceBox<>();
         locationField = new TextField();
@@ -129,10 +133,79 @@ public class Adminclient {
     private Client getClient() throws ClientError {
         return new Client("127.0.1.1", 8080, user, false);
     }
+    private void updateDelProd(){
+        try {
+
+            client = getClient();
+
+            ArrayList<Product> prods = client.allProducts();
+
+            ArrayList<String> s = new ArrayList<>();
+            for(Product p : prods){
+                if(p==null){
+                    continue;
+                }
+                s.add(p.getProductName());
+            }
+
+            this.delProdNam.setItems(FXCollections.observableArrayList(s));
+
+            client.shutdown();
+        }
+        catch (Exception e){
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
+        }
+    }
+    private void updateOrders(String user){
+
+        try{
+            client = getClient();
+
+            ArrayList<Order> orders = client.clientsOrdersByEmail(user);
+            ArrayList<String> names = new ArrayList<>();
+            for(Order order : orders){
+                names.add(order.getId());
+            }
+
+            this.userOrderViews.setItems(FXCollections.observableArrayList(names));
+            client.shutdown();
+        }
+        catch (Exception e){
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
+        }
+
+    }
     public void initialize(){
         this.prodCatSelBox.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
+
         this.defCategorySel.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
         this.productType.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
+      updateDelProd();
+        userSelectOrderViews.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                updateOrders(newValue);
+            }
+        });
+        userOrderViews.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                updateOrderDetails(newValue);
+            }
+        });
+
         productType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
@@ -193,7 +266,6 @@ public class Adminclient {
                         numPages.setText("Number of pages:");
                         gridPane.add(author,0,6);
                         gridPane.add(authorField,1,6);
-
                         gridPane.add(pusblication,0,7);
                         gridPane.add(publicationDate,1,7);
 
@@ -258,6 +330,28 @@ public class Adminclient {
 
     }
 
+    private void updateOrderDetails(String newValue) {
+
+        try{
+
+            client = getClient();
+
+            Order orders= client.clientsOrderById(newValue);
+
+            dateOrderView.setItems(FXCollections.observableArrayList(orders));
+            client.shutdown();
+        }
+        catch (Exception e){
+            try {
+                client.shutdown();
+            }
+            catch (Exception ignored){
+
+            }
+        }
+
+    }
+
     private void cleanCatManage(){
         this.catNameField.setText("");
     }
@@ -273,7 +367,9 @@ public class Adminclient {
 
     public void addUserClick(Event event) { }//tab
 
-    public void prodManClick(Event event) { }//tab
+    public void prodManClick(Event event) {
+        updateDelProd();
+    }//tab
 
     public void catManClick(Event event) { }//tab
 
@@ -286,7 +382,13 @@ public class Adminclient {
             client.shutdown();
         }
         catch (Exception e){
-            client.shutdown();
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
         }
         Platform.exit();
     }
@@ -305,40 +407,46 @@ public class Adminclient {
         try{
             Object o = productType.getValue();
             String s = (String)o;
-            client = getClient();
+
             switch (s){
                 case "Home":
                     Home home = new Home(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),locationField.getText());
                     home.getCatagories().add(prodCatSelBox.getValue());
+                    client = getClient();
                     client.addProductToCatalog(home);
 
                     break;
                 case "Book":
                     Book book = new Book(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),authorField.getText(),publicationDate.getValue(),30);
                     book.getCatagories().add(prodCatSelBox.getValue());
+                    client = getClient();
                     client.addProductToCatalog(book);
                     break;
                 case "Phone":
                     Phone phone = new Phone(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),serialField.getText(),warranty.getValue(),imeiField.getText(),osField.getText());
                     phone.getCatagories().add(prodCatSelBox.getValue());
+                    client = getClient();
                     client.addProductToCatalog(phone);
                     break;
                 case "Computer":
                     Computer c = new Computer(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),serialField.getText(),warranty.getValue(),new ArrayList<>());
                     c.getCatagories().add(prodCatSelBox.getValue());
+                    client = getClient();
                     client.addProductToCatalog(c);
                     break;
                 case "Electronic":
                     Electronic el = new Electronic(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),serialField.getText(),warranty.getValue());
                     el.getCatagories().add(prodCatSelBox.getValue());
+                    client = getClient();
                     client.addProductToCatalog(el);
                     break;
                 default:
                     Product product = new Product(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now());
                     client.addProductToCatalog(product);
+                    client = getClient();
                     break;
             }
-            client.shutdown();
+
             prodnameField.setText("");
             brandName.setText("");
             prdDescription.setText("");
@@ -347,25 +455,55 @@ public class Adminclient {
             osField.setText("");
             authorField.setText("");
             locationField.setText("");
-            //client.addProductToCatalog();
+
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Product added");
             alert.show();
+            client.shutdown();
         }
         catch (Exception e){
             System.out.printf("Execptions %s",e.getMessage());
-            client.shutdown();
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
         }
     }
 
     public void deleteProduct(ActionEvent actionEvent) {//product tab delete button
+
         try{
-           // client.removeProductFromCatalog();
+
+            String s = (String)delProdNam.getValue();
+
+            if(s == null ||s.isEmpty()){
+
+                Alert eAlert = new Alert(Alert.AlertType.ERROR, "Please select a product to delete");
+                eAlert.show();
+                return;
+            }
+
+            client = getClient();
+           client.removeProductFromCatalogByName(s);
+           client.shutdown();
+
+            updateDelProd();
+
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Product deleted");
             alert.show();
         }
         catch (Exception e){
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
             System.out.printf("Execptions %s",e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -382,7 +520,14 @@ public class Adminclient {
             this.prodCatSelBox.getItems().addAll(this.catNameField.getText());
         }
         catch (Exception e){
-            client.shutdown();
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
+
             System.out.printf("Execptions %s",e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -400,7 +545,13 @@ public class Adminclient {
             this.prodCatSelBox.getItems().remove(this.catNameField.getText());
         }
         catch (Exception e){
-            client.shutdown();
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
             System.out.printf("Execptions %s",e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -415,7 +566,13 @@ public class Adminclient {
             client.shutdown();
         }
         catch (Exception e){
-            client.shutdown();
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
             System.out.printf("Execptions %s",e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -424,11 +581,20 @@ public class Adminclient {
 
     public void selUserReportView(MouseEvent mouseEvent) {//viewer on final order reports
         try {
+            client = getClient();
             for (User user : client.allUsers()) {
                 ArrayList<Order> orders = client.clientsOrders(user);
             }
+            client.shutdown();
         }
         catch (Exception e){
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
             System.out.printf("Execptions %s",e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -449,6 +615,27 @@ public class Adminclient {
     }
 
     public void ordReportClck(Event event) {//tab
+        System.out.println("Updatings details");
+        ArrayList<String> names= new ArrayList<>();
+        try {
+            client=getClient();
+            System.out.println("Updating details");
+            ArrayList<User> users=client.allUsers();
+            for(User user : users){
+             names.add(user.getEmail());
+            }
+            client.shutdown();
+            userSelectOrderViews.setItems(FXCollections.observableList(names));
+        }
+        catch (Exception e){
+            try {
+                client.shutdown();
+            }
+            catch (Exception se) {
+
+            }
+            System.out.printf("Failed to update prod search details cuz %s\n",e.getMessage());
+        }
     }
 
     public void checkAuthLogin(Event event) { }//tab
@@ -491,7 +678,13 @@ public class Adminclient {
             alert.show();
         }
         catch (Exception e) {
-            client.shutdown();
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
             System.out.printf("Execptions %s", e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -509,7 +702,13 @@ public class Adminclient {
             alert.show();
         }
         catch (Exception e) {
-            client.shutdown();
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
             System.out.printf("Execptions %s", e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -526,7 +725,13 @@ public class Adminclient {
             alert.show();
         }
         catch (Exception e) {
-            client.shutdown();
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
             System.out.printf("Execptions %s", e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
@@ -542,10 +747,20 @@ public class Adminclient {
             alert.show();
         }
         catch (Exception e) {
-            client.shutdown();
+            try {
+                client.shutdown();
+            }
+
+            catch (Exception ignored){
+
+            }
             System.out.printf("Execptions %s", e.getMessage());
             Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             eAlert.show();
         }
+    }
+
+    public void selDelProd(ActionEvent actionEvent) {
+
     }
 }

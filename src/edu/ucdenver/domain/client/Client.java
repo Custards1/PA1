@@ -229,14 +229,17 @@ public class Client implements RequestClientProtocol {
         return addCatagoryToProduct(catagoryName,id.toString());
     }
     public synchronized void removeProductFromCatalog(String productId) throws ClientError {
+        System.out.println("Is rmpdfc");
         if(!this.isAdmin || productId == null){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
-       
+        System.out.println("Is rmpdasdfc");
         HashMap<String,String> fields = new HashMap<>();
+        System.out.println("Is rmpasddfc");
         fields.put("product-to-remove",productId);
+        System.out.println("Is rasdsdmpdfc");
         RequestClientProtocol.sendMinimalRequest(this,RequestType.REMOVE_PRODUCT_FROM_CATALOG,fields,output);
-  
+        System.out.println("Iasdsdas rmpdfc");
         Request r = okOrDie(this,input);
       
     }
@@ -475,6 +478,38 @@ public class Client implements RequestClientProtocol {
         }
         return orders;
     }
+    public synchronized ArrayList<Order> clientsOrdersByEmail(String email) throws ClientError {
+        HashMap<String,String> ss = new HashMap<>();
+        ss.put("email",email);
+        RequestClientProtocol.sendMinimalRequest (this,RequestType.GET_USER_ORDERS,ss,output);
+        ArrayList<Order> orders = new ArrayList<>();
+        Request r = okOrDie(this,input);
+        for(HashMap<String,String> objs : r.getObjs() ){
+            Order temp = new Order();
+            temp.fromRequestable(objs);
+            orders.add(temp);
+        }
+        return orders;
+    }
+    public Order clientsOrderById(String newValue) throws ClientError {
+        HashMap<String,String> ss = new HashMap<>();
+        ss.put("id",newValue);
+        System.out.println("WSEndt");
+        RequestClientProtocol.sendMinimalRequest (this,RequestType.GET_USER_ORDERS,ss,output);
+        ArrayList<Order> orders = new ArrayList<>();
+        System.out.println("SEndt");
+        Request r = okOrDie(this,input);
+        System.out.println("Gott");
+        Order o = new Order();
+        try {
+            o.fromRequestable(r.getObjs().get(0));
+        }
+        catch (Exception e){
+            throw new ClientError(ClientErrorType.INVALID_REQUEST);
+        }
+        return o;
+    }
+
     public synchronized Order finalizeOrder() throws ClientError {
         RequestClientProtocol.sendBlankRequest(this,RequestType.FINALIZE_ORDER,output);
 
@@ -560,7 +595,8 @@ public class Client implements RequestClientProtocol {
         RequestClientProtocol.sendMinimalRequest(this,RequestType.SET_DEFAULT_CATAGORY,cat,output);
         Request r = okOrDie(this,input);
     }
-   
+
+
 
 
     /*

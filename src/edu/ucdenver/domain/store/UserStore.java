@@ -45,6 +45,22 @@ public class UserStore  implements Serializable  {
             throw new IllegalArgumentException();
         }
     }
+    private synchronized User getUser(String email) throws IllegalArgumentException {
+        if(!userNameMap.containsKey(email)){
+            throw new IllegalArgumentException();
+        }
+        try {
+            User user=users.get(userNameMap.get(email));
+            if(user ==null) {
+                throw new IllegalArgumentException();
+            }
+
+            return user;
+        }
+        catch (Exception e){
+            throw new IllegalArgumentException();
+        }
+    }
     private synchronized void addUserRaw(User user) {
         this.users.add(user);
         userNameMap.put(user.getEmail(),this.users.size()-1);
@@ -195,6 +211,16 @@ public class UserStore  implements Serializable  {
         ArrayList<Order> toRet = new ArrayList<>();
         for(int i =0;i < user.getOrders();i++){
             toRet.add(getOrder(user.getOrderId(i)));
+        }
+        return toRet;
+    }
+    public synchronized ArrayList<Order> getUsersOrders(User connectedUser,String email) throws IllegalArgumentException {
+        if(!connectedUser.validLoginInfo()){
+            throw new IllegalArgumentException();
+        }
+        ArrayList<Order> toRet = new ArrayList<>();
+        for(int i =0;i <getUser(email).getOrders();i++){
+            toRet.add(getOrder(getUser(email).getOrderId(i)));
         }
         return toRet;
     }

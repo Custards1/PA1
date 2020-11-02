@@ -787,10 +787,33 @@ public class ServerTask implements Runnable, RequestServerProtocol {
     private RequestType getUserOrders(Request incoming, BufferedReader input, PrintWriter output) {
         String temp = new String();
         try {
-            ArrayList<HashMap<String,String>> objs = incoming.getObjs();
-            if(objs == null || objs.isEmpty()) {
+            temp = incoming.getTable().get("id");
+            if(temp==null||temp.isEmpty()){
+                ArrayList<HashMap<String,String>> objs = incoming.getObjs();
+                if(objs == null || objs.isEmpty()) {
+                    try{
+                        temp = incoming.getTable().get("email");
+                        if(temp==null||temp.isEmpty()){
+                            try {
+                                RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_RESOURCE);
+                                return RequestType.OK;
+                            }
+                            catch (Exception ee){
+                                return RequestType.ERROR;
+                            }
+                        }
+                        ArrayList<Order> r  = userStore.getUsersOrders(connectedUser,temp);
+                        sendList(output,RequestType.OK,r);
+                        return RequestType.OK;
+                    }
+                    catch (Exception e){
+                        return RequestType.ERROR;
+                    }
+                }
+                User user = new User();
+                user.fromRequestable(objs.get(0));
                 try{
-                    ArrayList<Order> r  = userStore.getUsersOrders(connectedUser);
+                    ArrayList<Order> r  = userStore.getUsersOrders(connectedUser,user);
                     sendList(output,RequestType.OK,r);
                     return RequestType.OK;
                 }
@@ -798,16 +821,15 @@ public class ServerTask implements Runnable, RequestServerProtocol {
                     return RequestType.ERROR;
                 }
             }
-           User user = new User();
-            user.fromRequestable(objs.get(0));
-            try{
-                ArrayList<Order> r  = userStore.getUsersOrders(connectedUser,user);
-                sendList(output,RequestType.OK,r);
+            try {
+                Order order = userStore.getOrder(temp);
+                RequestServerProtocol.sendRequestable(output,RequestType.OK,order);
                 return RequestType.OK;
             }
-            catch (Exception e){
+            catch (Exception ee){
                 return RequestType.ERROR;
             }
+
 
         }
         catch (IllegalArgumentException e){

@@ -234,8 +234,9 @@ public class ClientTest {
             System.out.printf("Current order id is %s\n",current.getId());
             client.addProductToOrder(phone);
             client.addProductToOrder(phone);
-            client.removeProductFromOrder(phone);
             Order fin = client.finalizeOrder();
+            client.addProductToOrder(phone);
+            client.finalizeOrder();
             System.out.printf("Final order id is %s\n",current.getId());
 
             int i =0;
