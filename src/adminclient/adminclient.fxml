@@ -100,7 +100,7 @@
                     </rowConstraints>
                     <Button fx:id="addProdClick" mnemonicParsing="false" onAction="#addProduct" text="Add Product" GridPane.halignment="CENTER" />
                     <Button fx:id="delProdClick" mnemonicParsing="false" onAction="#deleteProduct" prefWidth="96.0" text="Delete Product" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-               <ComboBox fx:id="delProdNam" onAction="#selDelProd"  prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               <ComboBox fx:id="delProdNam" onAction="#selDelProd" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 </GridPane>
             <GridPane fx:id="extraTextFields" layoutX="453.0" layoutY="47.0" prefHeight="311.0" prefWidth="142.0">
               <columnConstraints>
@@ -163,17 +163,9 @@
                     <ListView fx:id="userOrderViews" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
                     <ListView fx:id="userSelectOrderViews" onMouseClicked="#selUserReportView" prefHeight="200.0" prefWidth="200.0" />
                 </GridPane>
-                <GridPane layoutX="15.0" layoutY="197.0" prefHeight="160.0" prefWidth="570.0">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                    <DatePicker fx:id="dateSelOrderView" onAction="#dateUpdOrderView" GridPane.halignment="CENTER" />
-                    <ListView fx:id="dateOrderView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
-                </GridPane>
+                 <DatePicker fx:id="dateSelOrderView" layoutX="14.0" layoutY="207.0" onAction="#dateUpdOrderView" />
+                 <ListView fx:id="dateOrderView" layoutX="369.0" layoutY="175.0" prefHeight="192.0" prefWidth="200.0" />
+            <DatePicker fx:id="dateSelOderViewEnd" layoutX="14.0" layoutY="271.0" onAction="#dateUpdOrderViewEnd" />
             </AnchorPane>
         </Tab>
         <Tab fx:id="loginTab" onCloseRequest="#checkAuthLogin" text="Login">

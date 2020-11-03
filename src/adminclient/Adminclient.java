@@ -24,6 +24,8 @@ import javafx.util.converter.NumberStringConverter;
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 //File Upload Test
 import javafx.util.converter.NumberStringConverter;
@@ -56,6 +58,9 @@ public class Adminclient {
     public ListView userOrderViews;
     public ListView userSelectOrderViews;
     public DatePicker dateSelOrderView;
+    public DatePicker dateSelOrderViewEnd;
+    LocalDate one;
+    LocalDate two;
     public ListView dateOrderView;
     public Tab loginTab;
     public TextField usernameFieldLogin;
@@ -129,6 +134,10 @@ public class Adminclient {
         serialField = new TextField();
         serial = new Label();
         dateSelOrderView = new DatePicker();
+        one = LocalDate.now();
+        two = LocalDate.now();
+        dateSelOrderView = new DatePicker();
+        dateSelOrderViewEnd = new DatePicker();
     }
     private Client getClient() throws ClientError {
         return new Client("127.0.1.1", 8080, user, false);
@@ -163,20 +172,23 @@ public class Adminclient {
         }
     }
     private void updateOrders(String user){
+        LocalDate onet = one.compareTo(two) <= 0  ?one : two;
+        LocalDate twot = one.compareTo(two) <= 0  ? two : one;
 
         try{
             client = getClient();
-
             ArrayList<Order> orders = client.clientsOrdersByEmail(user);
             ArrayList<String> names = new ArrayList<>();
             for(Order order : orders){
-                names.add(order.getId());
+                 if(order.getFinalization().compareTo(onet)>=0 && order.getFinalization().compareTo(twot)<=0) {
+                   names.add(order.getId());
+                 }
             }
-
             this.userOrderViews.setItems(FXCollections.observableArrayList(names));
             client.shutdown();
         }
         catch (Exception e){
+            System.out.println("NOOO");
             try {
                 client.shutdown();
             }
@@ -185,7 +197,6 @@ public class Adminclient {
 
             }
         }
-
     }
     public void initialize(){
         this.prodCatSelBox.setItems(FXCollections.observableArrayList("Book", "Computer", "Electronic", "Home", "Phone"));
@@ -337,8 +348,14 @@ public class Adminclient {
             client = getClient();
 
             Order orders= client.clientsOrderById(newValue);
-
-            dateOrderView.setItems(FXCollections.observableArrayList(orders));
+            ArrayList<String> names = new ArrayList<>();
+            names.add(String.format("Finalized: %s",orders.getFinalization().toString()));
+            names.add("Products:");
+            for (String name : orders.getProducts()){
+                Product p = client.getProduct(name);
+                names.add(String.format("         %s",p.getProductName()));
+            }
+            dateOrderView.setItems(FXCollections.observableArrayList(names));
             client.shutdown();
         }
         catch (Exception e){
@@ -602,15 +619,14 @@ public class Adminclient {
     }
 
     public void dateUpdOrderView(ActionEvent actionEvent) {//view by date on final order reports
-        try {
-            for (User user : client.allUsers()) {
-                ArrayList<Order> orders = client.clientsOrders(user);
-            }
-        }
-        catch (Exception e){
-            System.out.printf("Execptions %s",e.getMessage());
-            Alert eAlert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-            eAlert.show();
+       if(dateSelOrderView.getValue()!=null){
+           one = dateSelOrderView.getValue();
+       }
+
+    }
+    public void dateUpdOrderViewEnd(ActionEvent actionEvent) {//view by date on final order reports
+        if(dateSelOrderViewEnd.getValue()!=null){
+            two = dateSelOrderViewEnd.getValue();
         }
     }
 

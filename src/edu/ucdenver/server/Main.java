@@ -13,6 +13,7 @@ public class Main {
         while(invalid){
             System.out.println("1) Read from file (default.ser)");
             System.out.println("2) Start without a file");
+            System.out.print(">> ");
             String in=null;
             try {
                 in = br.readLine();
