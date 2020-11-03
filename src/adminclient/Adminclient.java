@@ -19,10 +19,14 @@ import edu.ucdenver.domain.order.*;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.util.converter.DateStringConverter;
 import javafx.util.converter.NumberStringConverter;
 
 import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -185,10 +189,14 @@ public class Adminclient {
                  }
             }
             this.userOrderViews.setItems(FXCollections.observableArrayList(names));
+            if(this.dateOrderView!=null){
+                this.dateOrderView.getItems().clear();
+            }
+
             client.shutdown();
         }
         catch (Exception e){
-            System.out.println("NOOO");
+
             try {
                 client.shutdown();
             }
@@ -619,15 +627,26 @@ public class Adminclient {
     }
 
     public void dateUpdOrderView(ActionEvent actionEvent) {//view by date on final order reports
-       if(dateSelOrderView.getValue()!=null){
            one = dateSelOrderView.getValue();
-       }
-
+           System.out.println(one);
     }
     public void dateUpdOrderViewEnd(ActionEvent actionEvent) {//view by date on final order reports
-        if(dateSelOrderViewEnd.getValue()!=null){
-            two = dateSelOrderViewEnd.getValue();
+        try{
+            System.out.println(dateSelOrderViewEnd.getEditor().getText());
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            System.out.println("1");
+            Date convertedCurrentDate = sdf.parse(dateSelOrderViewEnd.getEditor().getText());
+            System.out.println("2");
+            Instant instant = convertedCurrentDate.toInstant();
+            System.out.println("3");
+            two = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+            System.out.println("4");
+            System.out.println(two);
         }
+        catch (Exception e){
+System.out.println(String.format("Failed because %s",e.getMessage()));
+        }
+
     }
 
     public void ordReportClck(Event event) {//tab

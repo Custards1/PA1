@@ -165,7 +165,7 @@
                 </GridPane>
                  <DatePicker fx:id="dateSelOrderView" layoutX="14.0" layoutY="207.0" onAction="#dateUpdOrderView" />
                  <ListView fx:id="dateOrderView" layoutX="369.0" layoutY="175.0" prefHeight="192.0" prefWidth="200.0" />
-            <DatePicker fx:id="dateSelOderViewEnd" layoutX="14.0" layoutY="271.0" onAction="#dateUpdOrderViewEnd" />
+            <DatePicker fx:id="dateSelOrderViewEnd" layoutX="14.0" layoutY="271.0" onAction="#dateUpdOrderViewEnd" />
             </AnchorPane>
         </Tab>
         <Tab fx:id="loginTab" onCloseRequest="#checkAuthLogin" text="Login">
