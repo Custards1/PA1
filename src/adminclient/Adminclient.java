@@ -241,7 +241,7 @@ public class Adminclient {
                     Integer i = GridPane.getRowIndex(n);
                     n = null;
                 }
-            try{
+            //try{
                 switch ((String)productType.getItems().get((Integer) number2)){
                     case "Home":
                         for(Node n : gridPane.getChildren()) {
@@ -262,8 +262,18 @@ public class Adminclient {
                         warrantyN.setText("");
                         numPages .setText("");
                         serial .setText("");
-                        gridPane.add(location,0,6);
-                        gridPane.add(locationField,1,6);
+                        try {
+                            gridPane.add(location, 0, 6);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(locationField, 1, 6);
+                        }
+                        catch (Exception ignored){
+
+                        }
                         break;
                     case "Book":
                         for(Node n : gridPane.getChildren()) {
@@ -287,13 +297,42 @@ public class Adminclient {
                         author.setText("Author:");
                         pusblication.setText("Publication Date:");
                         numPages.setText("Number of pages:");
-                        gridPane.add(author,0,6);
-                        gridPane.add(authorField,1,6);
-                        gridPane.add(pusblication,0,7);
-                        gridPane.add(publicationDate,1,7);
+                        try {
+                            gridPane.add(author, 0, 6);
+                        }
+                        catch (Exception ignored){
 
-                        gridPane.add(numPages,0,8);
-                        gridPane.add(numOfPages,1,8);
+                        }
+                        try {
+                            gridPane.add(authorField, 1, 6);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(pusblication, 0, 7);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(publicationDate, 1, 7);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(numPages, 0, 8);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(numOfPages, 1, 8);
+                        }
+                        catch (Exception ignored){
+
+                        }
 
                         break;
                     case "Electronic":
@@ -310,11 +349,30 @@ public class Adminclient {
 
                         serial.setText("Serial:");
                         warrantyN.setText("Warranty:");
-                        gridPane.add(serial,0,6);
-                        gridPane.add(authorField,1,6);
+                        try {
+                            gridPane.add(serial, 0, 6);
+                        }
+                        catch (Exception ignored){
 
-                        gridPane.add(warrantyN,0,7);
-                        gridPane.add(warranty,1,7);
+                        }
+                        try {
+                            gridPane.add(authorField, 1, 6);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(warrantyN, 0, 7);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(warranty, 1, 7);
+                        }
+                        catch (Exception ignored){
+
+                        }
 
                         break;
                     case "Computer":
@@ -331,22 +389,62 @@ public class Adminclient {
                         os.setText("OS:");
                         serial.setText("Serial:");
                         warrantyN.setText("Warranty:");
-                        gridPane.add(serial,0,6);
-                        gridPane.add(serialField,1,6);
-                        gridPane.add(warrantyN,0,7);
-                        gridPane.add(warranty,1,7);
-                        gridPane.add(imei,0,8);
-                        gridPane.add(imeiField,1,8);
-                        gridPane.add(os,0,9);
-                        gridPane.add(osField,1,9);
+                        try {
+                            gridPane.add(serial, 0, 6);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(serialField, 1, 6);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(warrantyN, 0, 7);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(warranty, 1, 7);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(imei, 0, 8);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(imeiField, 1, 8);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(os, 0, 9);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(osField, 1, 9);
+                        }
+                        catch (Exception ignored){
+
+                        }
 
 
                     default:break;
                 }
-            }
-            catch (Exception ignored){
+           // }
+           /* catch (Exception ignored){
 
-            }
+            }*/
 
             }
         });
