@@ -34,9 +34,12 @@ public class Computer extends Electronic implements Requestable, Serializable {
     }
     @Override
     public HashMap<String, String> asRequestable() {
+        System.out.println("YoMCBRO");
         setType("Computer");
         HashMap<String, String> base = super.asRequestable();
-        base.put("specs", RequestObjectParser.intoRaw(technicalSpecs));
+        System.out.println("Yo");
+        base.put("specs", technicalSpecs.isEmpty()?"None":RequestObjectParser.intoRaw(technicalSpecs));
+        System.out.println("YoYO");
         return base;
     }
     @Override

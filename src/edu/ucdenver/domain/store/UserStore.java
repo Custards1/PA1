@@ -177,13 +177,13 @@ public class UserStore  implements Serializable  {
         }
 
         String orderName = connectedUser.getCurrentOrderId();
-        System.out.printf("Orderid is %s\n",orderName);
+
         Integer i = orderNameMap.get(orderName);
         if(i == null){
-            System.out.printf("Ordwwerid is %s\n",orderName);
+
                 return addOrderRaw(new Order(orderName));
         }
-        System.out.printf("aOrderid is %s\n",orderName);
+
         return getOrder(orderName);
     }
     //returns the users current order and finalizes it, throws if id is not found in store

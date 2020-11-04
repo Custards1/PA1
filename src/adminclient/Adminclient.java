@@ -258,7 +258,7 @@ public class Adminclient {
                         location.setText("Location:");
                         author         .setText("");
                         imei          .setText("");
-                        os            .setText("");;
+                        os            .setText("");
                         pusblication  .setText("");
                         warrantyN.setText("");
                         numPages .setText("");
@@ -390,14 +390,57 @@ public class Adminclient {
 
                         break;
                     case "Computer":
-                        location.setText("");
+                        for(Node n : gridPane.getChildren()) {
+                            Integer i = GridPane.getRowIndex(n);
+                            if(i==null || i==0){
+                                continue;
+                            }
+                            if(i == 6||i == 7){
+                                n.setVisible(true);
+                            }
+                        }
+                        for(TextField i : specFields){
+                            i.setVisible(false);
+                        }
+
+
                         author         .setText("");
+                        location      .setText("");
                         imei          .setText("");
                         os            .setText("");;
                         pusblication  .setText("");
-                        warrantyN.setText("");
+
                         numPages .setText("");
-                        serial .setText("");
+
+                        serial.setText("Serial:");
+                        warrantyN.setText("Warranty:");
+                        try {
+                            gridPane.add(serial, 0, 6);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(authorField, 1, 6);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(warrantyN, 0, 7);
+                        }
+                        catch (Exception ignored){
+
+                        }
+                        try {
+                            gridPane.add(warranty, 1, 7);
+                        }
+                        catch (Exception ignored){
+
+                        }
+
+
+
                         TextInputDialog td = new TextInputDialog("");
                         td.setHeaderText("Enter number of specs");
                         td.showAndWait();
@@ -412,21 +455,21 @@ public class Adminclient {
                             if(i==null || i==0){
                                 continue;
                             }
-                            if(i >= 6&& i<=6+numSpec){
+                            if(i >= 8&& i<=8+numSpec){
                                 n.setVisible(true);
                             }
                         }
                         for(int i = 0; i < numSpec;i++){
                             specFields.add(new TextField());
                             try {
-                                gridPane.add(specFields.get(specFields.size()-1), 0, i+6);
+                                gridPane.add(specFields.get(specFields.size()-1), 0, i+8);
                             }
                             catch (Exception ignored){
 
                             }
                             specFields.add(new TextField());
                             try {
-                                gridPane.add(specFields.get(specFields.size()-1), 1, i+6);
+                                gridPane.add(specFields.get(specFields.size()-1), 1, i+8);
                             }
                             catch (Exception ignored){
 
@@ -627,7 +670,7 @@ public class Adminclient {
                 case "Computer":
                     ArrayList<String> specs = new ArrayList<>();
                     for(TextField f : specFields){
-                        if(f !=null && f.getText()!=null){
+                        if(f !=null && f.getText()!=null && !f.getText().isEmpty()){
                             specs.add(f.getText());
                         }
                     }

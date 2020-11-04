@@ -47,10 +47,14 @@ public interface RequestClientProtocol {
                                        RequestType type,
                                        Requestable requestable,
                                        PrintWriter output) throws ClientError {
+
         ArrayList<HashMap<String,String>> objs = new ArrayList<>();
         objs.add(requestable.asRequestable());
+
         Request to_send = new Request(type,null,objs);
+
         try {
+
             to_send.send(output);
         }
         catch (IOException e){
