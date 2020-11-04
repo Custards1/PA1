@@ -239,10 +239,6 @@ public class Adminclient {
                         n.setVisible(false);
                     }
                 }
-                for(Node n : gridPane.getChildren()) {
-                    Integer i = GridPane.getRowIndex(n);
-                    n = null;
-                }
             //try{
                 switch ((String)productType.getItems().get((Integer) number2)){
                     case "Home":
@@ -254,6 +250,9 @@ public class Adminclient {
                             if(i == 6){
                                 n.setVisible(true);
                             }
+                        }
+                        for(TextField i : specFields){
+                            i.setVisible(false);
                         }
 
                         location.setText("Location:");
@@ -287,7 +286,9 @@ public class Adminclient {
                                 n.setVisible(true);
                             }
                         }
-
+                        for(TextField i : specFields){
+                            i.setVisible(false);
+                        }
 
                         location      .setText("");
                         imei          .setText("");
@@ -347,7 +348,9 @@ public class Adminclient {
                                 n.setVisible(true);
                             }
                         }
-
+                        for(TextField i : specFields){
+                            i.setVisible(false);
+                        }
 
 
                         author         .setText("");
@@ -387,10 +390,21 @@ public class Adminclient {
 
                         break;
                     case "Computer":
+                        location.setText("");
+                        author         .setText("");
+                        imei          .setText("");
+                        os            .setText("");;
+                        pusblication  .setText("");
+                        warrantyN.setText("");
+                        numPages .setText("");
+                        serial .setText("");
                         TextInputDialog td = new TextInputDialog("");
                         td.setHeaderText("Enter number of specs");
                         td.showAndWait();
                         String temp = td.getEditor().getText();
+                        for(TextField i : specFields){
+                            i.setVisible(false);
+                        }
                         specFields = new ArrayList<>();
                         Integer numSpec = Integer.valueOf(temp);
                         for(Node n : gridPane.getChildren()) {
@@ -429,6 +443,9 @@ public class Adminclient {
                             if(i == 6||i == 7||i == 8||i == 9){
                                 n.setVisible(true);
                             }
+                        }
+                        for(TextField i : specFields){
+                            i.setVisible(false);
                         }
 
                         author         .setText("");
