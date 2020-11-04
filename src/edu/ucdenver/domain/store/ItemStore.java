@@ -248,7 +248,9 @@ public class ItemStore extends UserStore implements Serializable {
     }
     //adds a product to the store, failes if user is not admin
     public synchronized void addProduct(User admin,Product p) throws IllegalArgumentException {
+        System.out.println("Adding prod");
         if(p == null||!validAdminAuthentication(admin)) {
+            System.out.println("Adding prod");
             throw new IllegalArgumentException();
         }
         ArrayList<String> catalog =p.getCatagories();
@@ -261,11 +263,19 @@ public class ItemStore extends UserStore implements Serializable {
                 p.getCatagories().set(iter,defaultC.getName());
             }
             else {
-                Integer i = catagoryNames.get(catagory);
-                if(i == null || i >=catagories.size()){
-                    throw new IllegalArgumentException();
+                if(!catagory.isEmpty()){
+                    Integer i = catagoryNames.get(catagory);
+                    if(i == null || i >=catagories.size()){
+                        addCatagory(admin,catagory);
+                        Integer ii = catagoryNames.get(catagory);
+                        catagories.get(ii).addProduct(p.getProductId());
+                    }
+                    else{
+                        catagories.get(i).addProduct(p.getProductId());
+                    }
+
                 }
-                catagories.get(i).addProduct(p.getProductId());
+
             }
             iter++;
         }

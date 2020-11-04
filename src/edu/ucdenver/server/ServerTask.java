@@ -579,14 +579,16 @@ public class ServerTask implements Runnable, RequestServerProtocol {
     }
     //Handles request to addProductToTheCatalog, client must be admin
     private RequestType addProductToCatalog(Request incoming, BufferedReader input, PrintWriter output) {
+        System.out.println("Tryina add prasoductss");
         ArrayList<HashMap<String,String>> objs = incoming.getObjs();
         if(objs == null || objs.isEmpty()) {
-
             try {
                 RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_REQUEST);
+                System.out.println("Tryina add products INVALID RREQUST");
                 return RequestType.OK;
             }
             catch (Exception ee){
+                System.out.println("Tryina add products INVALID REQUEST ERROR");
                 return RequestType.ERROR;
             }
         }
@@ -617,9 +619,11 @@ public class ServerTask implements Runnable, RequestServerProtocol {
             System.out.println(type);
             try {
                 RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_REQUEST);
+                System.out.println("Tryina add products INVALID dREQUEST ERROR");
                 return RequestType.OK;
             }
             catch (Exception ee){
+                System.out.println("Tryina add products INVALIdD REQUEST ERROR");
                 return RequestType.ERROR;
             }
         }
@@ -628,20 +632,23 @@ public class ServerTask implements Runnable, RequestServerProtocol {
 
         }
         product.fromRequestable(requested);
+        System.out.println("BEFORE");
         userStore.addProduct(connectedUser,product);
+        System.out.println("AFTER");
         try{
-
+            System.out.println("Tryina add products OK");
             RequestServerProtocol.sendBlankRequest(output,RequestType.OK);
-
+            System.out.println("Tryina add products IQUEST");
             return RequestType.OK;
         }
         catch (Exception e){
 
-            try{
+            try{ System.out.println("Tryina add products INVALID AC");
                 RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_ACCESS);
                 return RequestType.OK;
             }
             catch (Exception ee){
+                System.out.println("Tryina add products INVALID AC2");
                 return RequestType.ERROR;
             }
 

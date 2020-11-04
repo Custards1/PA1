@@ -608,7 +608,14 @@ public class Adminclient {
                     client.addProductToCatalog(phone);
                     break;
                 case "Computer":
-                    Computer c = new Computer(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),serialField.getText(),warranty.getValue(),new ArrayList<>());
+                    ArrayList<String> specs = new ArrayList<>();
+                    for(TextField f : specFields){
+                        if(f !=null && f.getText()!=null){
+                            specs.add(f.getText());
+                        }
+                    }
+                    specFields.clear();
+                    Computer c = new Computer(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),serialField.getText(),warranty.getValue(),specs);
                     c.getCatagories().add(prodCatSelBox.getValue());
                     client = getClient();
                     client.addProductToCatalog(c);
@@ -621,8 +628,9 @@ public class Adminclient {
                     break;
                 default:
                     Product product = new Product(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now());
-                    client.addProductToCatalog(product);
                     client = getClient();
+                    client.addProductToCatalog(product);
+
                     break;
             }
 
