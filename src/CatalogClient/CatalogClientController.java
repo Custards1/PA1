@@ -225,12 +225,12 @@ public class CatalogClientController {
             ArrayList<String>names = new ArrayList<>();
             Order products = client.currentOrder();
             names.add(String.format("ID: %s",products.getId()));
-            System.out.printf("Current order %s\n",products.getId());
+
             for(String entry : products.getProducts()){
                 if(entry==null||entry.isEmpty()||entry.equals("none")){
                     continue;
                 }
-                System.out.printf("Current order is %s\n",entry);
+
                 Product p = client.getProduct(entry);
                 names.add(String.format("%s by %s",p.getProductName(),p.getBrandName()));
             }
