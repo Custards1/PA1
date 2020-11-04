@@ -336,6 +336,15 @@ public class Adminclient {
 
                         break;
                     case "Electronic":
+                        for(Node n : gridPane.getChildren()) {
+                            Integer i = GridPane.getRowIndex(n);
+                            if(i==null || i==0){
+                                continue;
+                            }
+                            if(i == 6||i == 7){
+                                n.setVisible(true);
+                            }
+                        }
 
 
 
@@ -378,6 +387,15 @@ public class Adminclient {
                     case "Computer":
                         break;
                     case "Phone":
+                        for(Node n : gridPane.getChildren()) {
+                            Integer i = GridPane.getRowIndex(n);
+                            if(i==null || i==0){
+                                continue;
+                            }
+                            if(i == 6||i == 7||i == 8||i == 9){
+                                n.setVisible(true);
+                            }
+                        }
 
                         author         .setText("");
                         location      .setText("");
