@@ -21,89 +21,89 @@ a software system for a department store
    ### Name:  AdminClientMain.java
    Description:  Main call to the admin client.
 
-   Name:  adminClient.fxml
-        Description:  Contains the admin client user interface.
+   ### Name:  adminClient.fxml
+   Description:  Contains the admin client user interface.
 
 ## Directory:  Catalogclient
-    Name:  CatalogClientController.java
-        Description:  Contains the functionality for the
+   ### Name:  CatalogClientController.java
+   Description:  Contains the functionality for the
         catalog client user interface.
 
-   Name:  CatalogClientMain.java
-        Description:  Main call to the catalog client.
+   ### Name:  CatalogClientMain.java
+   Description:  Main call to the catalog client.
 
-   Name:  LoginController.java
-        Description:  Contains the functionality of the
+   ### Name:  LoginController.java
+   Description:  Contains the functionality of the
         login interface.
 
-   Name:  login.fxml
-        Description:  Contains the login interface.
+   ### Name:  login.fxml
+   Description:  Contains the login interface.
 
-   Name:  UserClient.fxml
-        Description:  contains the catalog client user
+   ### Name:  UserClient.fxml
+   Description:  contains the catalog client user
         interface.
 
 ## Directory:  edu.ucdenver.domain.category
-   Name: Catagory.java
-        Description: Contains a class representing a catagory for the store
+   ### Name: Catagory.java
+   Description: Contains a class representing a catagory for the store
 ## Directory:  edu.ucdenver.domain.client
-   Name:  Client.java
-        Description: Contains the client class used to retrieve all information from the
+   ### Name:  Client.java
+   Description: Contains the client class used to retrieve all information from the
         server
-   Name:  ClientError.java
-        Description: Provides custom errors used to distinguish protocol errors
-   Name:  ClientErrorType.java
-        Description: An enumeration definining all error types
-   Name:  ClientTest.java
-        Description: This is soley a file to test the server, nothing more
+   ### Name:  ClientError.java
+   Description: Provides custom errors used to distinguish protocol errors
+   ### Name:  ClientErrorType.java
+   Description: An enumeration definining all error types
+   ### Name:  ClientTest.java
+   Description: This is soley a file to test the server, nothing more
 ## Directory:  edu.ucdenver.domain.order
-   Name:  Order.java
-        Description: This file represents a users order from the store
+   ### Name:  Order.java
+   Description: This file represents a users order from the store
 ## Directory:  edu.ucdenver.domain.parser
-   Name:  RequestObjectParser.java
-        Description: This object helps parse objects from and to a requestable format
+   ### Name:  RequestObjectParser.java
+   Description: This object helps parse objects from and to a requestable format
 ## Directory:  edu.ucdenver.domain.products
-   Name:  Book.java
-        Description: Defines the book product used in the store
-   Name:  Computer.java
-        Description: Defines the computer product used in the store
-   Name:  Electronic.java
-        Description: Defines the electronic product used in the store
-   Name:  Home.java
-        Description: Defines the home product used in the store
-   Name:  Phone.java
-        Description: Defines the phone product used in the store
-   Name:  Product.java
-        Description: Defines any product, base class of all products
+   ### Name:  Book.java
+   Description: Defines the book product used in the store
+   ### Name:  Computer.java
+   Description: Defines the computer product used in the store
+   ### Name:  Electronic.java
+   Description: Defines the electronic product used in the store
+   ### Name:  Home.java
+   Description: Defines the home product used in the store
+   ### Name:  Phone.java
+   Description: Defines the phone product used in the store
+   ### Name:  Product.java
+   Description: Defines any product, base class of all products
 ## Directory:  edu.ucdenver.domain.request
-   Name:  Request.java
-        Description: This class represents a request, used to encode messages between
+   ### Name:  Request.java
+   Description: This class represents a request, used to encode messages between
                      A server and a client
-   Name:  Requestable.java
-        Description: This file defines the interface used to turn an object to and from a
+   ### Name:  Requestable.java
+   Description: This file defines the interface used to turn an object to and from a
                      request friendly format.
-   Name:  RequestServerProtocol.java
-        Description: This file defines the protocol to be used by any class implenting a server protocol
-   Name:  RequestClientProtocol.java
-        Description: This file defines the protocol to be used by any class implenting a request protocol
+   ### Name:  RequestServerProtocol.java
+   Description: This file defines the protocol to be used by any class implenting a server protocol
+   ### Name:  RequestClientProtocol.java
+   Description: This file defines the protocol to be used by any class implenting a request protocol
 ## Directory:  edu.ucdenver.domain.store
-   Name:  UserStore.java
-        Description: This file defines a collection of users and thier orders for the store,
+   ### Name:  UserStore.java
+   Description: This file defines a collection of users and thier orders for the store,
                      enforces admin authentication for admin required tasks.
-   Name:  ItemStore.java
-        Description: This class extends the UserStore, adds the ability to store products and catagories
+   ### Name:  ItemStore.java
+   Description: This class extends the UserStore, adds the ability to store products and catagories
                                           to the store. Enforces admin authentication for admin required tasks.
 ## Directory:  edu.ucdenver.domain.user
-   Name:  User.java
-        Description: This class reprents a user account for the store.
+   ### Name:  User.java
+   Description: This class reprents a user account for the store.
 ## Directory:  edu.ucdenver.server
-   Name:  Main.java
-        Description: This is the main server file, asks for option to load a file or not and
+   ### Name:  Main.java
+   Description: This is the main server file, asks for option to load a file or not and
                      starts the server
-   Name:  Server.java
-        Description: This class implents the server process, awwaits a conncetion and starts a ServerTask
-   Name:  ServerTask.java
-        Description: This class is respondible for handling a client, replying with data from store,
+   ### Name:  Server.java
+   Description: This class implents the server process, awwaits a conncetion and starts a ServerTask
+   ### Name:  ServerTask.java
+   Description: This class is respondible for handling a client, replying with data from store,
                      or an error if something went wrong
 
   
