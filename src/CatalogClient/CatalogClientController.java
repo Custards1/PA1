@@ -98,7 +98,7 @@ public class CatalogClientController {
             browseProductsInCategory.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
-            System.out.printf("Failed to update prods cuz %s\n",e.getMessage());
+           // System.out.printf("Failed to update prods cuz %s\n",e.getMessage());
         }
     }
     //updates product details page from product name
@@ -114,7 +114,7 @@ public class CatalogClientController {
             prdouctDetails.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
-            System.out.printf("Failed to update prod details cuz %s\n",e.getMessage());
+           // System.out.printf("Failed to update prod details cuz %s\n",e.getMessage());
         }
     }
     //updates product search details page from product name
@@ -130,7 +130,7 @@ public class CatalogClientController {
             searchProductDetails.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
-            System.out.printf("Failed to update prod search details cuz %s\n",e.getMessage());
+            //System.out.printf("Failed to update prod search details cuz %s\n",e.getMessage());
         }
     }
     //updates catagories
@@ -144,7 +144,7 @@ public class CatalogClientController {
             browseCategories.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
-            System.out.printf("Failed to update cata cuz %s\n",e.getMessage());
+            //System.out.printf("Failed to update cata cuz %s\n",e.getMessage());
         }
     }
     //adds a selected product to the users current order
@@ -193,7 +193,7 @@ public class CatalogClientController {
             searchResultsPane.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
-            System.out.printf("Failed to init cuz search %s\n",e.getMessage());
+          //  System.out.printf("Failed to init cuz search %s\n",e.getMessage());
         }
 
     }
@@ -237,7 +237,7 @@ public class CatalogClientController {
             productsInOrder.setItems(FXCollections.observableList(names));
         }
         catch (Exception ee){
-            System.out.printf("Failed to init cuz search %s\n",ee.getMessage());
+           // System.out.printf("Failed to init cuz search %s\n",ee.getMessage());
         }
     }
     //finalizes current order
@@ -286,7 +286,7 @@ public class CatalogClientController {
             searchProductDetails.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
-            System.out.printf("Failed to update prod search details cuz %s\n",e.getMessage());
+           // System.out.printf("Failed to update prod search details cuz %s\n",e.getMessage());
         }
     }
 }
