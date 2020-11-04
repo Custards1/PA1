@@ -237,6 +237,10 @@ public class Adminclient {
                         n.setVisible(false);
                     }
                 }
+                for(Node n : gridPane.getChildren()) {
+                    Integer i = GridPane.getRowIndex(n);
+                    n = null;
+                }
             try{
                 switch ((String)productType.getItems().get((Integer) number2)){
                     case "Home":
