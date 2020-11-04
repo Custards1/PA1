@@ -8,6 +8,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+//This class represents a catagory in the store, it can be sent as part of a request because
+//it implents Requestable, and it can be saved to a file because it implements,
+//serializable.
 public class Catagory implements Requestable, Serializable {
     private String name;
     private ArrayList<String> products;
@@ -74,7 +78,7 @@ public class Catagory implements Requestable, Serializable {
             this.products = RequestObjectParser.fromRaw(Product.argCheck(requestable,"product-list"));
         }
         catch (Exception e){
-           ;
+           throw e;
         }
     }
 

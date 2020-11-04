@@ -7,7 +7,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+//This class represents a computer, it implemets serializable
+//so it can be saved to a file, and it implements requestable so it can
+//be sent as a request and it inherits from the base Product class and the Electronic class
 public class Computer extends Electronic implements Requestable, Serializable {
 
 

@@ -17,51 +17,20 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//This class communicates with a server to get objects from the store.
 public class Client implements RequestClientProtocol {
-    private String host;
-    private int port;
+
     private Socket socket;
     private BufferedReader input = null;
     private PrintWriter output = null;
     private boolean isAdmin;
     private User user;
-    public void shutdown(){
-        if(this.socket!=null){
-            try {
 
-                this.socket.close();
-            }
-            catch (Exception e){
-
-            }
-            this.socket = null;
-        }
-        if(this.input!=null){
-            try {
-
-                this.input.close();
-            }
-            catch (Exception e){
-
-            }
-            this.input = null;
-        }
-        if(this.output!=null){
-            try {
-
-                this.output.close();
-            }
-            catch (Exception e){
-
-            }
-            this.output = null;
-        }
-
-    }
-
+    //Acceses server on specified host and port, using the specified user. If signup is true,
+    //the server will attempt to create a new user, if false it will attempt to log the user in.
+    //Throws an error if unable to authenticate or communicate with the server.
     public Client(String host,int port,User self,boolean signup)throws ClientError{
-        this.host = host;
-        this.port = port;
+
         this.isAdmin = false;
         ;
 
@@ -104,10 +73,11 @@ public class Client implements RequestClientProtocol {
             throw ioe;
         }
     }
-
     public boolean isAdmin() {
         return isAdmin;
     }
+
+    //retrives the default catagory, throws error if unable to communicate with server.
     public synchronized Catagory getDefaultCatagory() throws ClientError {
         RequestClientProtocol.sendBlankRequest(this,RequestType.GET_DEFAULT_CATAGORY,output);
         Request r = okOrDie(this,input);
@@ -123,6 +93,7 @@ public class Client implements RequestClientProtocol {
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
         }
     }
+    //retrives a product by its name, throws error if unable to communicate with server.
     public synchronized Product getProductByName(String name) throws  ClientError{
         HashMap<String,String> fields = new HashMap<>();
         fields.put("product",name);
@@ -137,6 +108,7 @@ public class Client implements RequestClientProtocol {
         }
 
     }
+    //retrives a product by its id, throws error if unable to communicate with server.
     public synchronized Product getProduct(String id) throws  ClientError{
         HashMap<String,String> fields = new HashMap<>();
         fields.put("product-id",id);
@@ -151,6 +123,7 @@ public class Client implements RequestClientProtocol {
         }
 
     }
+    //adds a product to the catalog, throws error if unable to communicate with server.
      public synchronized void addProductToCatalog(Product p) throws ClientError {
         System.out.println("__AasC");
         if(!this.isAdmin|| p == null){
@@ -163,6 +136,7 @@ public class Client implements RequestClientProtocol {
          System.out.println("_g_AC");
        
     }
+    //reterns a list of products that match given search, throws error if unable to communicate with server.
     public synchronized ArrayList<Product> search(String text) throws ClientError {
         if(text == null){
             return allProducts();
@@ -177,7 +151,7 @@ public class Client implements RequestClientProtocol {
         }
         return products;
     }
-    //returns updated product if succesfull
+    //returns updated product if succesfull,throws error if unable to communicate with server.
     public synchronized Product addCatagoryToProduct(String catagoryName,String productid) throws ClientError{
         if(!this.isAdmin||catagoryName==null||productid==null||catagoryName.isEmpty()||productid.isEmpty()){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
@@ -202,7 +176,8 @@ public class Client implements RequestClientProtocol {
             return p;
         }
     }
-
+    //creates a new admin user,throws error if unable to communicate with server.
+    //OR if the clients connceted user is not admin
     public synchronized void createAdmin(String email,String name,String password)throws ClientError{
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
@@ -212,22 +187,17 @@ public class Client implements RequestClientProtocol {
         RequestClientProtocol.sendMinimalRequestable(this,RequestType.ADD_ADMIN_USER,self,output);
         Request r = okOrDie(this,input);
     }
-    public synchronized  void removeUser(String email)throws ClientError{
-        if(!this.isAdmin){
-            throw new ClientError(ClientErrorType.INVALID_ACCESS);
-        }
-        //TODO
-       //
-       // sendMinimalRequestable(RequestType.ADD_ADMIN_USER,self);
-        //Request r = okOrDie(this,input);
-    }
-    public synchronized  Product addCatagoryToProductByName(String catagoryName,String productName)throws ClientError{
+   //adds a catagory to a products,throws error if unable to communicate with server.
+   //OR if the clients connceted user is not admin
+    public synchronized void addCatagoryToProductByName(String catagoryName, String productName)throws ClientError{
         StringBuilder id = new StringBuilder();
         for(String word : productName.split("\\s")) {
             id.append(word);
         }
-        return addCatagoryToProduct(catagoryName,id.toString());
+        addCatagoryToProduct(catagoryName, id.toString());
     }
+    //removes a product from the catalog by id,throws error if unable to communicate with server.
+    //OR if the clients connceted user is not admin
     public synchronized void removeProductFromCatalog(String productId) throws ClientError {
         System.out.println("Is rmpdfc");
         if(!this.isAdmin || productId == null){
@@ -243,6 +213,8 @@ public class Client implements RequestClientProtocol {
         Request r = okOrDie(this,input);
       
     }
+    //removes a product from the catalog by name,throws error if unable to communicate with server.
+    //OR if the clients connceted user is not admin
     public synchronized  void removeProductFromCatalogByName(String productName) throws ClientError {
         StringBuilder id = new StringBuilder();
         for(String word : productName.split("\\s")) {
@@ -250,6 +222,8 @@ public class Client implements RequestClientProtocol {
         }
         removeProductFromCatalog(id.toString());
     }
+    //removes a catagory from a product by id,throws error if unable to communicate with server.
+    //OR if the clients connceted user is not admin
     public synchronized Product removeCatagoryFromProduct(String catagoryName, String productid) throws ClientError{
         if(!this.isAdmin||catagoryName==null||productid==null||catagoryName.isEmpty()||productid.isEmpty()){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
@@ -271,17 +245,18 @@ public class Client implements RequestClientProtocol {
         catch (Exception e){
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
         }
-        finally {
-            return p;
-        }
+        return p;
     }
-    public synchronized Product removeCatagoryFromProductByName(String catagoryName,String productName) throws ClientError{
+    //removes a catagory from a product by name,throws error if unable to communicate with server.
+    //OR if the clients connceted user is not admin
+    public synchronized void removeCatagoryFromProductByName(String catagoryName, String productName) throws ClientError{
         StringBuilder id = new StringBuilder();
         for(String word : productName.split("\\s")) {
             id.append(word);
         }
-        return removeCatagoryFromProduct(catagoryName,id.toString());
+        removeCatagoryFromProduct(catagoryName, id.toString());
     }
+    //Parses a product from the given raw product, throws error if unable to parse.
     protected synchronized static Product parseProduct(HashMap<String,String> requested) throws IllegalArgumentException{
         String type = requested.get("product-type");
         Product p = null;
@@ -310,6 +285,7 @@ public class Client implements RequestClientProtocol {
         p.fromRequestable(requested);
         return p;
     }
+    //Parses a product from the given raw product, throws error if unable to parse.
     public synchronized ArrayList<Product> getProductsInCatagory(String catagoryName) throws ClientError {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("catagory",catagoryName);
@@ -321,6 +297,7 @@ public class Client implements RequestClientProtocol {
         }
         return products;
     }
+    //gets products in the default catagory,throws error if unable to communicate with server.
     public synchronized  ArrayList<Product> getProductsInDefaultCatagory() throws ClientError {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("default","true");
@@ -334,13 +311,14 @@ public class Client implements RequestClientProtocol {
         }
         return products;
     }
-    //if not admin fails
+    //asks server to shutdown,throws error if unable to communicate with server OR if not admin fails
     public synchronized void askToShutdown() throws  ClientError {
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
         RequestClientProtocol.sendBlankRequest(this,RequestType.TERMINATE,output);
     }
+    //adds a catagory to the catalog,throws error if unable to communicate with server OR if not admin fails
     public synchronized void addCatagory(String catagory) throws ClientError {
             if(!isAdmin){
                 throw new ClientError(ClientErrorType.INVALID_ACCESS);
@@ -352,6 +330,7 @@ public class Client implements RequestClientProtocol {
        
            Request r = okOrDie(this,input);
     }
+    //removes a catagory to the catalog,throws error if unable to communicate with server OR if not admin fails
     public synchronized void removeCatagory(String catagory) throws ClientError {
         if(!isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
@@ -361,6 +340,7 @@ public class Client implements RequestClientProtocol {
         RequestClientProtocol.sendMinimalRequest(this,RequestType.REMOVE_CATAGORY,cat,output);
         Request r = okOrDie(this,input);
     }
+    //retives all catagories,throws error if unable to communicate with server
     public synchronized ArrayList<Catagory> allCatagories() throws ClientError {
 
         RequestClientProtocol.sendBlankRequest(this,RequestType.GET_ALL_CATAGORIES,output);
@@ -384,6 +364,7 @@ public class Client implements RequestClientProtocol {
         }
         return catagories;
     }
+    //retives all users,throws error if unable to communicate with server OR if not admin
     public synchronized ArrayList<User> allUsers() throws ClientError {
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
@@ -408,6 +389,7 @@ public class Client implements RequestClientProtocol {
         }
         return users;
     }
+    //adds another user,throws error if unable to communicate with server
     public synchronized void addAnotherUser(User u) throws ClientError{
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
@@ -416,6 +398,7 @@ public class Client implements RequestClientProtocol {
         RequestClientProtocol.sendMinimalRequestable(this,RequestType.CREATE_USER,u,output);
         Request r = okOrDie(this,input);
     }
+    //retives the current order,throws error if unable to communicate with server
     public synchronized Order currentOrder() throws ClientError {
 
         RequestClientProtocol.sendBlankRequest(this,RequestType.CURRENT_ORDER,output);
@@ -436,6 +419,7 @@ public class Client implements RequestClientProtocol {
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
         }
     }
+    //clears current order,throws error if unable to communicate with server
     public synchronized Order clearOrder() throws ClientError {
 
         RequestClientProtocol.sendBlankRequest(this,RequestType.CLEAR_ORDER,output);
@@ -456,6 +440,7 @@ public class Client implements RequestClientProtocol {
             throw new ClientError(ClientErrorType.INVALID_RESOURCE);
         }
     }
+    //retrives currents users orders,throws error if unable to communicate with server
     public synchronized ArrayList<Order> clientsOrders() throws ClientError {
         RequestClientProtocol.sendBlankRequest(this,RequestType.GET_USER_ORDERS,output);
         ArrayList<Order> orders = new ArrayList<>();
@@ -467,6 +452,7 @@ public class Client implements RequestClientProtocol {
         }
         return orders;
     }
+    //retrives a specific users orders,throws error if unable to communicate with server
     public synchronized ArrayList<Order> clientsOrders(User user) throws ClientError {
         RequestClientProtocol.sendMinimalRequestable(this,RequestType.GET_USER_ORDERS,user,output);
         ArrayList<Order> orders = new ArrayList<>();
@@ -478,6 +464,7 @@ public class Client implements RequestClientProtocol {
         }
         return orders;
     }
+    //retrives a specific users orders by email,throws error if unable to communicate with server
     public synchronized ArrayList<Order> clientsOrdersByEmail(String email) throws ClientError {
         HashMap<String,String> ss = new HashMap<>();
         ss.put("email",email);
@@ -491,6 +478,7 @@ public class Client implements RequestClientProtocol {
         }
         return orders;
     }
+    //retrives a specific users orders by id,throws error if unable to communicate with server
     public Order clientsOrderById(String newValue) throws ClientError {
         HashMap<String,String> ss = new HashMap<>();
         ss.put("id",newValue);
@@ -509,7 +497,7 @@ public class Client implements RequestClientProtocol {
         }
         return o;
     }
-
+    //finalizes and returns current order,throws error if unable to communicate with server
     public synchronized Order finalizeOrder() throws ClientError {
         RequestClientProtocol.sendBlankRequest(this,RequestType.FINALIZE_ORDER,output);
 
@@ -521,8 +509,8 @@ public class Client implements RequestClientProtocol {
         order.fromRequestable(r.getObjs().get(0));
         return order;
     }
-    //returns updated order
-    public synchronized Order addProductToOrder(Product p) throws ClientError {
+    //returns updated order,throws error if unable to communicate with server
+    public synchronized void addProductToOrder(Product p) throws ClientError {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("product",p.getProductId());
         RequestClientProtocol.sendMinimalRequest(this,RequestType.ADD_PRODUCT_TO_ORDER,fields,output);
@@ -532,9 +520,8 @@ public class Client implements RequestClientProtocol {
         }
         Order order = new Order();
         order.fromRequestable(r.getObjs().get(0));
-        return order;
     }
-    //needs admin access
+    //returns updated order,throws error if unable to communicate with server OR if not admin
     public synchronized ArrayList<Order> allFinalizedOrders() throws ClientError {
         if(!this.isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
@@ -552,7 +539,7 @@ public class Client implements RequestClientProtocol {
         }
         return orders;
     }
-    //returns updated order
+    //removes a product from an order and returns removed product,throws error if unable to communicate with server
     public synchronized Order removeProductFromOrder(Product p) throws ClientError {
         HashMap<String,String> fields = new HashMap<>();
         fields.put("product",p.getProductId());
@@ -565,6 +552,7 @@ public class Client implements RequestClientProtocol {
         order.fromRequestable(r.getObjs().get(0));
         return order;
     }
+    //returns all products,throws error if unable to communicate with server
     public synchronized ArrayList<Product> allProducts() throws ClientError {
 
         RequestClientProtocol.sendBlankRequest(this,RequestType.GET_ALL_PRODUCTS,output);
@@ -586,6 +574,7 @@ public class Client implements RequestClientProtocol {
         }
         return products;
     }
+    //sets the default catagory,throws error if unable to communicate with server OR if not admin
     public synchronized void setDefaultCatagory(String catagory) throws ClientError {
         if(!isAdmin){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
@@ -595,25 +584,41 @@ public class Client implements RequestClientProtocol {
         RequestClientProtocol.sendMinimalRequest(this,RequestType.SET_DEFAULT_CATAGORY,cat,output);
         Request r = okOrDie(this,input);
     }
+    //shutsdown conncetion
+    public void shutdown(){
+        if(this.socket!=null){
+            try {
 
+                this.socket.close();
+            }
+            catch (Exception ignored){
 
+            }
+            this.socket = null;
+        }
+        if(this.input!=null){
+            try {
 
+                this.input.close();
+            }
+            catch (Exception ignored){
 
-    /*
-    public boolean requestUserByEmail(String email, String password) {
+            }
+            this.input = null;
+        }
+        if(this.output!=null){
+            try {
+
+                this.output.close();
+            }
+            catch (Exception ignored){
+
+            }
+            this.output = null;
+        }
 
     }
-    public boolean requestUserByName(String name,String password) {
 
-    }
-    public boolean requestCatagory(String catagory_name) {
-
-    }
-    public boolean requestProduct(String product_name) {
-
-}
-
-     */
 
 
 }

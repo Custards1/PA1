@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//This class represents a users order, it can be sent as part of a request because
+//it implents Requestable, and it can be saved to a file because it implements,
+//serializable.
 public class Order implements Requestable, Serializable {
     private String orderId;
     private ArrayList<String> products;
@@ -25,14 +28,14 @@ public class Order implements Requestable, Serializable {
         products = new ArrayList<>();
         finalized = false;
         orderId = "";
-        finalization = LocalDate.of(2020,12,6);
+        finalization = LocalDate.of(2021,12,6);
     }
     public Order (String orderId) {
 
         products = new ArrayList<>();
         finalized = false;
         this.orderId = orderId;
-        finalization = LocalDate.of(2020,12,6);
+        finalization = LocalDate.of(2021,12,6);
     }
     public HashMap<String, String> asRequestable() {
         HashMap<String,String> requestable = new HashMap<>();

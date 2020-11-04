@@ -8,9 +8,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+//This is the protocol for sending request a client uses to communicate with a server
+//up to implementer to close conncetion
 public interface RequestClientProtocol {
+    //must implement a shutdown method
     void shutdown();
+
+    //sends a blank request to the server, shutdown on failure and throws a client error
     static void sendBlankRequest(RequestClientProtocol self,RequestType type, PrintWriter output) throws ClientError {
         Request to_send = new Request(type,null,null);
         try {
@@ -21,6 +25,7 @@ public interface RequestClientProtocol {
             throw new ClientError(ClientErrorType.INVALID_SOCKET);
         }
     }
+    //sends a request with specified fields to the server, shutdown on failure and throws a client error
     static void sendMinimalRequest(RequestClientProtocol self,
                                    RequestType type,
                                    HashMap<String,String> fields,
@@ -36,6 +41,8 @@ public interface RequestClientProtocol {
             throw new ClientError(ClientErrorType.INVALID_SOCKET);
         }
     }
+    //sends a request with an object that implements requestable
+    // to the server, shutdown on failure and throws a client error
     static void sendMinimalRequestable(RequestClientProtocol self,
                                        RequestType type,
                                        Requestable requestable,
@@ -51,6 +58,8 @@ public interface RequestClientProtocol {
             throw new ClientError(ClientErrorType.INVALID_SOCKET);
         }
     }
+    //sends a request with specified fields and with an object that implements requestable
+    // to the server, shutdown on failure and throws a client error
     static void sendModerateRequestable(RequestClientProtocol self,
                                         RequestType type,
                                         HashMap<String,String> fields ,
@@ -68,6 +77,8 @@ public interface RequestClientProtocol {
             throw new ClientError(ClientErrorType.INVALID_SOCKET);
         }
     }
+    //sends a request with specified fields and with a list of objects that implements requestable
+    // to the server, shutdown on failure and throws a client error
     static void sendRequestableList(RequestClientProtocol self,
                                     RequestType type,
                                     HashMap<String,String> fields,
@@ -83,6 +94,7 @@ public interface RequestClientProtocol {
             throw new ClientError(ClientErrorType.INVALID_SOCKET);
         }
     }
+    //recives an ok request from the server or shutdown and throw client error
     default Request okOrDie(RequestClientProtocol self,BufferedReader input)throws ClientError{
 
         if(input == null){

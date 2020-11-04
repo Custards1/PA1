@@ -1,5 +1,6 @@
 package edu.ucdenver.domain.client;
 
+//Custom error handling class for Client
 public class ClientError extends Exception {
     ClientErrorType type;
     public ClientError(ClientErrorType type,String additional) {

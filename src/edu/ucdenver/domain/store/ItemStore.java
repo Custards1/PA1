@@ -8,7 +8,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+//This class is used to store products and catagories for a store.
+//It is also used to store a collection of users and their orders,
+//because its parent class is the user store.
+//This class enforces admin access to retrive certail information.
+//It is also able to be saved to a file because it implements Serializable.
 public class ItemStore extends UserStore implements Serializable {
     private ArrayList<Product> products;
     private ArrayList<Catagory> catagories;
@@ -23,7 +27,9 @@ public class ItemStore extends UserStore implements Serializable {
         this.catagoryNames = new HashMap<>();
         this.productNames = new HashMap<>();
     }
-    public synchronized Catagory forceAddCatagory(String catagory){
+
+    // forces a cotagory to be added or retrived, if string catatory is null, returns null
+    private synchronized Catagory forceAddCatagory(String catagory){
         if(catagory == null){
             return null;
         }
@@ -37,12 +43,14 @@ public class ItemStore extends UserStore implements Serializable {
             return catagories.get(catagoryNames.get(catagory));
         }
     }
+    // returns the defult catagory
     public synchronized Catagory getDefaultCatagory() throws IllegalArgumentException{
         if(defaultCatagory >= catagories.size()) {
             throw new IllegalArgumentException();
         }
         return catagories.get(defaultCatagory);
     }
+    // removes prduct from catagory and returns the modifed procut, throws on failure
     public synchronized Product removeCatagoryFromProduct(User admin, String catagory, String productId) throws IllegalArgumentException {
         if(productId == null||catagory == null ||!validAdminAuthentication(admin)) {
             throw new IllegalArgumentException();
@@ -57,6 +65,7 @@ public class ItemStore extends UserStore implements Serializable {
         }
         return product;
     }
+    // returns all products in the database
     public synchronized ArrayList<Product> allProducts(){
         ArrayList<Product> products = new ArrayList<>();
         for(Map.Entry<String,Integer> name : productNames.entrySet()){
@@ -64,6 +73,7 @@ public class ItemStore extends UserStore implements Serializable {
         }
         return products;
     }
+    // returns all catagories in the database
     public synchronized ArrayList<Catagory> allCatagories(){
         ArrayList<Catagory> catagories = new ArrayList<>();
         for(Map.Entry<String,Integer> name : catagoryNames.entrySet()){
@@ -71,6 +81,7 @@ public class ItemStore extends UserStore implements Serializable {
         }
         return catagories;
     }
+    // searches product name and description for the specified text.
     public synchronized ArrayList<Product> searchProducts(String search){
         ArrayList<Product> catagories = new ArrayList<>();
         HashMap<String,Integer> addedProducts = new HashMap<>();
@@ -107,6 +118,7 @@ public class ItemStore extends UserStore implements Serializable {
         }
         return catagories;
     }
+    // adds a catagory to a product, returns the modifed product, throws on failure
     public synchronized Product addCatagoryToProduct(User admin,String catagory,String productId) throws IllegalArgumentException{
         if(productId == null||catagory == null ||!validAdminAuthentication(admin)) {
             throw new IllegalArgumentException();
@@ -132,7 +144,7 @@ public class ItemStore extends UserStore implements Serializable {
         }
         return product;
     }
-
+    //returns a product with specified id, throws if not found
     public Product getProduct(String productId) throws IllegalArgumentException {
         Integer h = productNames.get(productId);
         if(h != null) {
@@ -143,6 +155,7 @@ public class ItemStore extends UserStore implements Serializable {
         }
         throw new IllegalArgumentException();
     }
+    //returns a product with specified name, throws if not found
     public Product getProductByName(String productName) throws IllegalArgumentException {
         StringBuilder id = new StringBuilder();
         for(String word : productName.split("\\s")) {
@@ -158,7 +171,7 @@ public class ItemStore extends UserStore implements Serializable {
         }
         throw new IllegalArgumentException();
     }
-
+    //returns a catagory with specified name, throws on failure.
     public synchronized Catagory getCatagory(String catagory) throws IllegalArgumentException{
         Integer g = catagoryNames.get(catagory);
         if(g==null||g >= catagories.size()){
@@ -170,6 +183,7 @@ public class ItemStore extends UserStore implements Serializable {
         }
         return c;
     }
+    //returns all products with a specified catagory name.
     public ArrayList<Product> getProductsFromCatagory(String catagoryName) throws IllegalArgumentException {
         Integer i = catagoryNames.get(catagoryName);
         if(i == null || i >=catagories.size()){
@@ -189,10 +203,12 @@ public class ItemStore extends UserStore implements Serializable {
         }
         return p;
     }
-    public synchronized void addProductsRaw(Product p ){
+    //adds product to the database.
+    private synchronized void addProductsRaw(Product p){
         products.add(p);
         productNames.put(p.getProductId(),products.size()-1);
     }
+    //removes product from the database, requires admin authentication
     public synchronized void removeProduct(User admin,String productId) throws IllegalArgumentException{
         if(productId == null||!validAdminAuthentication(admin)) {
 
@@ -230,7 +246,8 @@ public class ItemStore extends UserStore implements Serializable {
 
 
     }
-    public synchronized void addProduct(User admin,Product p) {
+    //adds a product to the store, failes if user is not admin
+    public synchronized void addProduct(User admin,Product p) throws IllegalArgumentException {
         if(p == null||!validAdminAuthentication(admin)) {
             throw new IllegalArgumentException();
         }
@@ -266,6 +283,7 @@ public class ItemStore extends UserStore implements Serializable {
         }
         addProductsRaw(p);
     }
+    //sets the default catagory, failes if user is not admin
     public synchronized void setDefaultCatagory(User admin,String name) throws IllegalArgumentException{
         Integer i = catagoryNames.get(name);
         if(i == null || i >=catagories.size()||!validAdminAuthentication(admin)){
@@ -292,6 +310,7 @@ public class ItemStore extends UserStore implements Serializable {
 
         }
     }
+    //adds a catagory, failes if user is not admin
     public synchronized void addCatagory(User admin,String catagory) throws IllegalArgumentException {
         if(catagory == null||!validAdminAuthentication(admin)) {
             throw new IllegalArgumentException();
@@ -299,6 +318,7 @@ public class ItemStore extends UserStore implements Serializable {
 
         forceAddCatagory(catagory);
     }
+    //removes a catagory, failes if user is not admin
     public synchronized void removeCatagory(User admin,String catagory) throws IllegalArgumentException {
         if(catagory == null||!validAdminAuthentication(admin)) {
 

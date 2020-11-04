@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="adminclient.Adminclient">
     <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
@@ -28,11 +29,11 @@
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
@@ -41,10 +42,10 @@
                     <Label text="Admin:" GridPane.rowIndex="3" />
                     <TextField fx:id="usernameField" GridPane.columnIndex="1" />
                     <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-               <Button fx:id="addAdminClick" mnemonicParsing="false" onAction="#addAdmin" prefHeight="25.0" prefWidth="76.0" text="Add Admin" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-               <Button fx:id="addUserClick" mnemonicParsing="false" onAction="#addUser" text="Add User" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-               <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-               <Label text="Email" GridPane.rowIndex="1" />
+                    <Button fx:id="addAdminClick" mnemonicParsing="false" onAction="#addAdmin" prefHeight="25.0" prefWidth="76.0" text="Add Admin" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <Button fx:id="addUserClick" mnemonicParsing="false" onAction="#addUser" text="Add User" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                    <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Label text="Email" GridPane.rowIndex="1" />
                 </GridPane>
                 <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="109.0" layoutY="110.0">
                     <Image url="@../img/usericon.png" />
@@ -65,29 +66,29 @@
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <Label text="Product Name:" GridPane.rowIndex="1" />
                     <Label text="Product Category:" GridPane.rowIndex="2" />
                     <TextField fx:id="prdDescription" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                     <Button fx:id="addCatsToProd" mnemonicParsing="false" onAction="#addCatToProd" text="Add Category to Product" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
                     <ComboBox fx:id="prodCatSelBox" onAction="#selProdCategory" prefWidth="150.0" promptText="Select Categories" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-               <Button fx:id="removeCatsFromProd" mnemonicParsing="false" onAction="#removeCatFromProd" text="Remove Catagory From Product" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-               <Label text="Product Type:" GridPane.rowIndex="4" />
-               <ChoiceBox fx:id="productType" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-               <Label text="Product Description" GridPane.rowIndex="5" />
-               <Label text="Brand Name:" />
-               <TextField fx:id="brandName" GridPane.columnIndex="1" />
-               <TextField fx:id="prodnameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Button fx:id="removeCatsFromProd" mnemonicParsing="false" onAction="#removeCatFromProd" text="Remove Catagory From Product" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <Label text="Product Type:" GridPane.rowIndex="4" />
+                    <ChoiceBox fx:id="productType" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    <Label text="Product Description" GridPane.rowIndex="5" />
+                    <Label text="Brand Name:" />
+                    <TextField fx:id="brandName" GridPane.columnIndex="1" />
+                    <TextField fx:id="prodnameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 </GridPane>
                 <GridPane layoutX="200.0" layoutY="283.0" prefHeight="75.0" prefWidth="200.0">
                     <columnConstraints>
@@ -95,28 +96,28 @@
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                  <RowConstraints maxHeight="35.0" minHeight="0.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="35.0" minHeight="0.0" prefHeight="35.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="35.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <Button fx:id="addProdClick" mnemonicParsing="false" onAction="#addProduct" text="Add Product" GridPane.halignment="CENTER" />
                     <Button fx:id="delProdClick" mnemonicParsing="false" onAction="#deleteProduct" prefWidth="96.0" text="Delete Product" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-               <ComboBox fx:id="delProdNam" onAction="#selDelProd" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <ComboBox fx:id="delProdNam" onAction="#selDelProd" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 </GridPane>
-            <GridPane fx:id="extraTextFields" layoutX="453.0" layoutY="47.0" prefHeight="311.0" prefWidth="142.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
+                <GridPane fx:id="extraTextFields" layoutX="453.0" layoutY="47.0" prefHeight="311.0" prefWidth="142.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                </GridPane>
             </AnchorPane>
         </Tab>
         <Tab fx:id="catManagement" onSelectionChanged="#catManClick" text="Category Management">
@@ -163,9 +164,11 @@
                     <ListView fx:id="userOrderViews" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
                     <ListView fx:id="userSelectOrderViews" onMouseClicked="#selUserReportView" prefHeight="200.0" prefWidth="200.0" />
                 </GridPane>
-                 <DatePicker fx:id="dateSelOrderView" layoutX="14.0" layoutY="207.0" onAction="#dateUpdOrderView" />
-                 <ListView fx:id="dateOrderView" layoutX="369.0" layoutY="175.0" prefHeight="192.0" prefWidth="200.0" />
-            <DatePicker fx:id="dateSelOrderViewEnd" layoutX="14.0" layoutY="271.0" onAction="#dateUpdOrderViewEnd" />
+                <DatePicker fx:id="dateSelOrderView" layoutX="14.0" layoutY="207.0" onAction="#dateUpdOrderView" />
+                <ListView fx:id="dateOrderView" layoutX="369.0" layoutY="175.0" prefHeight="192.0" prefWidth="200.0" />
+                <DatePicker fx:id="dateSelOrderViewEnd" layoutX="14.0" layoutY="271.0" onAction="#dateUpdOrderViewEnd" />
+                <Text layoutX="14.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" text="From:" />
+                <Text layoutX="14.0" layoutY="261.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To:" />
             </AnchorPane>
         </Tab>
         <Tab fx:id="loginTab" onCloseRequest="#checkAuthLogin" text="Login">

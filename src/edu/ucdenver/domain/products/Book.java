@@ -7,10 +7,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//This class is the base class for all products, it implemets serializable
+//so it can be saved to a file, and it implements requestable so it can
+//be sent as a request.
 public class Book extends Product implements Requestable, Serializable {
-
-
-
     private String author;
     private LocalDate publicationDate;
     private int numPages;

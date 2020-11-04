@@ -14,12 +14,15 @@ public class Server implements Runnable {
     private int backlog;
     private String configFile;
     private ItemStore store;
+    //constructs server at specified port and backlog,does not start server
     public Server (int port,int backlog) {
             this.backlog = backlog;
             this.port = port;
             this.configFile = "default.ser";
             this.store = new ItemStore();
     }
+    //constructs server at specified port and backlog and config file,does not start server but will
+    //throw error if data cannot be loaded from the config file
     public Server (int port,int backlog,String configFile) throws IllegalArgumentException,java.io.IOException,ClassNotFoundException {
             this.backlog = backlog;
             this.port = port;
@@ -27,6 +30,8 @@ public class Server implements Runnable {
             this.store = new ItemStore();
             this.loadFromFile();
     }
+
+    //runs the server
     @Override
     public void run(){
         ServerSocket server = null;
@@ -62,6 +67,7 @@ public class Server implements Runnable {
         service.shutdown();
 
     }
+    //loads from a config file
     public void loadFromFile() throws IOException,ClassNotFoundException{
         if(configFile.isEmpty() || configFile == null){
             configFile = "default.ser";
@@ -72,6 +78,7 @@ public class Server implements Runnable {
         in.close();
         fileIn.close();
     }
+    //saves to a config file
     public void saveToFile() throws IOException{
         if(configFile.isEmpty() || configFile == null){
             configFile = "default.ser";

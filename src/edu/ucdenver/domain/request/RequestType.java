@@ -1,5 +1,5 @@
 package edu.ucdenver.domain.request;
-
+//The type of request
 public enum RequestType {
     CREATE_USER,
     AUTHENTICATE_USER,

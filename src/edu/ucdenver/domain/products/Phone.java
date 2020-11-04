@@ -6,8 +6,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-public class Phone extends Electronic implements Requestable , Serializable {
+//This class represents a phone, it implemets serializable
+//so it can be saved to a file, and it implements requestable so it can
+//be sent as a request and it inherits from the base Product class and the Electronic class
+public class  Phone extends Electronic implements Requestable , Serializable {
 
 
     private String imei;
@@ -32,6 +34,7 @@ public class Phone extends Electronic implements Requestable , Serializable {
         this.imei = imei;
         this.os = os;
     }
+    //returns object as a requestable object
     @Override
     public HashMap<String, String> asRequestable()  {
         setType("Phone");
@@ -40,6 +43,7 @@ public class Phone extends Electronic implements Requestable , Serializable {
         base.put("os",os);
         return base;
     }
+    //parses object from requestable object, throws execption if unable to parse.
     @Override
     public void fromRequestable(HashMap<String, String> requestable) throws IllegalArgumentException {
         super.fromRequestable(requestable);
@@ -49,6 +53,7 @@ public class Phone extends Electronic implements Requestable , Serializable {
         this.imei = argCheck(requestable,"imei");
         this.os = argCheck(requestable,"os");
     }
+    //parses object from requestable object, throws execption if unable to parse.
     @Override
     public ArrayList<String> asDisplayable() {
         ArrayList<String> displayable = super.asDisplayable();

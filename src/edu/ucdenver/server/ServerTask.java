@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+//This is the task that will be started upon each new connection by the server
 public class ServerTask implements Runnable, RequestServerProtocol {
     private Socket socket;
     private ServerSocket serverRef;

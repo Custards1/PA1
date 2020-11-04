@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
+//This class is the base class for all products, it implemets serializable
+//so it can be saved to a file, and it implements requestable so it can
+//be sent as a request.
 public class Product implements Requestable , Serializable {
 
     private String productId;
@@ -74,6 +77,7 @@ public class Product implements Requestable , Serializable {
         requestable.put("product-catagory", temp);
         return requestable;
     }
+    //returns string if it exists in the map, throws error if not
     public static String argCheck(HashMap<String, String> requestable,String arg)throws IllegalArgumentException  {
         String temp = null;
         temp = requestable.get(arg);
@@ -82,11 +86,7 @@ public class Product implements Requestable , Serializable {
         }
         return temp;
     }
-    public static Product fromObj(HashMap<String,String> obj) throws IllegalArgumentException{
-        Product product = new Product();
-        product.fromRequestable(obj);
-        return product;
-    }
+
     public String getType() {
         return type;
     }
@@ -102,6 +102,8 @@ public class Product implements Requestable , Serializable {
     public void setCatagories(ArrayList<String> catagories) {
         this.catagories = catagories;
     }
+
+    //returns a displayable friendly list of strings representing the product
     public ArrayList<String> asDisplayable(){
         ArrayList<String> displayable = new ArrayList<>();
         displayable.add(String.format("Name: %s",getProductName()));
@@ -110,6 +112,7 @@ public class Product implements Requestable , Serializable {
         displayable.add(String.format("Available from: %s",getDoi().toString()));
         return displayable;
     }
+    //populates product from a requestable format, throws an Execption if unable to parse
     public void fromRequestable(HashMap<String, String> requestable) throws IllegalArgumentException {
         clear();
 

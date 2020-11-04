@@ -1,5 +1,5 @@
 package edu.ucdenver.domain.client;
-
+//Error type
 public enum ClientErrorType {
     INVALID_SOCKET,
     INVALID_EMAIL,

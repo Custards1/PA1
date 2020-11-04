@@ -8,11 +8,16 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//This class is used to construct requests between the client and the server.
+//Any object that implements requestable can be sent and recived.
 public class Request {
     private RequestType type;
     private HashMap<String,String> fields;
     private ArrayList<HashMap<String,String>> objs;
+    //Seperates fields in a raw request.
     public static String seperater = "(?<!\\|)\\|(?!\\|)";
+
+   //constructs a request with given type, fields and objects
     public Request(RequestType type,HashMap<String,String> fields,ArrayList<HashMap<String,String>> objs){
         if(type==null) {
             this.type = RequestType.ERROR;
@@ -34,9 +39,81 @@ public class Request {
             this.objs=objs;
         }
     }
+    //contrusts a request object from a raw request, throws if unable to parse request.
+    public Request(String raw) throws IllegalArgumentException {
+
+        this.initFields();
+
+        this.fromString(raw);
+
+        this.validateType();
+
+    }
+    //constructs request from data in the stream, throws an error if unable to parse request.
+    public Request(BufferedReader stream) throws ClientError {
+        this.initFields();
+        StringBuilder size = new StringBuilder(new String());
+        int bytes = 0;
+
+        try{
+            while ((bytes=stream.read())>0 && (char)bytes!='|' && stream.ready()){
+                size.append((char) bytes);
+            }
+
+        }
+        catch(IOException e) {
+
+            throw new ClientError(ClientErrorType.INVALID_SOCKET);
+        }
+        String b=size.toString();
+        if(b.isEmpty()){
+            throw new ClientError(ClientErrorType.INVALID_SOCKET);
+        }
+
+        int rsize = Integer.parseInt(b);
+
+        if(rsize<=0){
+            if(bytes <=0) {
+                throw new ClientError(ClientErrorType.INVALID_SOCKET);
+            }
+            else{
+                throw new ClientError(ClientErrorType.INVALID_REQUEST);
+            }
+        }
+
+        char[] chars = new char[rsize];
+        int charsRead = 0;
+        try {
+            //charsRead = stream.read();
+            charsRead= stream.read(chars);
+            if(charsRead == -1){
+                throw new ClientError(ClientErrorType.INVALID_REQUEST);
+            }
+
+
+            String s = String.valueOf(chars);
+
+            try{
+
+                this.fromString(s);
+
+                this.validateType();
+            }
+            catch (IllegalArgumentException e) {
+
+                throw new ClientError(ClientErrorType.INVALID_REQUEST);
+            }
+        }
+        catch (IOException e){
+            throw new ClientError(ClientErrorType.INVALID_REQUEST);
+        }
+
+
+    }
     public HashMap<String,String> getTable() {
         return this.fields;
     }
+
     public void setTable(HashMap<String,String> table) {
         this.fields = table;
     }
@@ -44,6 +121,9 @@ public class Request {
     public ArrayList<HashMap<String,String>> getObjs(){
         return this.objs;
     }
+
+
+    //Turns the request into its raw string format.
     public String toRaw() {
         StringBuilder builder = new StringBuilder();
         for (HashMap.Entry<String,String> entry : this.fields.entrySet()) {
@@ -69,6 +149,7 @@ public class Request {
         }
         return builder.toString();
     }
+    //sends a request to a output stream, throws IO execption if writing to stream fails.
     public void send(PrintWriter output) throws IOException{
         if(output.checkError()){
             throw new IOException();
@@ -88,97 +169,22 @@ public class Request {
             throw new IOException();
         }
     }
-    public Request(BufferedReader stream) throws ClientError {
-        this.initFields();
-        StringBuilder size = new StringBuilder(new String());
-        int bytes = 0;
-      
-        try{
-            while ((bytes=stream.read())>0 && (char)bytes!='|' && stream.ready()){
-                size.append((char) bytes);
-            }
-
-        }
-        catch(IOException e) {
-
-            throw new ClientError(ClientErrorType.INVALID_SOCKET);
-        }
-        String b=size.toString();
-        if(b.isEmpty()){
-            throw new ClientError(ClientErrorType.INVALID_SOCKET);
-        }
-        
-        int rsize = Integer.parseInt(b);
-        
-        if(rsize<=0){
-            if(bytes <=0) {
-                throw new ClientError(ClientErrorType.INVALID_SOCKET);
-            }
-            else{
-                throw new ClientError(ClientErrorType.INVALID_REQUEST);
-            }
-        }
-       
-        char[] chars = new char[rsize];
-        int charsRead = 0;
-        try {
-            //charsRead = stream.read();
-            charsRead= stream.read(chars);
-
-
-
-            String s = String.valueOf(chars);
-
-            try{
-               
-                this.fromString(s);
-                
-                this.validateType();
-            }
-            catch (IllegalArgumentException e) {
-
-                throw new ClientError(ClientErrorType.INVALID_REQUEST);
-            }
-        }
-        catch (IOException e){
-            throw new ClientError(ClientErrorType.INVALID_REQUEST);
-        }
-
-
-    }
+    //inits fields of the request
     private void initFields() {
         this.fields = new HashMap<>();
         this.type = RequestType.NOOP;
         this.objs = new ArrayList<>();
     }
-    public Request(String raw) throws IllegalArgumentException {
-        
-        this.initFields();
-        
-        this.fromString(raw);
-        ;
-        this.validateType();
-       
-    }
-    public void validateType()throws IllegalArgumentException {
+    //retirves type from fields,throws exception if fields does not contain a request type,
+    public void validateType() throws IllegalArgumentException {
 
         if(!this.fields.containsKey("rtype")) {
             throw new IllegalArgumentException("No type");
         }
-
-
         String temp = this.fields.get("rtype").toUpperCase().trim();
-        if (temp!=null) {
-           
-        }
-
         this.type = RequestType.valueOf(temp);
-
     }
-    private void fromObjString(String raw)throws IllegalArgumentException {
-
-    }
-
+    //Parses a raw request into a Request object, throws execption if unable to parse request
     public void fromString(String raw) throws IllegalArgumentException {
         
         if (raw == null||raw.isEmpty() ){
@@ -231,6 +237,7 @@ public class Request {
         total+=1;
 
     }
+
     public String getField(String field) throws IllegalArgumentException {
         String res = this.fields.get(field);
         if (res == null) {

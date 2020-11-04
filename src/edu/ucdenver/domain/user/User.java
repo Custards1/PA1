@@ -5,17 +5,21 @@ import edu.ucdenver.domain.request.Requestable;
 import java.io.Serializable;
 import java.util.HashMap;
 
+//This class represents a user in the store databse, it is sendable in requests because
+//it implements Requestable, and is able to be saved to a file because it implements
+//serializable.
 public class User implements Requestable, Serializable {
     private boolean isAdmin;
     private String email;
     private String name;
     private String password;
     private int orders;
-    //boolean authenticated;
-    //**//
+    //creates an empty user
     public User(){
         clear();
     }
+
+    //creates a user with a specified email,name,and password
     public User(String email,String name,String password) {
         this.email = email;
         this.password = password;
@@ -23,12 +27,15 @@ public class User implements Requestable, Serializable {
         this.isAdmin = false;
         orders = 0;
     }
+    //creates a user from a requestable hashmap
     public User(HashMap<String,String> requestable) throws IllegalArgumentException {
         fromRequestable(requestable);
     }
+    //return the internal order id for a specified id
     public String getOrderId(int id){
         return  getEmail()+Integer.toString(id);
     }
+    //return the internal current orderid
     public String getCurrentOrderId(){
         return  getEmail()+Integer.toString(getOrders());
     }
@@ -37,8 +44,11 @@ public class User implements Requestable, Serializable {
         this.password = new String();
         this.name = new String();
         this.isAdmin = false;
+
         orders = 0;
     }
+    //implents fromRequestable protocol
+    @Override
     public void fromRequestable(HashMap<String,String> requestable) throws IllegalArgumentException {
         if(!requestable.containsKey("email")||!requestable.containsKey("name")||!requestable.containsKey("password")||!requestable.containsKey("is_admin")){
             throw new IllegalArgumentException("Bad requestable");
@@ -59,6 +69,8 @@ public class User implements Requestable, Serializable {
 
         }
     }
+    //implements asReqquestable protocol
+    @Override
     public HashMap<String,String> asRequestable(){
         HashMap<String,String> requestable = new HashMap<>();
         requestable.put("email",this.email);
@@ -68,11 +80,7 @@ public class User implements Requestable, Serializable {
         requestable.put("orders",Integer.toString(this.orders));
         return requestable;
     }
-    public static User fromObj(HashMap<String,String> obj) throws IllegalArgumentException {
-        User user = new User();
-        user.fromRequestable(obj);
-        return user;
-    }
+
     public void setPassword(String password){
         this.password = password;
     }
@@ -91,6 +99,8 @@ public class User implements Requestable, Serializable {
     public String getName(){
         return this.name;
     }
+
+    //checks if a string has whitespace
     private static boolean hasWhiteSpace(String msg){
         for (int i = 0; i < msg.length(); i++) {
             if(Character.isWhitespace(msg.charAt(i))){
@@ -99,6 +109,8 @@ public class User implements Requestable, Serializable {
         }
         return  false;
     }
+
+    //counts amount of times character appears in string
     private static int countCertainChar(String str,char c){
         int count=0;
         for (int i = 0; i < str.length(); i++) {
@@ -107,9 +119,11 @@ public class User implements Requestable, Serializable {
         }
         return count;
     }
+    //returns true if login information is valid
     public boolean validLoginInfo() {
         return this.validEmail() && this.validPassword();
     }
+    //returns true if email is valid
     public boolean validEmail(){
         if(this.email==null||this.email.isEmpty()||!this.email.contains("@")|| hasWhiteSpace(this.email)){
             return false;
@@ -127,12 +141,15 @@ public class User implements Requestable, Serializable {
         }
         return true;
     }
+    //returns true if password is valid
     public boolean validPassword(){
         return this.password != null && !this.password.isEmpty() && this.password.length() >= 8 && this.password.chars().allMatch(Character::isLetterOrDigit);
     }
+
     public boolean isAdmin(){
         return this.isAdmin;
     }
+
     public void setAdmin(boolean is_admin){
         this.isAdmin = is_admin;
     }

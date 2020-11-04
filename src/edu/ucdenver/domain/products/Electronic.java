@@ -6,7 +6,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+//This class represents an electronic, it implemets serializable
+//so it can be saved to a file, and it implements requestable so it can
+//be sent as a request and it inherits from the base Product class
 public class Electronic extends Product implements Requestable, Serializable {
 
     private String serial;
