@@ -31,10 +31,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-//File Upload Test
 import javafx.util.converter.NumberStringConverter;
 public class Adminclient {
-
 
     public Tab addUser;
     public Tab prodManagement;
@@ -45,7 +43,6 @@ public class Adminclient {
     public PasswordField passwordField;
     public Button addAdminClick;
     public Button addUserClick;
-    //public ToggleGroup adminFlag;
     public TextField prodnameField;
     public Button addCatsToProd;
     public Button removeCatsFromProd;
@@ -96,7 +93,7 @@ public class Adminclient {
     private Client client = null;
     private User user;
 
-    public Adminclient(){
+    public Adminclient(){//contructor
         this.user = new User("admin@admin.org","admin","admin3234");
         try {
             client = new Client("127.0.1.1", 8080, user, false);
@@ -230,7 +227,7 @@ public class Adminclient {
         productType.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-                for(Node n : gridPane.getChildren()) {
+                for(Node n : gridPane.getChildren()) {// clear all dynamic text boxes
                     Integer i = GridPane.getRowIndex(n);
                     if(i==null || i<0){
                         continue;
@@ -239,9 +236,8 @@ public class Adminclient {
                         n.setVisible(false);
                     }
                 }
-            //try{
                 switch ((String)productType.getItems().get((Integer) number2)){
-                    case "Home":
+                    case "Home":// generate boxes for home product
                         for(Node n : gridPane.getChildren()) {
                             Integer i = GridPane.getRowIndex(n);
                             if(i==null || i==0){
@@ -276,7 +272,7 @@ public class Adminclient {
 
                         }
                         break;
-                    case "Book":
+                    case "Book":// generate boxes for book product
                         for(Node n : gridPane.getChildren()) {
                             Integer i = GridPane.getRowIndex(n);
                             if(i==null || i==0){
@@ -338,7 +334,7 @@ public class Adminclient {
                         }
 
                         break;
-                    case "Electronic":
+                    case "Electronic":// generate boxes for electronic product
                         for(Node n : gridPane.getChildren()) {
                             Integer i = GridPane.getRowIndex(n);
                             if(i==null || i==0){
@@ -351,7 +347,6 @@ public class Adminclient {
                         for(TextField i : specFields){
                             i.setVisible(false);
                         }
-
 
                         author         .setText("");
                         location      .setText("");
@@ -389,7 +384,7 @@ public class Adminclient {
                         }
 
                         break;
-                    case "Computer":
+                    case "Computer":// generate boxes for computer product
                         for(Node n : gridPane.getChildren()) {
                             Integer i = GridPane.getRowIndex(n);
                             if(i==null || i==0){
@@ -402,7 +397,6 @@ public class Adminclient {
                         for(TextField i : specFields){
                             i.setVisible(false);
                         }
-
 
                         author         .setText("");
                         location      .setText("");
@@ -439,9 +433,7 @@ public class Adminclient {
 
                         }
 
-
-
-                        TextInputDialog td = new TextInputDialog("");
+                        TextInputDialog td = new TextInputDialog("");//popup text box for number of entry fields
                         td.setHeaderText("Enter number of specs");
                         td.showAndWait();
                         String temp = td.getEditor().getText();
@@ -477,7 +469,7 @@ public class Adminclient {
                             i++;
                         }
                         break;
-                    case "Phone":
+                    case "Phone":// generate boxes for phone product
                         for(Node n : gridPane.getChildren()) {
                             Integer i = GridPane.getRowIndex(n);
                             if(i==null || i==0){
@@ -550,14 +542,8 @@ public class Adminclient {
 
                         }
 
-
                     default:break;
                 }
-           // }
-           /* catch (Exception ignored){
-
-            }*/
-
             }
         });
 
@@ -593,13 +579,13 @@ public class Adminclient {
 
     private void cleanCatManage(){
         this.catNameField.setText("");
-    }
-    private void cleanAddUser(){
+    }//clear category entry field
+    private void cleanAddUser(){//clear user entry field
         this.usernameField.setText("");
         this.passwordField.setText("");
         this.emailField.setText("");
     }
-    private void cleanLogin(){
+    private void cleanLogin(){//clear login entry field
         this.usernameFieldLogin.setText("");
         this.passwordFieldLogin.setText("");
     }
@@ -614,7 +600,7 @@ public class Adminclient {
 
     public void ordReportClick(Event event) { }//tab
 
-    public void saveCloseClick(ActionEvent actionEvent) {
+    public void saveCloseClick(ActionEvent actionEvent) {//exit admin client
         try {
             client = getClient();
             client.askToShutdown();
@@ -632,42 +618,38 @@ public class Adminclient {
         Platform.exit();
     }
 
-   /* public void toggleAdmin(ActionEvent actionEvent) {
-        //change to add admin, add user
-    }*/
-
     public void updatedCategories(ActionEvent actionEvent) {//product tab button
     }
 
     public void selProdCategory(ActionEvent actionEvent) {//product tab drop down menu
     }
 
-    public void addProduct(ActionEvent actionEvent) {//product tab add button
+    public void addProduct(ActionEvent actionEvent) {//add a product
         try{
             Object o = productType.getValue();
             String s = (String)o;
 
             switch (s){
-                case "Home":
+                case "Home"://add home product
                     Home home = new Home(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),locationField.getText());
                     home.getCatagories().add(prodCatSelBox.getValue());
                     client = getClient();
                     client.addProductToCatalog(home);
 
                     break;
-                case "Book":
+                case "Book":// add book product
                     Book book = new Book(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),authorField.getText(),publicationDate.getValue(),30);
                     book.getCatagories().add(prodCatSelBox.getValue());
                     client = getClient();
                     client.addProductToCatalog(book);
                     break;
-                case "Phone":
+                case "Phone"://add phone product
                     Phone phone = new Phone(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),serialField.getText(),warranty.getValue(),imeiField.getText(),osField.getText());
                     phone.getCatagories().add(prodCatSelBox.getValue());
                     client = getClient();
                     client.addProductToCatalog(phone);
                     break;
-                case "Computer":
+                case "Computer"://add computer product
                     ArrayList<String> specs = new ArrayList<>();
                     for(TextField f : specFields){
                         if(f !=null && f.getText()!=null && !f.getText().isEmpty()){
@@ -680,13 +662,13 @@ public class Adminclient {
                     client = getClient();
                     client.addProductToCatalog(c);
                     break;
-                case "Electronic":
+                case "Electronic"://add electronic product
                     Electronic el = new Electronic(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now(),serialField.getText(),warranty.getValue());
                     el.getCatagories().add(prodCatSelBox.getValue());
                     client = getClient();
                     client.addProductToCatalog(el);
                     break;
-                default:
+                default://add basic product
                     Product product = new Product(prodnameField.getText(),brandName.getText(),prdDescription.getText(),LocalDate.now());
                     client = getClient();
                     client.addProductToCatalog(product);
@@ -721,7 +703,7 @@ public class Adminclient {
         }
     }
 
-    public void deleteProduct(ActionEvent actionEvent) {//product tab delete button
+    public void deleteProduct(ActionEvent actionEvent) {//delete product
 
         try{
 
@@ -757,12 +739,12 @@ public class Adminclient {
         }
     }
 
-    public void addCategory(ActionEvent actionEvent) {
+    public void addCategory(ActionEvent actionEvent) {//add available catagory for products
         try {
             client = getClient();
             client.addCatagory(this.catNameField.getText());
             client.shutdown();
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory added");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Category added");
             alert.show();
             this.prodCatSelBox.getItems().addAll(this.catNameField.getText());
         }
@@ -782,12 +764,12 @@ public class Adminclient {
         cleanCatManage();
     }
 
-    public void deleteCategory(ActionEvent actionEvent) {
+    public void deleteCategory(ActionEvent actionEvent) {//delete catagory from available list
         try {
             client = getClient();
             client.removeCatagory(this.catNameField.getText());
             client.shutdown();
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory deleted");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Category deleted");
             alert.show();
             this.prodCatSelBox.getItems().remove(this.catNameField.getText());
         }
@@ -806,7 +788,7 @@ public class Adminclient {
         cleanCatManage();
     }
 
-    public void updateDefCat(ActionEvent actionEvent) {//catagory managment confirm button
+    public void updateDefCat(ActionEvent actionEvent) {//set default catagory for product entry
         try {
             client = getClient();
             client.setDefaultCatagory(this.defCategorySel.getValue());
@@ -871,7 +853,7 @@ System.out.println(String.format("Failed because %s",e.getMessage()));
 
     }
 
-    public void ordReportClck(Event event) {//tab
+    public void ordReportClck(Event event) {//list of clients
         System.out.println("Updatings details");
         ArrayList<String> names= new ArrayList<>();
         try {
@@ -897,7 +879,7 @@ System.out.println(String.format("Failed because %s",e.getMessage()));
 
     public void checkAuthLogin(Event event) { }//tab
 
-    public void loginUser(ActionEvent actionEvent) {
+    public void loginUser(ActionEvent actionEvent) {//login as a different user
         //call in constructor
         if(this.emailField.getText().isEmpty() ||this.usernameFieldLogin.getText().isEmpty()||this.passwordFieldLogin.getText().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Please fill out all fields.");
@@ -924,9 +906,9 @@ System.out.println(String.format("Failed because %s",e.getMessage()));
 
     public void resetTextFieldsLogin(ActionEvent actionEvent) {
         cleanLogin();
-    }
+    }//clear text fields on reset button
 
-    public void addAdmin(ActionEvent actionEvent) {
+    public void addAdmin(ActionEvent actionEvent) {//add a new admin
         try {
             client = getClient();
             client.createAdmin(this.emailField.getText(), this.usernameField.getText(), this.passwordField.getText());
@@ -949,7 +931,7 @@ System.out.println(String.format("Failed because %s",e.getMessage()));
         cleanAddUser();
     }
 
-    public void addUser(ActionEvent actionEvent) {
+    public void addUser(ActionEvent actionEvent) {//add a new user
         try {
             User temp = new User(this.emailField.getText(), this.usernameField.getText(), this.passwordField.getText());
             client = getClient();
@@ -973,12 +955,12 @@ System.out.println(String.format("Failed because %s",e.getMessage()));
         cleanAddUser();
     }
 
-    public void addCatToProd(ActionEvent actionEvent) {
+    public void addCatToProd(ActionEvent actionEvent) {//add an additional category to a product
         try{
             client = getClient();
             client.addCatagoryToProductByName(this.prodCatSelBox.getValue(), this.prodnameField.getText());
             client.shutdown();
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory added to product");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Category added to product");
             alert.show();
         }
         catch (Exception e) {
@@ -995,12 +977,12 @@ System.out.println(String.format("Failed because %s",e.getMessage()));
         }
     }
 
-    public void removeCatFromProd(ActionEvent actionEvent) {
+    public void removeCatFromProd(ActionEvent actionEvent) {//remove a category from a product
         try{
             client = getClient();
             client.removeCatagoryFromProductByName(this.prodCatSelBox.getValue(), this.prodnameField.getText());
             client.shutdown();
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Catagory removed from product");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Category removed from product");
             alert.show();
         }
         catch (Exception e) {
