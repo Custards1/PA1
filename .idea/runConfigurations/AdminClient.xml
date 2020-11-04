@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="AdminClient" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="adminclient.AdminClientMain" />
+    <module name="PA1" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

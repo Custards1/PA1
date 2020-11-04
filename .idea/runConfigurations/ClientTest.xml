@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ClientTest" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="edu.ucdenver.domain.client.ClientTest" />
+    <module name="PA1" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
