@@ -45,18 +45,18 @@ public class ServerTask implements Runnable, RequestServerProtocol {
     //Used to authenicate incoming user;
     private User authorize(BufferedReader input, PrintWriter output) throws ClientError {
         Request incoming = null;
-        System.out.println("Tryina auth");
+       
         try{
            incoming = new Request(input);
         } catch (ClientError e){
            throw  e;
         }
-        System.out.printf("Gotten %s\n",incoming.toRaw());
+    
         if(incoming.getType()== RequestType.AUTHENTICATE_USER ||incoming.getType() == RequestType.CREATE_USER) {
             ArrayList<HashMap<String,String>> objs = incoming.getObjs();
-            System.out.println("is ok");
+          
             if(objs.isEmpty()){
-                System.out.println("OBJS IS EMPTY ");
+           
               RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_REQUEST);
               throw new ClientError((ClientErrorType.INVALID_REQUEST));
             }
@@ -64,21 +64,21 @@ public class ServerTask implements Runnable, RequestServerProtocol {
                 User user = null;
                 try {
                     user = new User(objs.get(0));
-                    System.out.println("user is ok");
+                  
 
                 }
                 catch (IllegalArgumentException e){
-                    System.out.println("user is bad");
+                   
                     RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_REQUEST);
                     throw new ClientError((ClientErrorType.INVALID_REQUEST));
                 }
                 if(!user.validEmail()){
-                    System.out.println("user is bad email");
+                
                     RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_EMAIL);
                     throw new ClientError((ClientErrorType.INVALID_EMAIL));
                 }
                 if(!user.validPassword()){
-                    System.out.println("user is bad password");
+                   
                     RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_PASSWORD);
                     throw new ClientError((ClientErrorType.INVALID_PASSWORD));
                 }
@@ -97,13 +97,13 @@ public class ServerTask implements Runnable, RequestServerProtocol {
                     return user;
                 }
                 else {
-                    System.out.println("user is maybe ok");
+                   
                     user.setAdmin(false);
                     if (!this.userStore.addUser(user)){
-                        System.out.println("user is No bueno");
+                       
                         throw new ClientError(ClientErrorType.INVALID_USER);
                     }
-                    System.out.println("added");
+                   
                     RequestServerProtocol.sendOneHotRequest(output,RequestType.OK,"admin","false");
                     return user;
                 }
@@ -579,16 +579,16 @@ public class ServerTask implements Runnable, RequestServerProtocol {
     }
     //Handles request to addProductToTheCatalog, client must be admin
     private RequestType addProductToCatalog(Request incoming, BufferedReader input, PrintWriter output) {
-        System.out.println("Tryina add prasoductss");
+        
         ArrayList<HashMap<String,String>> objs = incoming.getObjs();
         if(objs == null || objs.isEmpty()) {
             try {
                 RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_REQUEST);
-                System.out.println("Tryina add products INVALID RREQUST");
+                
                 return RequestType.OK;
             }
             catch (Exception ee){
-                System.out.println("Tryina add products INVALID REQUEST ERROR");
+           
                 return RequestType.ERROR;
             }
         }
@@ -616,14 +616,14 @@ public class ServerTask implements Runnable, RequestServerProtocol {
         }
         else{
 
-            System.out.println(type);
+            
             try {
                 RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_REQUEST);
-                System.out.println("Tryina add products INVALID dREQUEST ERROR");
+               
                 return RequestType.OK;
             }
             catch (Exception ee){
-                System.out.println("Tryina add products INVALIdD REQUEST ERROR");
+               
                 return RequestType.ERROR;
             }
         }
@@ -632,23 +632,23 @@ public class ServerTask implements Runnable, RequestServerProtocol {
 
         }
         product.fromRequestable(requested);
-        System.out.println("BEFORE");
+      
         userStore.addProduct(connectedUser,product);
-        System.out.println("AFTER");
+       
         try{
-            System.out.println("Tryina add products OK");
+    
             RequestServerProtocol.sendBlankRequest(output,RequestType.OK);
-            System.out.println("Tryina add products IQUEST");
+      
             return RequestType.OK;
         }
         catch (Exception e){
 
-            try{ System.out.println("Tryina add products INVALID AC");
+            try{ 
                 RequestServerProtocol.sendErrorRequest(output,ClientErrorType.INVALID_ACCESS);
                 return RequestType.OK;
             }
             catch (Exception ee){
-                System.out.println("Tryina add products INVALID AC2");
+              
                 return RequestType.ERROR;
             }
 
@@ -711,11 +711,11 @@ public class ServerTask implements Runnable, RequestServerProtocol {
     //Handles request to get the connceted users current order
     private RequestType getCurrentOrder(Request incoming, BufferedReader input, PrintWriter output) {
         try{
-            System.out.println("Sent");
+           
             Requestable r  = userStore.getCurrentOrder(connectedUser);
-            System.out.println("Hoobla");
+           
             RequestServerProtocol.sendRequestable(output,RequestType.OK,r);
-            System.out.println("Sending");
+          
             return RequestType.OK;
         }
         catch (Exception e){

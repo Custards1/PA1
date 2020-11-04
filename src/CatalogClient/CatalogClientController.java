@@ -15,6 +15,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+//This is the main controller class for the catalog client.
+//It handles the entire gui besides logging in, as thats done by the
+//LoginController class.
 
 public class CatalogClientController {
     public Tab browseTab;
@@ -51,6 +54,8 @@ public class CatalogClientController {
         called = false;
         selectedProduct = new String();
     }
+    //This function is used to initialize the controller from anywhere,
+    //namly another controller
     public void initializeMe() {
         browseCategories.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -77,10 +82,12 @@ public class CatalogClientController {
 
         updateCatagories();
     }
+//updates catagories when switching to update catagories tab
     public void browseTabSel(Event event) {
 
         updateCatagories();
     }
+    //updates products in window from a catagory name
     private synchronized void updateProducts(String catagory){
         ArrayList<String> names= new ArrayList<>();
         try {
@@ -94,36 +101,39 @@ public class CatalogClientController {
             System.out.printf("Failed to update prods cuz %s\n",e.getMessage());
         }
     }
+    //updates product details page from product name
     private synchronized void updateProductDetails(String name){
-        System.out.println("Updating details");
+       
         ArrayList<String> names= new ArrayList<>();
         try {
-            System.out.println("Updating details");
+           
             Product p = client.getProductByName(name);
-            System.out.println(p);
+            
             names = p.asDisplayable();
-            System.out.println(names);
+          
             prdouctDetails.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
             System.out.printf("Failed to update prod details cuz %s\n",e.getMessage());
         }
     }
+    //updates product search details page from product name
     private synchronized void updateProductSearchDetails(String name){
-        System.out.println("Updatings details");
+      
         ArrayList<String> names= new ArrayList<>();
         try {
-            System.out.println("Updating details");
+           
             Product p = client.getProductByName(name);
-            System.out.println(p);
+           
             names = p.asDisplayable();
-            System.out.println(names);
+          
             searchProductDetails.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){
             System.out.printf("Failed to update prod search details cuz %s\n",e.getMessage());
         }
     }
+    //updates catagories
     private synchronized  void updateCatagories(){
         ArrayList<String> names= new ArrayList<>();
         try {
@@ -137,6 +147,7 @@ public class CatalogClientController {
             System.out.printf("Failed to update cata cuz %s\n",e.getMessage());
         }
     }
+    //adds a selected product to the users current order
     public void addToOrder(ActionEvent actionEvent) {
         if(selectedProduct.isEmpty()){
             Alert a = new Alert(Alert.AlertType.ERROR);
@@ -163,7 +174,7 @@ public class CatalogClientController {
     }
     public void searchTabSel(Event event) {
     }
-
+    //updates search product list from entered search.
     public synchronized void doSearchAndUpdateList(ActionEvent actionEvent) {
         String msg = searchProducts.getText();
         searchProducts.setText("");
@@ -188,7 +199,9 @@ public class CatalogClientController {
     }
 
     public void selectProductFromSearch(MouseEvent mouseEvent) {
-        //updateProductSearchDetails("IPhone");
+        //using this function should work, as thats how the other pane is updated
+        // After furthur reasearch im 99.999% sure it doesnt work because
+        //an error in Java 8
        /* searchProductDetails.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -196,18 +209,17 @@ public class CatalogClientController {
                 updateProductSearchDetails(newValue);
             }
         });*/
-        //System.out.println(searchProductDetails.getSelectionModel().selectionModeProperty());
-    }
-    public void login(ActionEvent event){
-
 
     }
+
     public void orderTabSel(Event event) {
         updateOrderRaw();
     }
+    //updates current order on an event
     public void updateOrder(ActionEvent e){
        updateOrderRaw();
     }
+    //updates current order
     private void updateOrderRaw(){
         try {
             ArrayList<String>names = new ArrayList<>();
@@ -228,6 +240,8 @@ public class CatalogClientController {
             System.out.printf("Failed to init cuz search %s\n",ee.getMessage());
         }
     }
+    //finalizes current order
+
     public void submitOrder(ActionEvent actionEvent) {
         try{
             client.finalizeOrder();
@@ -242,6 +256,7 @@ public class CatalogClientController {
             a.show();
         }
     }
+//cancles current order
 
     public void cancelOrder(ActionEvent actionEvent) {
         try{
@@ -258,26 +273,16 @@ public class CatalogClientController {
         }
     }
 
-    public void checkAuthLogin(Event event) {
-    }
-
-    public void loginUser(ActionEvent actionEvent) {
-
-
-    }
-
-    public void resetTextFieldsLogin(ActionEvent actionEvent) {
-    }
-
+    //Updates product details in the browse tab
     public void showProdDetails(ActionEvent actionEvent) {
         String name = this.viewProdProperties.getText();
         ArrayList<String> names= new ArrayList<>();
         try {
-            System.out.println("Updating details");
+          
             Product p = client.getProductByName(name);
-            System.out.println(p);
+           
             names = p.asDisplayable();
-            System.out.println(names);
+          
             searchProductDetails.setItems(FXCollections.observableList(names));
         }
         catch (Exception e){

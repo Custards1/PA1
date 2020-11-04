@@ -38,7 +38,7 @@ public class Client implements RequestClientProtocol {
         ArrayList<HashMap<String,String>> re = new ArrayList();
         re.add(self.asRequestable());
         Request to_send = new Request(signup?RequestType.CREATE_USER:RequestType.AUTHENTICATE_USER,null,re);
-        System.out.printf("Tryina send %s\n",to_send.toRaw());
+       
         try {
             try{
                 this.socket = new Socket(host,port);
@@ -49,7 +49,7 @@ public class Client implements RequestClientProtocol {
             catch (IOException e){
                 throw new ClientError(ClientErrorType.INVALID_SOCKET);
             }
-            System.out.println("Snt");
+          
 
             try {
                 recived = okOrDie(this,input);
@@ -199,17 +199,17 @@ public class Client implements RequestClientProtocol {
     //removes a product from the catalog by id,throws error if unable to communicate with server.
     //OR if the clients connceted user is not admin
     public synchronized void removeProductFromCatalog(String productId) throws ClientError {
-        System.out.println("Is rmpdfc");
+        
         if(!this.isAdmin || productId == null){
             throw new ClientError(ClientErrorType.INVALID_ACCESS);
         }
-        System.out.println("Is rmpdasdfc");
+      
         HashMap<String,String> fields = new HashMap<>();
-        System.out.println("Is rmpasddfc");
+      
         fields.put("product-to-remove",productId);
-        System.out.println("Is rasdsdmpdfc");
+        
         RequestClientProtocol.sendMinimalRequest(this,RequestType.REMOVE_PRODUCT_FROM_CATALOG,fields,output);
-        System.out.println("Iasdsdas rmpdfc");
+       
         Request r = okOrDie(this,input);
       
     }
@@ -482,12 +482,12 @@ public class Client implements RequestClientProtocol {
     public Order clientsOrderById(String newValue) throws ClientError {
         HashMap<String,String> ss = new HashMap<>();
         ss.put("id",newValue);
-        System.out.println("WSEndt");
+       
         RequestClientProtocol.sendMinimalRequest (this,RequestType.GET_USER_ORDERS,ss,output);
         ArrayList<Order> orders = new ArrayList<>();
-        System.out.println("SEndt");
+        
         Request r = okOrDie(this,input);
-        System.out.println("Gott");
+       
         Order o = new Order();
         try {
             o.fromRequestable(r.getObjs().get(0));

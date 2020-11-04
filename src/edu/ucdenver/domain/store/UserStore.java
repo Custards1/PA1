@@ -112,7 +112,7 @@ public class UserStore  implements Serializable  {
     //adds a non admin user, returns false if failed.
     public synchronized boolean addUser(User user) {
         if(!validUserConstruct(user)){
-            System.out.println("Invalid user");
+         
             return false;
         }
         addPotentiallyPrivilagedUser(user,false);
@@ -172,7 +172,7 @@ public class UserStore  implements Serializable  {
     //returns the current order for a connected user, throws if not found or user is invalid
     public synchronized Order getCurrentOrder(User connectedUser) throws IllegalArgumentException {
         if(!connectedUser.validLoginInfo()){
-            System.out.println("Invalid");
+           
             throw new IllegalArgumentException();
         }
 
