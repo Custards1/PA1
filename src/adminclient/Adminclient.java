@@ -385,6 +385,20 @@ public class Adminclient {
 
                         break;
                     case "Computer":
+                        TextInputDialog td = new TextInputDialog("");
+                        td.setHeaderText("Enter number of specs");
+                        td.showAndWait();
+                        String temp = td.getEditor().getText();
+                        Integer numSpec = Integer.valueOf(temp);
+                        for(Node n : gridPane.getChildren()) {
+                            Integer i = GridPane.getRowIndex(n);
+                            if(i==null || i==0){
+                                continue;
+                            }
+                            if(i >= 6&& i<= numSpec){
+                                n.setVisible(true);
+                            }
+                        }
                         break;
                     case "Phone":
                         for(Node n : gridPane.getChildren()) {
