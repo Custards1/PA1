@@ -70,6 +70,7 @@ public class Adminclient {
     public TextField usernameFieldLogin;
     public PasswordField passwordFieldLogin;
     public Button loginButton;
+    public ArrayList<TextField> specFields;
     public Button resetButton;
     public TextField emailField;
     public TextField numOfPages;
@@ -117,6 +118,7 @@ public class Adminclient {
          location= new Label();
          imei= new Label();
          os= new Label();
+         specFields = new ArrayList<>();
          pusblication= new Label();
          warrantyN= new Label();
          numPages = new Label();
@@ -389,14 +391,31 @@ public class Adminclient {
                         td.setHeaderText("Enter number of specs");
                         td.showAndWait();
                         String temp = td.getEditor().getText();
+                        specFields = new ArrayList<>();
                         Integer numSpec = Integer.valueOf(temp);
                         for(Node n : gridPane.getChildren()) {
                             Integer i = GridPane.getRowIndex(n);
                             if(i==null || i==0){
                                 continue;
                             }
-                            if(i >= 6&& i<= numSpec){
+                            if(i >= 6&& i<=6+numSpec){
                                 n.setVisible(true);
+                            }
+                        }
+                        for(int i = 0; i < numSpec;i++){
+                            specFields.add(new TextField());
+                            try {
+                                gridPane.add(specFields.get(specFields.size()-1), 0, i+6);
+                            }
+                            catch (Exception ignored){
+
+                            }
+                            specFields.add(new TextField());
+                            try {
+                                gridPane.add(specFields.get(specFields.size()-1), 1, i+6);
+                            }
+                            catch (Exception ignored){
+
                             }
                         }
                         break;

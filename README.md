@@ -1,2 +1,5 @@
-# PA1
+# Server
 PA1
+# Catalog Client
+
+# Admin Client
